@@ -2,40 +2,57 @@
 <html>
 <body>
 
-<head>
-  <title>Mirage</title>
-</head>
+    <head>
+      <title>Mirage</title>
+    </head>
+
     
-<canvas id="myCanvas" width="1920" height="1080"
-style="border:1px solid #d3d3d3;">
-Your browser does not support the canvas element.
-</canvas>
-
-<script>
-//Setup
-var canvas = document.getElementById("myCanvas");
-var ctx = canvas.getContext("2d");
+    <canvas id="myCanvas" width="720" height="405"
+    style="border:1px solid #d3d3d3;">
+        Your browser does not support the canvas element.
+    </canvas>
     
-//Settings
 
-var nbRectWidth = 5;
-var nbRectHeight = 4;
-var rectWidth = canvas.width / nbRectWidth;
-var rectHeight = canvas.height / nbRectHeight;
-var fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight)+"px";
-ctx.font = fontSize+" Arial";
-ctx.textAlign = "center";
-ctx.textBaseline="middle";
+    <script>
+        //Setup
+        var canvas = document.getElementById("myCanvas");
+        var canvasCtx = canvas.getContext("2d");
+        var img = document.createElement("canvas");
+        var imgCtx = img.getContext("2d");
+        
 
-for (var j = 0 ; j < nbRectWidth ; ++j) {
-  for (var i = 0 ; i < nbRectHeight ; ++i) {
-      ctx.fillStyle = (i+j) % 2 == 0 ? "black" : "white";
-      ctx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
-      ctx.fillStyle = (i+j) % 2 == 0 ? "blue" : "red";
-      ctx.fillText(1 + j, rectWidth/2 + rectWidth * j, rectHeight/2 + rectHeight * i);
-  }
-}
-</script>
+        //Settings
+        var imgWidth = 1920;
+        var imgHeight = 1080;
+        img.width = imgWidth;
+        img.height = imgHeight;
+
+        var nbRectWidth = 5;
+        var nbRectHeight = 4;
+        var rectWidth = imgWidth / nbRectWidth;
+        var rectHeight = imgHeight / nbRectHeight;
+        var fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight)+"px";
+        
+        imgCtx.font = fontSize+" Arial";
+        imgCtx.textAlign = "center";
+        imgCtx.textBaseline="middle";
+        
+        
+        //Algorithm
+
+        for (var j = 0 ; j < nbRectWidth ; ++j) {
+          for (var i = 0 ; i < nbRectHeight ; ++i) {
+              imgCtx.fillStyle = (i+j) % 2 == 0 ? "black" : "white";
+              imgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
+              imgCtx.fillStyle = (i+j) % 2 == 0 ? "blue" : "red";
+              imgCtx.fillText(1 + j, rectWidth/2 + rectWidth * j, rectHeight/2 + rectHeight * i);
+          }
+        }
+        
+        //Draw the working img in the page canvas
+        canvasCtx.drawImage(img, 0, 0, img.width,    img.height,     // source rectangle
+                   0, 0, canvas.width, canvas.height); // destination rectangle
+    </script>
 
 </body>
 </html>
