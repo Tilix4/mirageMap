@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<head>
+  <title>Mirage</title>
+</head>
+    
+<canvas id="myCanvas" width="1920" height="1080"
+style="border:1px solid #d3d3d3;">
+Your browser does not support the canvas element.
+</canvas>
+
+<script>
+//Setup
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+    
+//Settings
+
+var nbRectWidth = 5;
+var nbRectHeight = 4;
+var rectWidth = canvas.width / nbRectWidth;
+var rectHeight = canvas.height / nbRectHeight;
+var fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight)+"px";
+ctx.font = fontSize+" Arial";
+ctx.textAlign = "center";
+ctx.textBaseline="middle";
+
+for (var j = 0 ; j < nbRectWidth ; ++j) {
+  for (var i = 0 ; i < nbRectHeight ; ++i) {
+      ctx.fillStyle = (i+j) % 2 == 0 ? "black" : "white";
+      ctx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
+      ctx.fillStyle = (i+j) % 2 == 0 ? "blue" : "red";
+      ctx.fillText(1 + j, rectWidth/2 + rectWidth * j, rectHeight/2 + rectHeight * i);
+  }
+}
+</script>
+
+</body>
+</html>
