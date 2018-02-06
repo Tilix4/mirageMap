@@ -4,6 +4,10 @@
 
     <head>
       <title>Mirage</title>
+        
+        <style>
+        
+        </style>
     </head>
 
     
@@ -12,6 +16,7 @@
         Your browser does not support the canvas element.
     </canvas>
     
+    <a id="downloadButton">Download Image</a>
 
     <script>
         //Setup
@@ -39,19 +44,30 @@
         
         
         //Algorithm
-
-        for (var j = 0 ; j < nbRectWidth ; ++j) {
-          for (var i = 0 ; i < nbRectHeight ; ++i) {
-              imgCtx.fillStyle = (i+j) % 2 == 0 ? "black" : "white";
-              imgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
-              imgCtx.fillStyle = (i+j) % 2 == 0 ? "blue" : "red";
-              imgCtx.fillText(1 + j, rectWidth/2 + rectWidth * j, rectHeight/2 + rectHeight * i);
-          }
-        }
+       
+        generateMire();
         
-        //Draw the working img in the page canvas
-        canvasCtx.drawImage(img, 0, 0, img.width,    img.height,     // source rectangle
-                   0, 0, canvas.width, canvas.height); // destination rectangle
+        //Setup the download button
+        var link = document.getElementById("downloadButton");
+        link.addEventListener('click', function(ev) {
+            link.href = img.toDataURL();
+            link.download = "mire_"+String(imgWidth)+"x"+String(imgHeight)+".png";
+        }, false);
+        
+         function generateMire(){
+            for (var j = 0 ; j < nbRectWidth ; ++j) {
+              for (var i = 0 ; i < nbRectHeight ; ++i) {
+                  imgCtx.fillStyle = (i+j) % 2 == 0 ? "black" : "white";
+                  imgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
+                  imgCtx.fillStyle = (i+j) % 2 == 0 ? "blue" : "red";
+                  imgCtx.fillText(1 + j, rectWidth/2 + rectWidth * j, rectHeight/2 + rectHeight * i);
+              }
+            }
+
+            //Draw the working img in the page canvas
+            canvasCtx.drawImage(img, 0, 0, img.width,    img.height,     // source rectangle
+                       0, 0, canvas.width, canvas.height); // destination rectangle
+        }
     </script>
 
 </body>
