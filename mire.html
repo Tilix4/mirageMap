@@ -71,6 +71,7 @@
         //Internal management
         var squaresEnabled = true;
         var bckSpaceCount = 0;
+        var imgRatio;
         
         //Algorithm
        
@@ -116,14 +117,19 @@
             imgHeight = heightField.value;
             img.width = imgWidth;
             img.height = imgHeight;
+            
             nbRectWidth = squaresWidthField.value;
             nbRectHeight = squaresHeightField.value;
             rectWidth = imgWidth / nbRectWidth;
             rectHeight = imgHeight / nbRectHeight;
             fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight)+"px";
+            
             imgCtx.font = fontSize+" Arial";
             imgCtx.textAlign = "center";
             imgCtx.textBaseline="middle";
+            
+            imgRatio = imgWidth/imgHeight;
+            canvas.height = canvas.width * 1/imgRatio;
         }
         
         
