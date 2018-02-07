@@ -12,13 +12,18 @@
 
      
       Image size:
-      <input type="text" id="imageWidthField" value="">
+      <input type="text" id="imageWidthField" value="1920">
          x
-      <input type="text" id="imageHeightField" value="">
-         Squares :
-      <input type="text" id="nbSquaresW">
+      <input type="text" id="imageHeightField" value="1080">
+         Grid :
+      <input type="text" id="nbSquaresW" value="10">
           x 
-      <input type="text" id="nbSquaresH">
+      <input type="text" id="nbSquaresH" value="10">
+    
+        <input type="checkbox" id="squaresCheckbox" checked="true"> Squares
+    
+    Lines :
+      <input type="text" id="linesField" value="2">
     
     
     <canvas id="myCanvas" width="720" height="405"
@@ -39,20 +44,30 @@
         var imgHeight = widthField.value;
         heightField.addEventListener("input", generateMire);
         
-        var squaresWidthField = document.getElementById("nbSquaresW");
-        var nbRectWidth = squaresWidthField.value;
-        squaresWidthField.addEventListener("input", generateMire);
-        squaresWidthField.addEventListener("keypress", squaresErgonomy);
-        squaresWidthField.addEventListener("blur", function currFunction(){if(squaresWidthField.value <= 0) setSquaresFields(0)}); //Set the field to 0 if empty or not valid
+        var rectWidthField = document.getElementById("nbSquaresW");
+        var nbRectWidth = rectWidthField.value;
+        rectWidthField.addEventListener("input", generateMire);
+        rectWidthField.addEventListener("keypress", squaresErgonomy);
+        rectWidthField.addEventListener("blur", function currFunction(){if(rectWidthField.value <= 0) setSquaresFields(0)}); //Set the field to 0 if empty or not valid
         
-        var squaresHeightField = document.getElementById("nbSquaresH");
-        var nbRectHeight = squaresHeightField.value;
-        squaresHeightField.addEventListener("input", generateMire);
-        squaresHeightField.addEventListener("keypress", squaresErgonomy);
-        squaresHeightField.addEventListener("blur", function currFunction(){if(squaresHeightField.value <= 0) setSquaresFields(0)}); //Set the field to 0 if empty or not valid
+        var rectHeightField = document.getElementById("nbSquaresH");
+        var nbRectHeight = rectHeightField.value;
+        rectHeightField.addEventListener("input", generateMire);
+        rectHeightField.addEventListener("keypress", squaresErgonomy);
+        rectHeightField.addEventListener("blur", function currFunction(){if(rectHeightField.value <= 0) setSquaresFields(0)}); //Set the field to 0 if empty or not valid
         
-        function myFunction() {//debug function
-    alert ("Hello World!");
+        var squaresCheckbox = document.getElementById("squaresCheckbox");
+        var rectAreSquares = squaresCheckbox.checked;
+        squaresCheckbox.addEventListener("input", setRectAsSquares);
+        
+        var linesField = document.getElementById("linesField");
+        var nLines = linesField.value;
+        linesField.addEventListener("input", setLines);
+        linesField.addEventListener("blur", function currFunction(){if(linesField.value <= 0) linesField.value = 0;}); //Set the field to 0 if empty or not valid
+        
+        function myFunction(e) {//debug function
+            rectAreSquares = squaresCheckbox.checked;
+    alert (nLines);
 }
         
         //Canvas
@@ -87,6 +102,11 @@
         
         //Functions
         
+        function setLines() {
+            nLines = linesField.value;
+            generateMire();
+        }
+        
         function squaresErgonomy(e) {//Squares fields ergonomy
             
             if(e.key == "Backspace"){
@@ -105,9 +125,15 @@
             generateMire();
         }
         
+        function setRectAsSquares () {
+            rectAreSquares = squaresCheckbox.checked;
+            rectHeightField.disabled = rectAreSquares;
+            generateMire();
+        }
+        
         function setSquaresFields(n) {
-            squaresWidthField.value = 0;
-            squaresHeightField.value = 0;
+            rectWidthField.value = 0;
+            rectHeightField.value = 0;
         }
         
         
@@ -118,8 +144,8 @@
             img.width = imgWidth;
             img.height = imgHeight;
             
-            nbRectWidth = squaresWidthField.value;
-            nbRectHeight = squaresHeightField.value;
+            nbRectWidth = rectWidthField.value;
+            nbRectHeight = rectHeightField.value;
             rectWidth = imgWidth / nbRectWidth;
             rectHeight = imgHeight / nbRectHeight;
             fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight)+"px";
@@ -137,19 +163,44 @@
          function generateMire(){
              updateSettings();
              canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+             
+             //Grid drawing
             for (var j = 0 ; j < nbRectWidth ; ++j) {
               for (var i = 0 ; i < nbRectHeight ; ++i) {
                   imgCtx.fillStyle = (i+j) % 2 == 0 ? "black" : "white";
-                  imgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
-                  imgCtx.fillStyle = (i+j) % 2 == 0 ? "blue" : "red";
-                  imgCtx.fillText(1 + j, rectWidth/2 + rectWidth * j, rectHeight/2 + rectHeight * i);
+                  if(rectAreSquares) {
+                      imgCtx.fillRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
+                      imgCtx.fillStyle = (i+j) % 2 == 0 ? "blue" : "red";
+                  imgCtx.fillText(1 + j, rectWidth/2 + rectWidth * j, rectWidth/2 + rectWidth * i);
+                  }
+                  else {
+                      imgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
+                      imgCtx.fillStyle = (i+j) % 2 == 0 ? "blue" : "red";
+                imgCtx.fillText(1 + j, rectWidth/2 + rectWidth * j, rectHeight/2 + rectHeight * i);
+                  }
               }
             }
+                
+                //Lines Drawing
+                
+                for(var i = 0; i<nLines; i++){
+                    drawLine(imgWidth/nLines*i,0,imgWidth/nLines * (i+1),imgHeight);
+                }
+            
              
             //Draw the working img in the page canvas
             canvasCtx.drawImage(img, 0, 0, img.width,    img.height,     // source rectangle
                        0, 0, canvas.width, canvas.height); // destination rectangle
              //myFunction();
+        }
+        
+        function drawLine(x1,y1,x2,y2){
+            imgCtx.beginPath();
+            imgCtx.moveTo(x1,y1);
+            imgCtx.lineTo(x2,y2);
+            imgCtx.lineWidth = 30;
+            imgCtx.strokeStyle = "red";
+            imgCtx.stroke();
         }
     </script>
 
