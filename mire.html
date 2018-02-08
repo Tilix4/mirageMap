@@ -7,59 +7,195 @@
         <title>Mirage</title>
 
         <style>
+            body {
+                background-color: #424242;
+                font-family: "Arial";
+            }
 
+            canvas {
+                display: inline-block;
+                border: 1px solid #d3d3d3;
+                position: fixed;
+                right: 10px;
+                width: 48%;
+            }
+
+            div {
+                margin: 3px;
+                position: relative;
+                margin-bottom: 10px;
+                /*outline: 2px dotted black;*/
+            }
+
+            input {
+                width: 10%;
+                background-color: #303030;
+                color: lightsteelblue;
+                border: solid 1px;
+                border-radius: 15px;
+            }
+
+            input[type="color"] {
+                background-color: transparent;
+                border: none;
+                vertical-align: middle;
+                box-shadow: none;
+
+            }
+
+            input[type="checkbox"] {
+                width: auto;
+            }
+
+            input[type="text"] {
+                padding: 3px;
+                text-align: center;
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+
+
+            a {
+                cursor: pointer;
+            }
+
+            p {
+                display: inline;
+                text-decoration: none;
+                color: gainsboro;
+                margin-top: 10px;
+                margin-right: 0px;
+                margin-left: 20px;
+            }
+
+            span {
+                color: gainsboro;
+            }
+
+            h2 {
+                color: #8d98aa;
+                margin-top: 0px;
+                margin-bottom: 15px;
+            }
+
+
+            .colorSelector {
+                height: 34px;
+                width: 50px;
+                display: inline;
+                border: none;
+            }
+
+            .Parametter {
+                border-bottom: solid 2px #606060;
+                padding-bottom: 2px;
+            }
+
+            #Settings {
+                display: inline-block;
+                background-color: transparent;
+                width: 50%;
+            }
+
+            #ExportSettings {}
+
+            #downloadButton {
+                background-color: #4CAF50;
+                /* Green */
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: block;
+                font-size: 16px;
+
+            }
 
         </style>
     </head>
 
     <div id="Settings">
-        <div id="ImageSize">
-            Image size:
-            <input type="text" id="imageWidthField" value="1920"> x
-            <input type="text" id="imageHeightField" value="1080">
+        <div class="Parametter" id="ImageSize">
+            <div>
+                <h2>Image</h2>
+                <p>Size</p>
+                <input type="text" id="imageWidthField" value="1920"> <span>x</span>
+                <input type="text" id="imageHeightField" value="1080">
+            </div>
         </div>
-        <div id="GridSettings">
-            Grid :
-            <input type="text" id="nbSquaresW" value="10"> x
-            <input type="text" id="nbSquaresH" value="10">
+        <div class="Parametter" id="GridSettings">
+            <div>
+                <h2>Grid</h2>
+                <p>Size</p>
+                <input type="text" id="nbSquaresW" value="10"> <span>x</span>
+                <input type="text" id="nbSquaresH" value="10">
 
 
-            <input type="checkbox" id="squaresCheckbox" checked="true" tabindex="-1"> Squares<br/> Grid color :
-            <input type="color" id="gridColorSelector" value="#000000" tabindex="-1">
-            Grid lines weight :
-            <input type="text" id="gridLinesWeightField" value="10">
-            Grid lines color :
-            <input type="color" id="gridLinesColorSelector" value="#000000" tabindex="-1">
-            Text color :
-            <input type="color" id="textColorSelector" value="#ffffff" tabindex="-1">
+                <input type="checkbox" id="squaresCheckbox" checked="true" tabindex="-1">
+                <span>Squares</span>
+            </div>
+            <div>
+
+                <p>Checker</p>
+                <input class="colorSelector" type="color" id="gridColorSelector" value="#000000" tabindex="-1">
+                <p>Lines weight</p>
+                <input type="text" id="gridLinesWeightField" value="10">
+                <p>Lines</p>
+                <input class="colorSelector" type="color" id="gridLinesColorSelector" value="#000000" tabindex="-1"></div>
+            <div>
+                <p>Text</p>
+                <input class="colorSelector" type="color" id="textColorSelector" value="#ffffff" tabindex="-1">
+            </div>
         </div>
-        <div id="LinesSettings">
-            Lines :
-            <input type="text" id="linesField" value="2"> Weight :
-            <input type="text" id="linesWeightField" value="10">
-            <input type="checkbox" id="crossesCheckbox" checked="true" tabindex="-1"> Crosses<br/> Lines color :
-            <input type="color" id="linesColorSelector" value="#ffffff" tabindex="-1">
+        <div class="Parametter" id="LinesSettings">
+            <div>
+                <h2>Lines</h2>
+                <p>How many</p>
+                <input type="text" id="linesField" value="2">
+                <p>Weight</p>
+                <input type="text" id="linesWeightField" value="10">
+                <input type="checkbox" id="crossesCheckbox" checked="true" tabindex="-1">
+                <span>Crosses</span>
+            </div>
+            <div>
+                <p>Lines</p>
+                <input class="colorSelector" type="color" id="linesColorSelector" value="#ffffff" tabindex="-1">
+            </div>
         </div>
-        <div id="CirclesSettings">
-            Circles :
-            <input type="text" id="circlesField" value="2"> Weight :
-            <input type="text" id="circlesWeightField" value="10">
-            <input type="checkbox" id="fittedCirclesCheckbox" checked="true" tabindex="-1"> Fitted circles<br/> Circles color :
-            <input type="color" id="circlesColorSelector" value="#ffffff" tabindex="-1">
+        <div class="Parametter" id="CirclesSettings">
+            <div>
+                <h2>Circles</h2>
+                <p>How many</p>
+                <input type="text" id="circlesField" value="2">
+                <p>Weight</p>
+                <input type="text" id="circlesWeightField" value="10">
+                <input type="checkbox" id="fittedCirclesCheckbox" checked="true" tabindex="-1">
+                <span>Fitted circles</span>
+            </div>
+            <div>
+                <p>Circles</p>
+                <input class="colorSelector" type="color" id="circlesColorSelector" value="#ffffff" tabindex="-1">
+            </div>
         </div>
-        <div id="GradientSettings">
-            Gradient Start color :
-            <input type="color" id="grdStartColorSelector" value="#ff0000" tabindex="-1"> End color :
-            <input type="color" id="grdEndColorSelector" value="#00ff00" tabindex="-1">
+        <div class="Parametter" id="GradientSettings">
+            <h2>Gradient</h2>
+            <div>
+                <p>Start</p>
+                <input class="colorSelector" type="color" id="grdStartColorSelector" value="#ff0000" tabindex="-1">
+                <p>End</p>
+                <input class="colorSelector" type="color" id="grdEndColorSelector" value="#00ff00" tabindex="-1">
+            </div>
         </div>
         <div id="ExportSettings">
             <a id="downloadButton">Download Image</a>
         </div>
     </div>
 
-    <canvas id="myCanvas" width="720" height="405" style="border:1px solid #d3d3d3;">
+    <canvas id="myCanvas" width="720" height="405">
         Your browser does not support the canvas element.
     </canvas>
+
 
 
     <script>
@@ -77,7 +213,7 @@
         var nbRectWidth = rectWidthField.value;
         rectWidthField.addEventListener("input", generateMire);
         rectWidthField.addEventListener("keypress", gridUpdate);
-        rectWidthField.addEventListener("input", gridUpdate);//Forcing height update
+        rectWidthField.addEventListener("input", gridUpdate); //Forcing height update
         rectWidthField.addEventListener("blur", function currFunction() {
             if (rectWidthField.value <= 0) setSquaresFields(0)
         }); //Set the field to 0 if empty or not valid
@@ -97,14 +233,14 @@
         var gridColorSelector = document.getElementById("gridColorSelector");
         var gridColor = gridColorSelector.value;
         gridColorSelector.addEventListener("input", setGridColor);
-        
+
         var gridLinesWeightField = document.getElementById("gridLinesWeightField");
         var gridLinesWeight = gridLinesWeightField.value;
         gridLinesWeightField.addEventListener("input", setGridLinesWeight);
         gridLinesWeightField.addEventListener("blur", function currFunction() {
             if (gridLinesWeightField.value <= 0) gridLinesWeightField.value = 0;
         }); //Set the field to 0 if empty or not valid
-        
+
         var gridLinesColorSelector = document.getElementById("gridLinesColorSelector");
         var gridLinesColor = gridLinesColorSelector.value;
         gridLinesColorSelector.addEventListener("input", setGridLinesColor);
@@ -252,8 +388,8 @@
             linesColor = linesColorSelector.value;
             generateMire();
         }
-        
-         function setGridLinesWeight() {
+
+        function setGridLinesWeight() {
             gridLinesWeight = gridLinesWeightField.value;
             generateMire();
         }
@@ -262,7 +398,7 @@
             gridColor = gridColorSelector.value;
             generateMire();
         }
-        
+
         function setGridLinesColor() {
             gridLinesColor = gridLinesColorSelector.value;
             generateMire();
@@ -288,10 +424,10 @@
             if (nbRectWidth > 0 && nbRectHeight > 0) {
                 squaresEnabled = true;
             }
-            if(rectAreSquares)
+            if (rectAreSquares)
                 rectHeightField.value = rectWidthField.value;
             generateMire();
-            
+
         }
 
         function setRectAsSquares() {
@@ -349,7 +485,7 @@
                     imgCtx.globalAlpha = 1;
                 }
             }
-            
+
             //Grid drawing (lines)
             for (var j = 0; j < nbRectWidth; ++j) {
                 for (var i = 0; i < nbRectHeight; ++i) {
