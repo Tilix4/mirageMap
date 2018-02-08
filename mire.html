@@ -4,7 +4,7 @@
 <body>
 
     <head>
-        <title>Mirage</title>
+        <title>Mirage Map</title>
 
         <style>
             body {
@@ -17,6 +17,7 @@
                 border: 1px solid #d3d3d3;
                 position: fixed;
                 right: 10px;
+                top: 20px;
                 width: 48%;
             }
 
@@ -52,6 +53,11 @@
                 text-align: center;
                 margin-left: 10px;
                 margin-right: 10px;
+            }
+
+            input[type="text"]:disabled {
+                background: #333333;
+                color: dimgrey;
             }
 
 
@@ -122,6 +128,8 @@
                 <p>Size</p>
                 <input type="text" id="imageWidthField" value="1920"> <span>x</span>
                 <input type="text" id="imageHeightField" value="1080">
+                <input style="display: none" type="checkbox" id="verticalCheckbox" checked="false" tabindex="-1">
+                <span style="display: none">Vertical organization</span>
             </div>
         </div>
         <div class="Parametter" id="GridSettings">
@@ -208,6 +216,10 @@
         var heightField = document.getElementById("imageHeightField");
         var imgHeight = widthField.value;
         heightField.addEventListener("input", generateMire);
+
+        var verticalCheckbox = document.getElementById("verticalCheckbox");
+        var verticalOrganization = verticalCheckbox.checked;
+        verticalCheckbox.addEventListener("input", setVerticalOrganization);
 
         var rectWidthField = document.getElementById("nbSquaresW");
         var nbRectWidth = rectWidthField.value;
@@ -424,6 +436,9 @@
             if (nbRectWidth > 0 && nbRectHeight > 0) {
                 squaresEnabled = true;
             }
+
+
+
             if (rectAreSquares)
                 rectHeightField.value = rectWidthField.value;
             generateMire();
@@ -440,6 +455,11 @@
         function setSquaresFields(n) {
             rectWidthField.value = 0;
             rectHeightField.value = 0;
+        }
+
+        function setVerticalOrganization() {
+            verticalOrganization = verticalCheckbox.checked;
+            generateMire();
         }
 
 
@@ -462,8 +482,21 @@
 
             imgRatio = imgWidth / imgHeight;
             canvas.height = canvas.width * 1 / imgRatio;
+
+            safeValues();
         }
 
+        function safeValues() {
+            //Secures the quantity of the squares
+            if (nbRectHeight >= imgHeight / 8) {
+                nbRectHeight = imgHeight / 8;
+                rectHeightField.value = nbRectHeight;
+            }
+            if (nbRectWidth >= imgWidth / 8) {
+                nbRectWidth = imgWidth / 8;
+                rectWidthField.value = nbRectWidth;
+            }
+        }
 
 
         function generateMire() {
@@ -471,6 +504,7 @@
             canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
             drawGradient();
+            
 
             //Grid drawing (checker)
             for (var j = 0; j < nbRectWidth; ++j) {
