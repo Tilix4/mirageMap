@@ -165,6 +165,8 @@
                 <input type="text" id="linesWeightField" value="10">
                 <input type="checkbox" id="crossesCheckbox" checked="true" tabindex="-1" onclick="setCrossedLines()">
                 <span>Crosses</span>
+                <input type="checkbox" id="middlesCheckbox" checked="true" tabindex="-1" onclick="setMiddlesCross()">
+                <span>Middles cross</span>
             </div>
             <div>
                 <p>Lines</p>
@@ -282,6 +284,10 @@
         var crossesCheckbox = document.getElementById("crossesCheckbox");
         var crossedLines = crossesCheckbox.checked;
         crossesCheckbox.addEventListener("input", setCrossedLines);
+        
+        var middlesCheckbox = document.getElementById("middlesCheckbox");
+        var middlesCross = middlesCheckbox.checked;
+        middlesCheckbox.addEventListener("input", setMiddlesCross);
 
         var circlesField = document.getElementById("circlesField");
         var nCircles = circlesField.value;
@@ -383,6 +389,11 @@
 
         function setCrossedLines() {
             crossedLines = crossesCheckbox.checked;
+            generateMire();
+        }
+        
+        function setMiddlesCross() {
+            middlesCross = middlesCheckbox.checked;
             generateMire();
         }
 
@@ -556,6 +567,12 @@
                     drawLine(imgWidth / nLines * i, imgHeight, imgWidth / nLines * (i + 1), 0);
                 } else
                     drawLine(imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
+            }
+            
+            //Middles cross Lines
+            if(middlesCross){
+                drawLine(imgWidth/2, 0, imgWidth/2, imgHeight);
+                drawLine(0, imgHeight/2, imgWidth, imgHeight/2);
             }
 
             //Circle drawing
