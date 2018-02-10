@@ -24,7 +24,8 @@
             div {
                 margin: 3px;
                 position: relative;
-                margin-bottom: 10px;
+                margin-top: 5px;
+                margin-bottom: 5px;
                 /*outline: 2px dotted black;*/
             }
 
@@ -103,9 +104,26 @@
                 background-color: transparent;
                 width: 50%;
             }
-            
-            #mainTextField{
+
+            #mainTextField {
                 width: 20%;
+            }
+            
+            #GradientUI {
+                border: solid 2px;
+                border-color: cornflowerblue;
+                border-radius: 15px;
+            }
+
+            .GradientRow {
+                text-align: center;
+            }
+
+            .gradientColorSelector {
+                border: none;
+                width: 49%;
+                margin-left: auto;
+                margin-right: auto;
             }
 
             #ExportSettings {}
@@ -141,7 +159,7 @@
             <div>
                 <h2>Text</h2>
                 <p>Main text</p>
-                <input type="text" id="mainTextField" value="Title">
+                <input type="text" id="mainTextField" value="Main Title">
                 <p>Weight</p>
                 <input type="text" id="mainTextWeightField" value="300">
                 <p>Color</p>
@@ -154,8 +172,7 @@
                 <p>Size</p>
                 <input type="text" id="nbSquaresW" value="10"> <span>x</span>
                 <input type="text" id="nbSquaresH" value="10">
-
-
+                
                 <input type="checkbox" id="squaresCheckbox" checked="true" tabindex="-1" onclick="setRectAsSquares()">
                 <span>Squares</span>
             </div>
@@ -206,16 +223,21 @@
         </div>
         <div class="Parametter" id="GradientSettings">
             <h2>Gradient</h2>
-            <div>
-                <p>Start</p>
-                <input class="colorSelector" type="color" id="grdStartColorSelector" value="#ff0000" tabindex="-1">
-                <p>End</p>
-                <input class="colorSelector" type="color" id="grdEndColorSelector" value="#00ff00" tabindex="-1">
+            <div id="GradientUI">
+                <div class="GradientRow">
+                    <input class="gradientColorSelector" type="color" id="grdTopLeftColorSelector" value="#ff0000" tabindex="-1">
+                    <input class="gradientColorSelector" type="color" id="grdTopRightColorSelector" value="#00ff00" tabindex="-1">
+                </div>
+                <div class="GradientRow">
+                    <input class="gradientColorSelector" type="color" id="grdBottomLeftColorSelector" value="#00f0ff" tabindex="-1">
+                    <input class="gradientColorSelector" type="color" id="grdBottomRightColorSelector" value="#f000ff" tabindex="-1">
+
+                </div>
             </div>
         </div>
-        <div id="ExportSettings">
-            <a id="downloadButton">Download Image</a>
-        </div>
+    </div>
+    <div id="ExportSettings">
+        <a id="downloadButton">Download Image</a>
     </div>
 
     <canvas id="myCanvas" width="720" height="405">
@@ -246,7 +268,7 @@
         var mainTextWeightField = document.getElementById("mainTextWeightField");
         var maintTextWeight = mainTextWeightField.value;
         mainTextWeightField.addEventListener("input", setMainTextWeight);
-        
+
         var textColorSelector = document.getElementById("textColorSelector");
         var textColor = textColorSelector.value;
         textColorSelector.addEventListener("input", setTextColor);
@@ -340,13 +362,21 @@
         fittedCirclesCheckbox.addEventListener("input", setFittedCircles);
 
         //Gradient
-        var grdStartColorSelector = document.getElementById("grdStartColorSelector");
-        var grdStartColor = grdStartColorSelector.value;
-        grdStartColorSelector.addEventListener("input", setGradientStartColor);
+        var grdTopLeftColorSelector = document.getElementById("grdTopLeftColorSelector");
+        var grdTopLeftColor = grdTopLeftColorSelector.value;
+        grdTopLeftColorSelector.addEventListener("input", setGradientTopLeftColor);
 
-        var grdEndColorSelector = document.getElementById("grdEndColorSelector");
-        var grdEndColor = grdEndColorSelector.value;
-        grdEndColorSelector.addEventListener("input", setGradientEndColor);
+        var grdTopRightColorSelector = document.getElementById("grdTopRightColorSelector");
+        var grdTopRightColor = grdTopRightColorSelector.value;
+        grdTopRightColorSelector.addEventListener("input", setGradientTopRightColor);
+
+        var grdBottomRightColorSelector = document.getElementById("grdBottomRightColorSelector");
+        var grdBottomRightColor = grdBottomRightColorSelector.value;
+        grdBottomRightColorSelector.addEventListener("input", setGradientBottomRightColor);
+
+        var grdBottomLeftColorSelector = document.getElementById("grdBottomLeftColorSelector");
+        var grdBottomLeftColor = grdBottomLeftColorSelector.value;
+        grdBottomLeftColorSelector.addEventListener("input", setGradientBottomLeftColor);
 
         function myFunction(e) { //debug function
             rectAreSquares = squaresCheckbox.checked;
@@ -385,13 +415,23 @@
 
         //Functions
 
-        function setGradientStartColor() {
-            grdStartColor = grdStartColorSelector.value;
+        function setGradientTopLeftColor() {
+            grdTopLeftColor = grdTopLeftColorSelector.value;
             generateMire();
         }
 
-        function setGradientEndColor() {
-            grdEndColor = grdEndColorSelector.value;
+        function setGradientTopRightColor() {
+            grdTopRightColor = grdTopRightColorSelector.value;
+            generateMire();
+        }
+
+        function setGradientBottomRightColor() {
+            grdBottomRightColor = grdBottomRightColorSelector.value;
+            generateMire();
+        }
+
+        function setGradientBottomLeftColor() {
+            grdBottomLeftColor = grdBottomLeftColorSelector.value;
             generateMire();
         }
 
@@ -464,7 +504,7 @@
             mainTextWeight = mainTextWeightField.value;
             generateMire();
         }
-        
+
         function setTextColor() {
             textColor = textColorSelector.value;
             generateMire();
@@ -529,7 +569,7 @@
             rectWidth = imgWidth / nbRectWidth;
             rectHeight = imgHeight / nbRectHeight;
             fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight) + "px";
-            
+
             mainTextWeight = mainTextWeightField.value;
 
             imgCtx.font = fontSize + " Arial";
@@ -559,7 +599,12 @@
             updateSettings();
             canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
-            drawGradient();
+            quadGradient(canvas, {
+                topLeft: grdTopLeftColor,
+                topRight: grdTopRightColor,
+                bottomLeft: grdBottomLeftColor,
+                bottomRight: grdBottomRightColor
+            });
 
 
             //Grid drawing (checker)
@@ -632,8 +677,8 @@
 
             //Text displaying
             imgCtx.fillStyle = textColor;
-            imgCtx.font = String(mainTextWeight) +"px"+" Arial";
-            imgCtx.fillText(mainText, imgWidth / 2, imgHeight/2);
+            imgCtx.font = String(mainTextWeight) + "px" + " Arial";
+            imgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
 
 
             //Draw the working img in the page canvas
@@ -642,14 +687,42 @@
             //myFunction();
         }
 
-        function drawGradient() {
+        function quadGradient(canvas, corners) {
+            var ctx = canvas.getContext('2d');
+            var w = canvas.width;
+            var h = canvas.height;
+            var gradient, startColor, endColor, fac;
 
-            var grd = imgCtx.createLinearGradient(0, 0, imgWidth, 0);
-            grd.addColorStop(0, grdStartColor);
-            grd.addColorStop(1, grdEndColor);
+            for (var i = 0; i < h; i++) {
+                gradient = ctx.createLinearGradient(0, i, w, i);
+                fac = i / (h - 1);
 
-            imgCtx.fillStyle = grd;
-            imgCtx.fillRect(0, 0, imgWidth, imgHeight);
+                startColor = lerpColor(corners.topLeft, corners.bottomLeft, fac);
+                endColor = lerpColor(corners.topRight, corners.bottomRight, fac);
+
+                gradient.addColorStop(0, startColor);
+                gradient.addColorStop(1, endColor);
+
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, i, w, i);
+            }
+        }
+
+        function lerpColor(a, b, amount) {
+
+            var ah = parseInt(a.replace(/#/g, ''), 16),
+                ar = ah >> 16,
+                ag = ah >> 8 & 0xff,
+                ab = ah & 0xff,
+                bh = parseInt(b.replace(/#/g, ''), 16),
+                br = bh >> 16,
+                bg = bh >> 8 & 0xff,
+                bb = bh & 0xff,
+                rr = ar + amount * (br - ar),
+                rg = ag + amount * (bg - ag),
+                rb = ab + amount * (bb - ab);
+
+            return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
         }
 
         function drawCircle(x, y, r) {
