@@ -99,6 +99,10 @@
                 padding-bottom: 2px;
             }
 
+            .checkbox {
+                display: inline-block;
+            }
+
             #Settings {
                 display: inline-block;
                 background-color: transparent;
@@ -108,7 +112,7 @@
             #mainTextField {
                 width: 20%;
             }
-            
+
             #GradientUI {
                 border: solid 2px;
                 border-color: cornflowerblue;
@@ -166,15 +170,28 @@
                 <input class="colorSelector" type="color" id="textColorSelector" value="#ffff00" tabindex="-1">
             </div>
         </div>
+        <div class="Parametter" id="FrameSettings">
+            <div>
+                <h2>Overlay</h2>
+                <div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="frameOverlayCheckbox" checked="true" tabindex="-1" onclick="setFrameOverlay()">
+                        <span>Frame</span>
+                    </div>
+                    <input class="colorSelector" type="color" id="frameOverlayColorSelector" value="#fff000" tabindex="-1">
+                </div>
+            </div>
+        </div>
         <div class="Parametter" id="GridSettings">
             <div>
                 <h2>Grid</h2>
                 <p>Size</p>
                 <input type="text" id="nbSquaresW" value="10"> <span>x</span>
                 <input type="text" id="nbSquaresH" value="10">
-                
-                <input type="checkbox" id="squaresCheckbox" checked="true" tabindex="-1" onclick="setRectAsSquares()">
-                <span>Squares</span>
+                <div class="checkbox">
+                    <input type="checkbox" id="squaresCheckbox" checked="true" tabindex="-1" onclick="setRectAsSquares()">
+                    <span>Squares</span>
+                </div>
             </div>
             <div>
 
@@ -196,12 +213,16 @@
                 <input type="text" id="linesField" value="2">
                 <p>Weight</p>
                 <input type="text" id="linesWeightField" value="10">
-                <input type="checkbox" id="crossesCheckbox" checked="true" tabindex="-1" onclick="setCrossedLines()">
-                <span>Crosses</span>
+                <div class="checkbox">
+                    <input type="checkbox" id="crossesCheckbox" checked="true" tabindex="-1" onclick="setCrossedLines()">
+                    <span>Crosses</span>
+                </div>
             </div>
             <div>
-                <input type="checkbox" id="middleCrossCheckbox" checked="true" tabindex="-1" onclick="setMiddleCross()">
-                <span>Middle cross</span>
+                <div class="checkbox">
+                    <input type="checkbox" id="middleCrossCheckbox" checked="true" tabindex="-1" onclick="setMiddleCross()">
+                    <span>Middle cross</span>
+                </div>
                 <p>Lines</p>
                 <input class="colorSelector" type="color" id="linesColorSelector" value="#ffffff" tabindex="-1">
             </div>
@@ -213,8 +234,9 @@
                 <input type="text" id="circlesField" value="2">
                 <p>Weight</p>
                 <input type="text" id="circlesWeightField" value="10">
-                <input type="checkbox" id="fittedCirclesCheckbox" checked="true" tabindex="-1" onclick="setFittedCircles()">
-                <span>Fitted circles</span>
+                <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked="true" tabindex="-1" onclick="setFittedCircles()">
+                    <span>Fitted circles</span>
+                </div>
             </div>
             <div>
                 <p>Circles</p>
@@ -231,14 +253,14 @@
                 <div class="GradientRow">
                     <input class="gradientColorSelector" type="color" id="grdBottomLeftColorSelector" value="#00f0ff" tabindex="-1">
                     <input class="gradientColorSelector" type="color" id="grdBottomRightColorSelector" value="#f000ff" tabindex="-1">
-
                 </div>
             </div>
         </div>
+        <div id="ExportSettings">
+            <a id="downloadButton">Download Image</a>
+        </div>
     </div>
-    <div id="ExportSettings">
-        <a id="downloadButton">Download Image</a>
-    </div>
+
 
     <canvas id="myCanvas" width="720" height="405">
         Your browser does not support the canvas element.
@@ -272,6 +294,14 @@
         var textColorSelector = document.getElementById("textColorSelector");
         var textColor = textColorSelector.value;
         textColorSelector.addEventListener("input", setTextColor);
+
+        var frameOverlayCheckbox = document.getElementById("frameOverlayCheckbox");
+        var frameOverlay = frameOverlayCheckbox.checked;
+        frameOverlayCheckbox.addEventListener("input", setFrameOverlay);
+
+        var frameOverlayColorSelector = document.getElementById("frameOverlayColorSelector");
+        var frameOverlayColor = frameOverlayColorSelector.value;
+        frameOverlayColorSelector.addEventListener("input", setFrameOverlayColor);
 
         var rectWidthField = document.getElementById("nbSquaresW");
         var nbRectWidth = rectWidthField.value;
@@ -510,6 +540,16 @@
             generateMire();
         }
 
+        function setFrameOverlay() {
+            frameOverlay = frameOverlayCheckbox.checked;
+            generateMire();
+        }
+
+        function setFrameOverlayColor() {
+            frameOverlayColor = frameOverlayColorSelector.value;
+            generateMire();
+        }
+
         function setNumbersColor() {
             numbersColor = numbersColorSelector.value;
             generateMire();
@@ -672,7 +712,6 @@
                     drawCircle(imgWidth / nCircles / 2 + imgWidth / nCircles * i, imgHeight / 2, imgWidth / nCircles / 2);
                 } else
                     drawCircle(imgWidth / (nCircles * 2) + imgWidth / nCircles * i, imgHeight / 2, imgHeight / 2);
-
             }
 
             //Text displaying
@@ -680,6 +719,12 @@
             imgCtx.font = String(mainTextWeight) + "px" + " Arial";
             imgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
 
+            //Overlay
+            if (frameOverlay) {
+                imgCtx.lineWidth = imgRatio * 50;
+                imgCtx.strokeStyle = frameOverlayColor;
+                imgCtx.strokeRect(0, 0, imgWidth, imgHeight);
+            }
 
             //Draw the working img in the page canvas
             canvasCtx.drawImage(img, 0, 0, img.width, img.height, // source rectangle
