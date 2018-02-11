@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<body>
+<body onload="initialisation()">
 
     <head>
         <title>Mirage Map</title>
@@ -83,10 +83,13 @@
             h2 {
                 display: inline;
                 color: #8d98aa;
-                margin-top: 0px;
-                margin-bottom: 15px;
             }
 
+            
+            h3 {
+                display: block;
+                color: #8d98aa;
+            }
 
             .colorSelector {
                 height: 34px;
@@ -206,7 +209,7 @@
         <div class="Parametter" id="OverlaySection">
             <div>
                 <h2>Overlay</h2>
-                <input class="ParametterCheckbox" type="checkbox" id="OverlayCheckbox" checked tabindex="-1" onclick="setOverlay()">
+                <input class="ParametterCheckbox" type="checkbox" id="OverlayCheckbox" tabindex="-1" onclick="setOverlay()">
             </div>
             <div id="OverlaySettings">
                 <div class="checkbox">
@@ -273,17 +276,29 @@
                 <input class="ParametterCheckbox" type="checkbox" id="CirclesCheckbox" checked tabindex="-1" onclick="setCircles()">
             </div>
             <div id="CirclesSettings">
-                <p>How many</p>
-                <input type="text" id="circlesField" value="2">
-                <p>Weight</p>
-                <input type="text" id="circlesWeightField" value="10">
-                <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
-                    <span>Fitted circles</span>
+                <div>
+                    <h3>Following circles</h3>
+                    <p>How many</p>
+                    <input type="text" id="followingCirclesField" value="2">
+                    <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
+                        <span>Fitted circles</span>
+                    </div>
                 </div>
                 <div>
-                    <p>Circles</p>
-                    <input class="colorSelector" type="color" id="circlesColorSelector" value="#ffffff" tabindex="-1">
+                    <h3>Concentric circles</h3>
+                    <p>How many</p>
+                    <input type="text" id="concentricCirclesField" value="2">
+                    <p>Size first</p>
+                    <input type="text" id="sizeConcentricCirclesField" value="500">
+                    <p>Multiplier</p>
+                    <input type="text" id="multConcentricCirclesField" value="200">
                 </div>
+            </div>
+            <div>
+                <p>Weight</p>
+                <input type="text" id="circlesWeightField" value="10">
+                <p>Color</p>
+                <input class="colorSelector" type="color" id="circlesColorSelector" value="#ffffff" tabindex="-1">
             </div>
         </div>
         <div class="Parametter" id="GradientSection">
@@ -313,8 +328,6 @@
     <canvas id="myCanvas" width="720" height="405">
         Your browser does not support the canvas element.
     </canvas>
-
-
 
     <script>
         //Setup
@@ -401,11 +414,32 @@
         var linesColor = linesColorSelector.value;
         linesColorSelector.addEventListener("input", generateMire);
 
-        var circlesField = document.getElementById("circlesField");
-        var nCircles = circlesField.value;
-        circlesField.addEventListener("input", generateMire);
-        circlesField.addEventListener("blur", function currFunction() {
-            if (circlesField.value <= 0) circlesField.value = 0;
+        var followingCirclesField = document.getElementById("followingCirclesField");
+        var nFollowingCircles = followingCirclesField.value;
+        followingCirclesField.addEventListener("input", generateMire);
+        followingCirclesField.addEventListener("blur", function currFunction() {
+            if (followingCirclesField.value <= 0) followingCirclesField.value = 0;
+        }); //Set the field to 0 if empty or not valid
+        
+        var concentricCirclesField = document.getElementById("concentricCirclesField");
+        var nConcentricCircles = concentricCirclesField.value;
+        concentricCirclesField.addEventListener("input", generateMire);
+        concentricCirclesField.addEventListener("blur", function currFunction() {
+            if (concentricCirclesField.value <= 0) concentricCirclesField.value = 0;
+        }); //Set the field to 0 if empty or not valid
+        
+        var sizeConcentricCirclesField = document.getElementById("sizeConcentricCirclesField");
+        var sizeConcentricCircles = sizeConcentricCirclesField.value;
+        sizeConcentricCirclesField.addEventListener("input", generateMire);
+        sizeConcentricCirclesField.addEventListener("blur", function currFunction() {
+            if (sizeConcentricCirclesField.value <= 0) sizeConcentricCirclesField.value = 0;
+        }); //Set the field to 0 if empty or not valid
+        
+        var multConcentricCirclesField = document.getElementById("multConcentricCirclesField");
+        var multConcentricCircles = multConcentricCirclesField.value;
+        multConcentricCirclesField.addEventListener("input", generateMire);
+        multConcentricCirclesField.addEventListener("blur", function currFunction() {
+            if (multConcentricCirclesField.value <= 0) multConcentricCirclesField.value = 0;
         }); //Set the field to 0 if empty or not valid
 
         var circlesWeightField = document.getElementById("circlesWeightField");
@@ -454,22 +488,18 @@
         var rectWidth;
         var rectHeight;
         var fontSize;
-        var isText = true;
-        var isOverlay = true;
-        var isGrid = true;
-        var isLines = true;
-        var isCircles = true;
-        var isGradient = true;
+        var isText = Boolean();
+        var isOverlay = Boolean();
+        var isGrid = Boolean();
+        var isLines = Boolean();
+        var isCircles = Boolean();
+        var isGradient = Boolean();
         var rectAreSquares = true;
 
         //Internal management
         var squaresEnabled = true;
         var bckSpaceCount = 0;
         var imgRatio;
-
-        //Algorithm
-        setRectAsSquares();
-        generateMire();
 
         //Setup the download button
         var link = document.getElementById("downloadButton");
@@ -480,6 +510,17 @@
 
 
         //Functions
+        
+        function initialisation(){
+            setText();
+            setOverlay();
+            setGrid();
+            setLines();
+            setCircles();
+            setGradient();
+            setRectAsSquares();
+            generateMire();
+        }
 
         function setText() {
             isText = document.getElementById("TextCheckbox").checked;
@@ -602,25 +643,23 @@
             imgRatio = imgWidth / imgHeight;
             canvas.height = canvas.width * 1 / imgRatio;
 
-            safeValues();
-
             //Fields
             //Text
             mainText = mainTextField.value;
             mainTextWeight = mainTextWeightField.value;
             textColor = textColorSelector.value;
-            
+
             //Overlay
             frameOverlay = frameOverlayCheckbox.checked;
             frameOverlayColor = frameOverlayColorSelector.value;
-            
-            
+
+
             //Grid
             gridColor = gridColorSelector.value;
             gridLinesWeight = gridLinesWeightField.value;
             gridLinesColor = gridLinesColorSelector.value;
             numbersColor = numbersColorSelector.value;
-            
+
             //Lines
             nLines = linesField.value;
             linesWeight = linesWeightField.value;
@@ -629,16 +668,21 @@
             linesColor = linesColorSelector.value;
 
             //Circles
-            nCircles = circlesField.value;
+            nFollowingCircles = followingCirclesField.value;
+            nConcentricCircles = concentricCirclesField.value;
+            sizeConcentricCircles = sizeConcentricCirclesField.value;
+            multConcentricCircles = multConcentricCirclesField.value;
             circlesWeight = circlesWeightField.value;
             fittedCircles = fittedCirclesCheckbox.checked;
             circlesColor = circlesColorSelector.value;
-            
+
             //Gradient
             grdTopLeftColor = grdTopLeftColorSelector.value;
             grdTopRightColor = grdTopRightColorSelector.value;
             grdBottomRightColor = grdBottomRightColorSelector.value;
             grdBottomLeftColor = grdBottomLeftColorSelector.value;
+            
+            safeValues();
         }
 
         function safeValues() {
@@ -730,13 +774,17 @@
                 }
             }
 
-            //Circle drawing
+            //Circles drawing
+            //TODO : Checkboxes + booleans for the types of circles
             if (isCircles) {
-                for (var i = 0; i < nCircles; i++) {
+                for (var i = 0; i < nFollowingCircles; i++) {
                     if (fittedCircles) {
-                        drawCircle(imgWidth / nCircles / 2 + imgWidth / nCircles * i, imgHeight / 2, imgWidth / nCircles / 2);
+                        drawCircle(imgWidth / nFollowingCircles / 2 + imgWidth / nFollowingCircles * i, imgHeight / 2, imgWidth / nFollowingCircles / 2);
                     } else
-                        drawCircle(imgWidth / (nCircles * 2) + imgWidth / nCircles * i, imgHeight / 2, imgHeight / 2);
+                        drawCircle(imgWidth / (nFollowingCircles * 2) + imgWidth / nFollowingCircles * i, imgHeight / 2, imgHeight / 2);
+                }
+                for (var i = 0; i < nConcentricCircles; i++) {
+                        drawCircle(imgWidth / 2, imgHeight / 2, sizeConcentricCircles/2 + multConcentricCircles * i);
                 }
             }
 
