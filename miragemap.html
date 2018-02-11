@@ -24,8 +24,8 @@
             div {
                 margin: 3px;
                 position: relative;
-                margin-top: 5px;
-                margin-bottom: 5px;
+                margin-top: 10px;
+                margin-bottom: 10px;
                 /*outline: 2px dotted black;*/
             }
 
@@ -81,6 +81,7 @@
             }
 
             h2 {
+                display: inline;
                 color: #8d98aa;
                 margin-top: 0px;
                 margin-bottom: 15px;
@@ -125,7 +126,7 @@
 
             .gradientColorSelector {
                 border: none;
-                width: 49%;
+                width: 45%;
                 margin-left: auto;
                 margin-right: auto;
             }
@@ -142,26 +143,58 @@
                 text-decoration: none;
                 display: block;
                 font-size: 16px;
+            }
 
+            input.ParametterCheckbox {
+                appearance: none;
+                width: 5%;
+                height: 12px;
+                border: 1px solid #aaa;
+                border-radius: 2px;
+                background: #606060;
+                position: relative;
+                display: inline-block;
+                overflow: hidden;
+                vertical-align: middle;
+                transition: background 0.3s;
+                box-sizing: border-box;
+            }
+
+            input.ParametterCheckbox:after {
+                content: '';
+                position: absolute;
+                border: 1px solid #aaa;
+                border-radius: 2px;
+                transition: left 0.1s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+            }
+
+            input.ParametterCheckbox:checked {
+                background: #64beef;
+                border-color: #8daee5;
             }
 
         </style>
+        <script src="prefixfree.min.js"></script>
     </head>
-
     <div id="Settings">
         <div class="Parametter" id="ImageSize">
             <div>
-                <h2>Image</h2>
+                <div>
+                    <h2>Image</h2>
+                </div>
                 <p>Size</p>
                 <input type="text" id="imageWidthField" value="1920"> <span>x</span>
                 <input type="text" id="imageHeightField" value="1080">
-                <input style="display: none" type="checkbox" id="verticalCheckbox" checked="false" tabindex="-1">
+                <input style="display: none" type="checkbox" id="verticalCheckbox" tabindex="-1">
                 <span style="display: none">Vertical organization</span>
             </div>
         </div>
-        <div class="Parametter" id="TextSettings">
+        <div class="Parametter" id="TextSection">
             <div>
                 <h2>Text</h2>
+                <input class="ParametterCheckbox" type="checkbox" id="TextCheckbox" checked tabindex="-1" onclick="setText()">
+            </div>
+            <div id="TextSettings">
                 <p>Main text</p>
                 <input type="text" id="mainTextField" value="Main Title">
                 <p>Weight</p>
@@ -170,89 +203,104 @@
                 <input class="colorSelector" type="color" id="textColorSelector" value="#ffff00" tabindex="-1">
             </div>
         </div>
-        <div class="Parametter" id="FrameSettings">
+        <div class="Parametter" id="OverlaySection">
             <div>
                 <h2>Overlay</h2>
-                <div>
-                    <div class="checkbox">
-                        <input type="checkbox" id="frameOverlayCheckbox" checked="true" tabindex="-1" onclick="setFrameOverlay()">
-                        <span>Frame</span>
-                    </div>
-                    <input class="colorSelector" type="color" id="frameOverlayColorSelector" value="#fff000" tabindex="-1">
+                <input class="ParametterCheckbox" type="checkbox" id="OverlayCheckbox" checked tabindex="-1" onclick="setOverlay()">
+            </div>
+            <div id="OverlaySettings">
+                <div class="checkbox">
+                    <input type="checkbox" id="frameOverlayCheckbox" checked tabindex="-1" onclick="setFrameOverlay()">
+                    <span>Frame</span>
                 </div>
+                <input class="colorSelector" type="color" id="frameOverlayColorSelector" value="#fff000" tabindex="-1">
             </div>
         </div>
-        <div class="Parametter" id="GridSettings">
+        <div class="Parametter" id="GridSection">
             <div>
                 <h2>Grid</h2>
+                <input class="ParametterCheckbox" type="checkbox" id="GridCheckbox" checked tabindex="-1" onclick="setGrid()">
+            </div>
+            <div id="GridSettings">
                 <p>Size</p>
                 <input type="text" id="nbSquaresW" value="10"> <span>x</span>
                 <input type="text" id="nbSquaresH" value="10">
                 <div class="checkbox">
-                    <input type="checkbox" id="squaresCheckbox" checked="true" tabindex="-1" onclick="setRectAsSquares()">
+                    <input type="checkbox" id="squaresCheckbox" checked tabindex="-1" onclick="setRectAsSquares()">
                     <span>Squares</span>
                 </div>
-            </div>
-            <div>
-
-                <p>Checker</p>
-                <input class="colorSelector" type="color" id="gridColorSelector" value="#000000" tabindex="-1">
-                <p>Lines weight</p>
-                <input type="text" id="gridLinesWeightField" value="10">
-                <p>Lines</p>
-                <input class="colorSelector" type="color" id="gridLinesColorSelector" value="#000000" tabindex="-1"></div>
-            <div>
-                <p>Numbers</p>
-                <input class="colorSelector" type="color" id="numbersColorSelector" value="#ffffff" tabindex="-1">
+                <div>
+                    <p>Checker</p>
+                    <input class="colorSelector" type="color" id="gridColorSelector" value="#000000" tabindex="-1">
+                    <p>Lines weight</p>
+                    <input type="text" id="gridLinesWeightField" value="10">
+                    <p>Lines</p>
+                    <input class="colorSelector" type="color" id="gridLinesColorSelector" value="#000000" tabindex="-1">
+                </div>
+                <div>
+                    <p>Numbers</p>
+                    <input class="colorSelector" type="color" id="numbersColorSelector" value="#ffffff" tabindex="-1">
+                </div>
             </div>
         </div>
-        <div class="Parametter" id="LinesSettings">
+        <div class="Parametter" id="LinesSection">
             <div>
                 <h2>Lines</h2>
+                <input class="ParametterCheckbox" type="checkbox" id="LinesCheckbox" checked tabindex="-1" onclick="setLines()">
+            </div>
+            <div id="LinesSettings">
                 <p>How many</p>
                 <input type="text" id="linesField" value="2">
                 <p>Weight</p>
                 <input type="text" id="linesWeightField" value="10">
                 <div class="checkbox">
-                    <input type="checkbox" id="crossesCheckbox" checked="true" tabindex="-1" onclick="setCrossedLines()">
+                    <input type="checkbox" id="crossesCheckbox" checked tabindex="-1" onclick="setCrossedLines()">
                     <span>Crosses</span>
                 </div>
-            </div>
-            <div>
-                <div class="checkbox">
-                    <input type="checkbox" id="middleCrossCheckbox" checked="true" tabindex="-1" onclick="setMiddleCross()">
-                    <span>Middle cross</span>
+                <div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="middleCrossCheckbox" checked tabindex="-1" onclick="setMiddleCross()">
+                        <span>Middle cross</span>
+                    </div>
+                    <p>Lines</p>
+                    <input class="colorSelector" type="color" id="linesColorSelector" value="#ffffff" tabindex="-1">
                 </div>
-                <p>Lines</p>
-                <input class="colorSelector" type="color" id="linesColorSelector" value="#ffffff" tabindex="-1">
             </div>
         </div>
-        <div class="Parametter" id="CirclesSettings">
+        <div class="Parametter" id="CirclesSection">
             <div>
                 <h2>Circles</h2>
+                <input class="ParametterCheckbox" type="checkbox" id="CirclesCheckbox" checked tabindex="-1" onclick="setCircles()">
+            </div>
+            <div id="CirclesSettings">
                 <p>How many</p>
                 <input type="text" id="circlesField" value="2">
                 <p>Weight</p>
                 <input type="text" id="circlesWeightField" value="10">
-                <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked="true" tabindex="-1" onclick="setFittedCircles()">
+                <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="setFittedCircles()">
                     <span>Fitted circles</span>
                 </div>
-            </div>
-            <div>
-                <p>Circles</p>
-                <input class="colorSelector" type="color" id="circlesColorSelector" value="#ffffff" tabindex="-1">
+                <div>
+                    <p>Circles</p>
+                    <input class="colorSelector" type="color" id="circlesColorSelector" value="#ffffff" tabindex="-1">
+                </div>
             </div>
         </div>
-        <div class="Parametter" id="GradientSettings">
-            <h2>Gradient</h2>
-            <div id="GradientUI">
-                <div class="GradientRow">
-                    <input class="gradientColorSelector" type="color" id="grdTopLeftColorSelector" value="#ff0000" tabindex="-1">
-                    <input class="gradientColorSelector" type="color" id="grdTopRightColorSelector" value="#00ff00" tabindex="-1">
-                </div>
-                <div class="GradientRow">
-                    <input class="gradientColorSelector" type="color" id="grdBottomLeftColorSelector" value="#00f0ff" tabindex="-1">
-                    <input class="gradientColorSelector" type="color" id="grdBottomRightColorSelector" value="#f000ff" tabindex="-1">
+        <div class="Parametter" id="GradientSection">
+            <div>
+                <h2>Gradient</h2>
+                <input class="ParametterCheckbox" type="checkbox" id="GradientCheckbox" checked tabindex="-1" onclick="setGradient()">
+            </div>
+            <div id="GradientSettings">
+                <div id="GradientUI">
+                    <div class="GradientRow">
+                        <input class="gradientColorSelector" type="color" id="grdTopLeftColorSelector" value="#ff0000" tabindex="-1">
+                        <input class="gradientColorSelector" type="color" id="grdTopRightColorSelector" value="#00ff00" tabindex="-1">
+                    </div>
+                    <div class="GradientRow">
+                        <input class="gradientColorSelector" type="color" id="grdBottomLeftColorSelector" value="#00f0ff" tabindex="-1">
+                        <input class="gradientColorSelector" type="color" id="grdBottomRightColorSelector" value="#f000ff" tabindex="-1">
+                    </div>
                 </div>
             </div>
         </div>
@@ -345,7 +393,7 @@
 
         var linesField = document.getElementById("linesField");
         var nLines = linesField.value;
-        linesField.addEventListener("input", setLines);
+        linesField.addEventListener("input", generateMire);
         linesField.addEventListener("blur", function currFunction() {
             if (linesField.value <= 0) linesField.value = 0;
         }); //Set the field to 0 if empty or not valid
@@ -371,7 +419,7 @@
 
         var circlesField = document.getElementById("circlesField");
         var nCircles = circlesField.value;
-        circlesField.addEventListener("input", setCircles);
+        circlesField.addEventListener("input", generateMire);
         circlesField.addEventListener("blur", function currFunction() {
             if (circlesField.value <= 0) circlesField.value = 0;
         }); //Set the field to 0 if empty or not valid
@@ -410,7 +458,7 @@
 
         function myFunction(e) { //debug function
             rectAreSquares = squaresCheckbox.checked;
-            alert(nLines);
+            alert(e);
         }
 
         //Canvas
@@ -418,12 +466,20 @@
         var canvasCtx = canvas.getContext("2d");
         var img = document.createElement("canvas");
         var imgCtx = img.getContext("2d");
+        var temp = document.createElement("canvas");
+        var ctx = img.getContext("2d");
 
 
         //Settings variables
         var rectWidth;
         var rectHeight;
         var fontSize;
+        var isText = true;
+        var isOverlay = true;
+        var isGrid = true;
+        var isLines = true;
+        var isCircles = true;
+        var isGradient = true;
 
 
         //Internal management
@@ -444,6 +500,67 @@
 
 
         //Functions
+
+        function setText() {
+            isText = document.getElementById("TextCheckbox").checked;
+            let id = "TextSettings";
+            if (isText)
+                document.getElementById(id).style.display = 'inline-block';
+            else
+                document.getElementById(id).style.display = 'none';
+            generateMire();
+        }
+
+        function setOverlay() {
+            isOverlay = document.getElementById("OverlayCheckbox").checked;
+            let id = "OverlaySettings";
+            if (isOverlay)
+                document.getElementById(id).style.display = 'inline-block';
+            else
+                document.getElementById(id).style.display = 'none';
+            generateMire();
+        }
+
+        function setGrid() {
+            isGrid = document.getElementById("GridCheckbox").checked;
+            let id = "GridSettings";
+            if (isGrid)
+                document.getElementById(id).style.display = 'inline-block';
+            else
+                document.getElementById(id).style.display = 'none';
+            generateMire();
+        }
+
+        function setLines() {
+            isLines = document.getElementById("LinesCheckbox").checked;
+            let id = "LinesSettings";
+            if (isLines)
+                document.getElementById(id).style.display = 'inline-block';
+            else
+                document.getElementById(id).style.display = 'none';
+
+            generateMire();
+        }
+
+        function setCircles() {
+            isCircles = document.getElementById("CirclesCheckbox").checked;
+            let id = "CirclesSettings";
+            if (isCircles)
+                document.getElementById(id).style.display = 'inline-block';
+            else
+                document.getElementById(id).style.display = 'none';
+            generateMire();
+        }
+
+        function setGradient() {
+            isGradient = document.getElementById("GradientCheckbox").checked;
+            let id = "GradientSettings";
+            if (isGradient)
+                document.getElementById(id).style.display = 'block';
+            else
+                document.getElementById(id).style.display = 'none';
+            generateMire();
+        }
 
         function setGradientTopLeftColor() {
             grdTopLeftColor = grdTopLeftColorSelector.value;
@@ -470,11 +587,6 @@
             generateMire();
         }
 
-        function setCircles() {
-            nCircles = circlesField.value;
-            generateMire();
-        }
-
         function setCirclesWeight() {
             circlesWeight = circlesWeightField.value;
             generateMire();
@@ -492,11 +604,6 @@
 
         function setMiddleCross() {
             middlesCross = middleCrossCheckbox.checked;
-            generateMire();
-        }
-
-        function setLines() {
-            nLines = linesField.value;
             generateMire();
         }
 
@@ -620,6 +727,13 @@
             canvas.height = canvas.width * 1 / imgRatio;
 
             safeValues();
+
+            //Fields
+            //Lines
+            nLines = linesField.value;
+
+            //Circles
+            nCircles = circlesField.value;
         }
 
         function safeValues() {
@@ -639,91 +753,101 @@
             updateSettings();
             canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
-            quadGradient(canvas, {
-                topLeft: grdTopLeftColor,
-                topRight: grdTopRightColor,
-                bottomLeft: grdBottomLeftColor,
-                bottomRight: grdBottomRightColor
-            });
-
-
-            //Grid drawing (checker)
-            for (var j = 0; j < nbRectWidth; ++j) {
-                for (var i = 0; i < nbRectHeight; ++i) {
-                    imgCtx.globalAlpha = 0.4;
-                    imgCtx.fillStyle = (i + j) % 2 == 0 ? gridColor : "transparent";
-                    if (rectAreSquares) {
-                        imgCtx.fillRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
-                    } else {
-                        imgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
-                    }
-                    imgCtx.globalAlpha = 1;
-                }
+            //Gradient
+            if (isGradient) {
+                quadGradient(canvas, {
+                    topLeft: grdTopLeftColor,
+                    topRight: grdTopRightColor,
+                    bottomLeft: grdBottomLeftColor,
+                    bottomRight: grdBottomRightColor
+                });
             }
 
-            //Grid drawing (lines)
-            for (var j = 0; j < nbRectWidth; ++j) {
-                for (var i = 0; i < nbRectHeight; ++i) {
-                    imgCtx.lineWidth = gridLinesWeight;
-                    imgCtx.strokeStyle = gridLinesColor;
-                    if (rectAreSquares) {
-                        imgCtx.strokeRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
-                    } else {
-                        imgCtx.strokeRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
+            //Grid
+            if (isGrid) {
+                //Grid drawing (checker)
+                for (var j = 0; j < nbRectWidth; ++j) {
+                    for (var i = 0; i < nbRectHeight; ++i) {
+                        imgCtx.globalAlpha = 0.4;
+                        imgCtx.fillStyle = (i + j) % 2 == 0 ? gridColor : "transparent";
+                        if (rectAreSquares) {
+                            imgCtx.fillRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
+                        } else {
+                            imgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
+                        }
+                        imgCtx.globalAlpha = 1;
                     }
                 }
-            }
 
-            //Text drawing
-            for (var j = 0; j < nbRectWidth; ++j) {
-                for (var i = 0; i < nbRectHeight; ++i) {
-                    if (rectAreSquares) {
-                        //imgCtx.fillStyle = (i + j) % 2 == 0 ? "blue" : "red";
-                        imgCtx.fillStyle = numbersColor;
-                        imgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectWidth / 2 + rectWidth * i);
-                    } else {
-                        //imgCtx.fillStyle = (i + j) % 2 == 0 ? "blue" : "red";
-                        imgCtx.fillStyle = numbersColor;
-                        imgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectHeight / 2 + rectHeight * i);
+                //Grid drawing (lines)
+                for (var j = 0; j < nbRectWidth; ++j) {
+                    for (var i = 0; i < nbRectHeight; ++i) {
+                        imgCtx.lineWidth = gridLinesWeight;
+                        imgCtx.strokeStyle = gridLinesColor;
+                        if (rectAreSquares) {
+                            imgCtx.strokeRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
+                        } else {
+                            imgCtx.strokeRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
+                        }
+                    }
+                }
+
+                //Numbers drawing
+                for (var j = 0; j < nbRectWidth; ++j) {
+                    for (var i = 0; i < nbRectHeight; ++i) {
+                        if (rectAreSquares) {
+                            //imgCtx.fillStyle = (i + j) % 2 == 0 ? "blue" : "red";
+                            imgCtx.fillStyle = numbersColor;
+                            imgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectWidth / 2 + rectWidth * i);
+                        } else {
+                            //imgCtx.fillStyle = (i + j) % 2 == 0 ? "blue" : "red";
+                            imgCtx.fillStyle = numbersColor;
+                            imgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectHeight / 2 + rectHeight * i);
+                        }
                     }
                 }
             }
 
             //Lines Drawing
+            if (isLines) {
+                for (var i = 0; i < nLines; i++) {
+                    if (crossedLines) {
+                        drawLine(imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
+                        drawLine(imgWidth / nLines * i, imgHeight, imgWidth / nLines * (i + 1), 0);
+                    } else
+                        drawLine(imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
+                }
 
-            for (var i = 0; i < nLines; i++) {
-                if (crossedLines) {
-                    drawLine(imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
-                    drawLine(imgWidth / nLines * i, imgHeight, imgWidth / nLines * (i + 1), 0);
-                } else
-                    drawLine(imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
-            }
-
-            //Middles cross Lines
-            if (middlesCross) {
-                drawLine(imgWidth / 2, 0, imgWidth / 2, imgHeight);
-                drawLine(0, imgHeight / 2, imgWidth, imgHeight / 2);
+                //Middles cross Lines
+                if (middlesCross) {
+                    drawLine(imgWidth / 2, 0, imgWidth / 2, imgHeight);
+                    drawLine(0, imgHeight / 2, imgWidth, imgHeight / 2);
+                }
             }
 
             //Circle drawing
-
-            for (var i = 0; i < nCircles; i++) {
-                if (fittedCircles) {
-                    drawCircle(imgWidth / nCircles / 2 + imgWidth / nCircles * i, imgHeight / 2, imgWidth / nCircles / 2);
-                } else
-                    drawCircle(imgWidth / (nCircles * 2) + imgWidth / nCircles * i, imgHeight / 2, imgHeight / 2);
+            if (isCircles) {
+                for (var i = 0; i < nCircles; i++) {
+                    if (fittedCircles) {
+                        drawCircle(imgWidth / nCircles / 2 + imgWidth / nCircles * i, imgHeight / 2, imgWidth / nCircles / 2);
+                    } else
+                        drawCircle(imgWidth / (nCircles * 2) + imgWidth / nCircles * i, imgHeight / 2, imgHeight / 2);
+                }
             }
 
             //Text displaying
-            imgCtx.fillStyle = textColor;
-            imgCtx.font = String(mainTextWeight) + "px" + " Arial";
-            imgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
-
+            if (isText) {
+                imgCtx.fillStyle = textColor;
+                imgCtx.font = String(mainTextWeight) + "px" + " Arial";
+                imgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
+            }
             //Overlay
-            if (frameOverlay) {
-                imgCtx.lineWidth = imgRatio * 50;
-                imgCtx.strokeStyle = frameOverlayColor;
-                imgCtx.strokeRect(0, 0, imgWidth, imgHeight);
+            if (isOverlay) {
+                if (frameOverlay) {
+                    imgCtx.lineWidth = imgRatio * 50;
+                    imgCtx.strokeStyle = frameOverlayColor;
+                    imgCtx.strokeRect(0, 0, imgWidth, imgHeight);
+                }
             }
 
             //Draw the working img in the page canvas
