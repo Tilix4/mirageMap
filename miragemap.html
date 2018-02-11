@@ -24,9 +24,12 @@
             div {
                 margin: 3px;
                 position: relative;
-                margin-top: 10px;
-                margin-bottom: 10px;
-                /*outline: 2px dotted black;*/
+                margin-top: 5px;
+                margin-bottom: 5px;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                padding-left: 10px;
+                width: auto;
             }
 
             input {
@@ -103,8 +106,15 @@
                 padding-bottom: 2px;
             }
 
+            .subParametter {
+                border-bottom: solid 2px #505050;
+                padding-bottom: 10px;
+            }
+
             .checkbox {
                 display: inline-block;
+                padding: 0;
+                margin: 0;
             }
 
             #Settings {
@@ -234,12 +244,14 @@
                 <input class="ParametterCheckbox" type="checkbox" id="GridCheckbox" checked tabindex="-1" onclick="setGrid()">
             </div>
             <div id="GridSettings">
-                <p>Size</p>
-                <input type="text" id="nbSquaresW" value="10"> <span>x</span>
-                <input type="text" id="nbSquaresH" value="10">
-                <div class="checkbox">
-                    <input type="checkbox" id="squaresCheckbox" checked tabindex="-1" onclick="setRectAsSquares()">
-                    <span>Squares</span>
+                <div>
+                    <p>Size</p>
+                    <input type="text" id="nbSquaresW" value="10"> <span>x</span>
+                    <input type="text" id="nbSquaresH" value="10">
+                    <div class="checkbox">
+                        <input type="checkbox" id="squaresCheckbox" checked tabindex="-1" onclick="setRectAsSquares()">
+                        <span>Squares</span>
+                    </div>
                 </div>
                 <div>
                     <p>Checker</p>
@@ -288,9 +300,9 @@
                 <div>
                     <div class="checkbox">
                         <h3>Following circles</h3>
-                        <input type="checkbox" id="followingCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
+                        <input type="checkbox" id="followingCirclesCheckbox" tabindex="-1" onclick="setFollowingCircles()">
                     </div>
-                    <div>
+                    <div class="subParametter" id="FollowingCirclesSettings">
                         <p>How many</p>
                         <input type="text" id="followingCirclesField" value="2">
                         <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
@@ -301,9 +313,9 @@
                 <div>
                     <div class="checkbox">
                         <h3>Concentric circles</h3>
-                        <input type="checkbox" id="concentricCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
+                        <input type="checkbox" id="concentricCirclesCheckbox" checked tabindex="-1" onclick="setConcentricCircles()">
                     </div>
-                    <div>
+                    <div class="subParametter" id="ConcentricCirclesSettings">
                         <p>How many</p>
                         <input type="text" id="concentricCirclesField" value="2">
                         <p>Size first</p>
@@ -353,11 +365,11 @@
         //Settings fields
         var widthField = document.getElementById("imageWidthField");
         var imgWidth = widthField.value;
-        widthField.addEventListener("input", generateMire);
+        widthField.addEventListener("blur", generateMire);
 
         var heightField = document.getElementById("imageHeightField");
         var imgHeight = widthField.value;
-        heightField.addEventListener("input", generateMire);
+        heightField.addEventListener("blur", generateMire);
 
         var verticalCheckbox = document.getElementById("verticalCheckbox");
         var verticalOrganization = verticalCheckbox.checked;
@@ -378,7 +390,7 @@
         var frameOverlayColorSelector = document.getElementById("frameOverlayColorSelector");
         var frameOverlayColor = frameOverlayColorSelector.value;
         frameOverlayColorSelector.addEventListener("input", generateMire);
-        
+
         var arrowsOverlayColorSelector = document.getElementById("arrowsOverlayColorSelector");
         var arrowsOverlayColor = arrowsOverlayColorSelector.value;
         arrowsOverlayColorSelector.addEventListener("input", generateMire);
@@ -537,6 +549,8 @@
             setGrid();
             setLines();
             setCircles();
+            setFollowingCircles();
+            setConcentricCircles();
             setGradient();
             setRectAsSquares();
             generateMire();
@@ -588,6 +602,26 @@
             let id = "CirclesSettings";
             if (isCircles)
                 document.getElementById(id).style.display = 'inline-block';
+            else
+                document.getElementById(id).style.display = 'none';
+            generateMire();
+        }
+
+        function setFollowingCircles() {
+            isFollowingCircles = document.getElementById("followingCirclesCheckbox").checked;
+            let id = "FollowingCirclesSettings";
+            if (isFollowingCircles)
+                document.getElementById(id).style.display = 'block';
+            else
+                document.getElementById(id).style.display = 'none';
+            generateMire();
+        }
+
+        function setConcentricCircles() {
+            isConcentricCircles = document.getElementById("concentricCirclesCheckbox").checked;
+            let id = "ConcentricCirclesSettings";
+            if (isConcentricCircles)
+                document.getElementById(id).style.display = 'block';
             else
                 document.getElementById(id).style.display = 'none';
             generateMire();
@@ -819,9 +853,12 @@
             //Text displaying
             if (isText) {
                 imgCtx.fillStyle = textColor;
+                imgCtx.strokeStyle = "black";
                 imgCtx.font = String(mainTextWeight) + "px" + " Arial";
+                imgCtx.strokeText(mainText, imgWidth / 2, imgHeight / 2);
                 imgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
             }
+
             //Overlay
             if (isOverlay) {
                 if (frameOverlay) {
@@ -887,7 +924,8 @@
             return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
         }
 
-        function drawArrow(ctx, x, y, s = 1, r = 0) {
+        function drawArrow(canvas, x, y, s = 1, r = 0) {
+            var ctx = canvas.getContext('2d');
             var arrow = {
                 x0: 0,
                 y0: 0,
