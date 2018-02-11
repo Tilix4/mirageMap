@@ -210,7 +210,7 @@
             </div>
             <div id="OverlaySettings">
                 <div class="checkbox">
-                    <input type="checkbox" id="frameOverlayCheckbox" checked tabindex="-1" onclick="setFrameOverlay()">
+                    <input type="checkbox" id="frameOverlayCheckbox" checked tabindex="-1" onclick="generateMire()">
                     <span>Frame</span>
                 </div>
                 <input class="colorSelector" type="color" id="frameOverlayColorSelector" value="#fff000" tabindex="-1">
@@ -254,12 +254,12 @@
                 <p>Weight</p>
                 <input type="text" id="linesWeightField" value="10">
                 <div class="checkbox">
-                    <input type="checkbox" id="crossesCheckbox" checked tabindex="-1" onclick="setCrossedLines()">
+                    <input type="checkbox" id="crossesCheckbox" checked tabindex="-1" onclick="generateMire()">
                     <span>Crosses</span>
                 </div>
                 <div>
                     <div class="checkbox">
-                        <input type="checkbox" id="middleCrossCheckbox" checked tabindex="-1" onclick="setMiddleCross()">
+                        <input type="checkbox" id="middleCrossCheckbox" checked tabindex="-1" onclick="generateMire()">
                         <span>Middle cross</span>
                     </div>
                     <p>Lines</p>
@@ -277,7 +277,7 @@
                 <input type="text" id="circlesField" value="2">
                 <p>Weight</p>
                 <input type="text" id="circlesWeightField" value="10">
-                <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="setFittedCircles()">
+                <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
                     <span>Fitted circles</span>
                 </div>
                 <div>
@@ -329,27 +329,23 @@
 
         var verticalCheckbox = document.getElementById("verticalCheckbox");
         var verticalOrganization = verticalCheckbox.checked;
-        verticalCheckbox.addEventListener("input", setVerticalOrganization);
+        verticalCheckbox.addEventListener("input", generateMire);
 
         var mainTextField = document.getElementById("mainTextField");
         var mainText = mainTextField.value;
-        mainTextField.addEventListener("input", setMainText);
+        mainTextField.addEventListener("input", generateMire);
 
         var mainTextWeightField = document.getElementById("mainTextWeightField");
         var maintTextWeight = mainTextWeightField.value;
-        mainTextWeightField.addEventListener("input", setMainTextWeight);
+        mainTextWeightField.addEventListener("input", generateMire);
 
         var textColorSelector = document.getElementById("textColorSelector");
         var textColor = textColorSelector.value;
-        textColorSelector.addEventListener("input", setTextColor);
-
-        var frameOverlayCheckbox = document.getElementById("frameOverlayCheckbox");
-        var frameOverlay = frameOverlayCheckbox.checked;
-        frameOverlayCheckbox.addEventListener("input", setFrameOverlay);
+        textColorSelector.addEventListener("input", generateMire);
 
         var frameOverlayColorSelector = document.getElementById("frameOverlayColorSelector");
         var frameOverlayColor = frameOverlayColorSelector.value;
-        frameOverlayColorSelector.addEventListener("input", setFrameOverlayColor);
+        frameOverlayColorSelector.addEventListener("input", generateMire);
 
         var rectWidthField = document.getElementById("nbSquaresW");
         var nbRectWidth = rectWidthField.value;
@@ -368,28 +364,24 @@
             if (rectHeightField.value <= 0) setSquaresFields(0)
         }); //Set the field to 0 if empty or not valid
 
-        var squaresCheckbox = document.getElementById("squaresCheckbox");
-        var rectAreSquares = squaresCheckbox.checked;
-        squaresCheckbox.addEventListener("input", setRectAsSquares);
-
         var gridColorSelector = document.getElementById("gridColorSelector");
         var gridColor = gridColorSelector.value;
-        gridColorSelector.addEventListener("input", setGridColor);
+        gridColorSelector.addEventListener("input", generateMire);
 
         var gridLinesWeightField = document.getElementById("gridLinesWeightField");
         var gridLinesWeight = gridLinesWeightField.value;
-        gridLinesWeightField.addEventListener("input", setGridLinesWeight);
+        gridLinesWeightField.addEventListener("input", generateMire);
         gridLinesWeightField.addEventListener("blur", function currFunction() {
             if (gridLinesWeightField.value <= 0) gridLinesWeightField.value = 0;
         }); //Set the field to 0 if empty or not valid
 
         var gridLinesColorSelector = document.getElementById("gridLinesColorSelector");
         var gridLinesColor = gridLinesColorSelector.value;
-        gridLinesColorSelector.addEventListener("input", setGridLinesColor);
+        gridLinesColorSelector.addEventListener("input", generateMire);
 
         var numbersColorSelector = document.getElementById("numbersColorSelector");
         var numbersColor = numbersColorSelector.value;
-        numbersColorSelector.addEventListener("input", setNumbersColor);
+        numbersColorSelector.addEventListener("input", generateMire);
 
         var linesField = document.getElementById("linesField");
         var nLines = linesField.value;
@@ -400,22 +392,14 @@
 
         var linesWeightField = document.getElementById("linesWeightField");
         var linesWeight = linesWeightField.value;
-        linesWeightField.addEventListener("input", setLinesWeight);
+        linesWeightField.addEventListener("input", generateMire);
         linesWeightField.addEventListener("blur", function currFunction() {
             if (linesWeightField.value <= 0) linesWeightField.value = 0;
         }); //Set the field to 0 if empty or not valid
 
         var linesColorSelector = document.getElementById("linesColorSelector");
         var linesColor = linesColorSelector.value;
-        linesColorSelector.addEventListener("input", setLinesColor);
-
-        var crossesCheckbox = document.getElementById("crossesCheckbox");
-        var crossedLines = crossesCheckbox.checked;
-        crossesCheckbox.addEventListener("input", setCrossedLines);
-
-        var middleCrossCheckbox = document.getElementById("middleCrossCheckbox");
-        var middlesCross = middleCrossCheckbox.checked;
-        middleCrossCheckbox.addEventListener("input", setMiddleCross);
+        linesColorSelector.addEventListener("input", generateMire);
 
         var circlesField = document.getElementById("circlesField");
         var nCircles = circlesField.value;
@@ -426,35 +410,31 @@
 
         var circlesWeightField = document.getElementById("circlesWeightField");
         var circlesWeight = circlesWeightField.value;
-        circlesWeightField.addEventListener("input", setCirclesWeight);
+        circlesWeightField.addEventListener("input", generateMire);
         circlesWeightField.addEventListener("blur", function currFunction() {
             if (linesField.value <= 0) circlesWeightField.value = 0;
         }); //Set the field to 0 if empty or not valid
 
         var circlesColorSelector = document.getElementById("circlesColorSelector");
         var circlesColor = circlesColorSelector.value;
-        circlesColorSelector.addEventListener("input", setCirclesColor);
-
-        var fittedCirclesCheckbox = document.getElementById("fittedCirclesCheckbox");
-        var fittedCircles = fittedCirclesCheckbox.checked;
-        fittedCirclesCheckbox.addEventListener("input", setFittedCircles);
+        circlesColorSelector.addEventListener("input", generateMire);
 
         //Gradient
         var grdTopLeftColorSelector = document.getElementById("grdTopLeftColorSelector");
         var grdTopLeftColor = grdTopLeftColorSelector.value;
-        grdTopLeftColorSelector.addEventListener("input", setGradientTopLeftColor);
+        grdTopLeftColorSelector.addEventListener("input", generateMire);
 
         var grdTopRightColorSelector = document.getElementById("grdTopRightColorSelector");
         var grdTopRightColor = grdTopRightColorSelector.value;
-        grdTopRightColorSelector.addEventListener("input", setGradientTopRightColor);
+        grdTopRightColorSelector.addEventListener("input", generateMire);
 
         var grdBottomRightColorSelector = document.getElementById("grdBottomRightColorSelector");
         var grdBottomRightColor = grdBottomRightColorSelector.value;
-        grdBottomRightColorSelector.addEventListener("input", setGradientBottomRightColor);
+        grdBottomRightColorSelector.addEventListener("input", generateMire);
 
         var grdBottomLeftColorSelector = document.getElementById("grdBottomLeftColorSelector");
         var grdBottomLeftColor = grdBottomLeftColorSelector.value;
-        grdBottomLeftColorSelector.addEventListener("input", setGradientBottomLeftColor);
+        grdBottomLeftColorSelector.addEventListener("input", generateMire);
 
         function myFunction(e) { //debug function
             rectAreSquares = squaresCheckbox.checked;
@@ -480,7 +460,7 @@
         var isLines = true;
         var isCircles = true;
         var isGradient = true;
-
+        var rectAreSquares = true;
 
         //Internal management
         var squaresEnabled = true;
@@ -562,106 +542,6 @@
             generateMire();
         }
 
-        function setGradientTopLeftColor() {
-            grdTopLeftColor = grdTopLeftColorSelector.value;
-            generateMire();
-        }
-
-        function setGradientTopRightColor() {
-            grdTopRightColor = grdTopRightColorSelector.value;
-            generateMire();
-        }
-
-        function setGradientBottomRightColor() {
-            grdBottomRightColor = grdBottomRightColorSelector.value;
-            generateMire();
-        }
-
-        function setGradientBottomLeftColor() {
-            grdBottomLeftColor = grdBottomLeftColorSelector.value;
-            generateMire();
-        }
-
-        function setFittedCircles() {
-            fittedCircles = fittedCirclesCheckbox.checked;
-            generateMire();
-        }
-
-        function setCirclesWeight() {
-            circlesWeight = circlesWeightField.value;
-            generateMire();
-        }
-
-        function setCirclesColor() {
-            circlesColor = circlesColorSelector.value;
-            generateMire();
-        }
-
-        function setCrossedLines() {
-            crossedLines = crossesCheckbox.checked;
-            generateMire();
-        }
-
-        function setMiddleCross() {
-            middlesCross = middleCrossCheckbox.checked;
-            generateMire();
-        }
-
-        function setLinesWeight() {
-            linesWeight = linesWeightField.value;
-            generateMire();
-        }
-
-        function setLinesColor() {
-            linesColor = linesColorSelector.value;
-            generateMire();
-        }
-
-        function setGridLinesWeight() {
-            gridLinesWeight = gridLinesWeightField.value;
-            generateMire();
-        }
-
-        function setGridColor() {
-            gridColor = gridColorSelector.value;
-            generateMire();
-        }
-
-        function setGridLinesColor() {
-            gridLinesColor = gridLinesColorSelector.value;
-            generateMire();
-        }
-
-        function setMainText() {
-            mainText = mainTextField.value;
-            generateMire();
-        }
-
-        function setMainTextWeight() {
-            mainTextWeight = mainTextWeightField.value;
-            generateMire();
-        }
-
-        function setTextColor() {
-            textColor = textColorSelector.value;
-            generateMire();
-        }
-
-        function setFrameOverlay() {
-            frameOverlay = frameOverlayCheckbox.checked;
-            generateMire();
-        }
-
-        function setFrameOverlayColor() {
-            frameOverlayColor = frameOverlayColorSelector.value;
-            generateMire();
-        }
-
-        function setNumbersColor() {
-            numbersColor = numbersColorSelector.value;
-            generateMire();
-        }
-
         function gridUpdate(e) { //Squares fields ergonomy
 
             if (e.key == "Backspace") {
@@ -677,8 +557,6 @@
             if (nbRectWidth > 0 && nbRectHeight > 0) {
                 squaresEnabled = true;
             }
-
-
 
             if (rectAreSquares)
                 rectHeightField.value = rectWidthField.value;
@@ -717,8 +595,6 @@
             rectHeight = imgHeight / nbRectHeight;
             fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight) + "px";
 
-            mainTextWeight = mainTextWeightField.value;
-
             imgCtx.font = fontSize + " Arial";
             imgCtx.textAlign = "center";
             imgCtx.textBaseline = "middle";
@@ -729,11 +605,40 @@
             safeValues();
 
             //Fields
+            //Text
+            mainText = mainTextField.value;
+            mainTextWeight = mainTextWeightField.value;
+            textColor = textColorSelector.value;
+            
+            //Overlay
+            frameOverlay = frameOverlayCheckbox.checked;
+            frameOverlayColor = frameOverlayColorSelector.value;
+            
+            
+            //Grid
+            gridColor = gridColorSelector.value;
+            gridLinesWeight = gridLinesWeightField.value;
+            gridLinesColor = gridLinesColorSelector.value;
+            numbersColor = numbersColorSelector.value;
+            
             //Lines
             nLines = linesField.value;
+            linesWeight = linesWeightField.value;
+            crossedLines = crossesCheckbox.checked;
+            middlesCross = middleCrossCheckbox.checked;
+            linesColor = linesColorSelector.value;
 
             //Circles
             nCircles = circlesField.value;
+            circlesWeight = circlesWeightField.value;
+            fittedCircles = fittedCirclesCheckbox.checked;
+            circlesColor = circlesColorSelector.value;
+            
+            //Gradient
+            grdTopLeftColor = grdTopLeftColorSelector.value;
+            grdTopRightColor = grdTopRightColorSelector.value;
+            grdBottomRightColor = grdBottomRightColorSelector.value;
+            grdBottomLeftColor = grdBottomLeftColorSelector.value;
         }
 
         function safeValues() {
