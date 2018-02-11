@@ -85,9 +85,9 @@
                 color: #8d98aa;
             }
 
-            
+
             h3 {
-                display: block;
+                display: inline;
                 color: #8d98aa;
             }
 
@@ -212,11 +212,20 @@
                 <input class="ParametterCheckbox" type="checkbox" id="OverlayCheckbox" tabindex="-1" onclick="setOverlay()">
             </div>
             <div id="OverlaySettings">
-                <div class="checkbox">
-                    <input type="checkbox" id="frameOverlayCheckbox" checked tabindex="-1" onclick="generateMire()">
-                    <span>Frame</span>
+                <div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="frameOverlayCheckbox" checked tabindex="-1" onclick="generateMire()">
+                        <span>Frame</span>
+                    </div>
+                    <input class="colorSelector" type="color" id="frameOverlayColorSelector" value="#fff000" tabindex="-1">
                 </div>
-                <input class="colorSelector" type="color" id="frameOverlayColorSelector" value="#fff000" tabindex="-1">
+                <div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="arrowsOverlayCheckbox" checked tabindex="-1" onclick="generateMire()">
+                        <span>Arrows</span>
+                    </div>
+                    <input class="colorSelector" type="color" id="arrowsOverlayColorSelector" value="#ff0000" tabindex="-1">
+                </div>
             </div>
         </div>
         <div class="Parametter" id="GridSection">
@@ -277,28 +286,38 @@
             </div>
             <div id="CirclesSettings">
                 <div>
-                    <h3>Following circles</h3>
-                    <p>How many</p>
-                    <input type="text" id="followingCirclesField" value="2">
-                    <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
-                        <span>Fitted circles</span>
+                    <div class="checkbox">
+                        <h3>Following circles</h3>
+                        <input type="checkbox" id="followingCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
+                    </div>
+                    <div>
+                        <p>How many</p>
+                        <input type="text" id="followingCirclesField" value="2">
+                        <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
+                            <span>Fitted circles</span>
+                        </div>
                     </div>
                 </div>
                 <div>
-                    <h3>Concentric circles</h3>
-                    <p>How many</p>
-                    <input type="text" id="concentricCirclesField" value="2">
-                    <p>Size first</p>
-                    <input type="text" id="sizeConcentricCirclesField" value="500">
-                    <p>Multiplier</p>
-                    <input type="text" id="multConcentricCirclesField" value="200">
+                    <div class="checkbox">
+                        <h3>Concentric circles</h3>
+                        <input type="checkbox" id="concentricCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
+                    </div>
+                    <div>
+                        <p>How many</p>
+                        <input type="text" id="concentricCirclesField" value="2">
+                        <p>Size first</p>
+                        <input type="text" id="sizeConcentricCirclesField" value="500">
+                        <p>Multiplier</p>
+                        <input type="text" id="multConcentricCirclesField" value="200">
+                    </div>
                 </div>
-            </div>
-            <div>
-                <p>Weight</p>
-                <input type="text" id="circlesWeightField" value="10">
-                <p>Color</p>
-                <input class="colorSelector" type="color" id="circlesColorSelector" value="#ffffff" tabindex="-1">
+                <div>
+                    <p>Weight</p>
+                    <input type="text" id="circlesWeightField" value="10">
+                    <p>Color</p>
+                    <input class="colorSelector" type="color" id="circlesColorSelector" value="#ffffff" tabindex="-1">
+                </div>
             </div>
         </div>
         <div class="Parametter" id="GradientSection">
@@ -359,6 +378,10 @@
         var frameOverlayColorSelector = document.getElementById("frameOverlayColorSelector");
         var frameOverlayColor = frameOverlayColorSelector.value;
         frameOverlayColorSelector.addEventListener("input", generateMire);
+        
+        var arrowsOverlayColorSelector = document.getElementById("arrowsOverlayColorSelector");
+        var arrowsOverlayColor = arrowsOverlayColorSelector.value;
+        arrowsOverlayColorSelector.addEventListener("input", generateMire);
 
         var rectWidthField = document.getElementById("nbSquaresW");
         var nbRectWidth = rectWidthField.value;
@@ -420,21 +443,21 @@
         followingCirclesField.addEventListener("blur", function currFunction() {
             if (followingCirclesField.value <= 0) followingCirclesField.value = 0;
         }); //Set the field to 0 if empty or not valid
-        
+
         var concentricCirclesField = document.getElementById("concentricCirclesField");
         var nConcentricCircles = concentricCirclesField.value;
         concentricCirclesField.addEventListener("input", generateMire);
         concentricCirclesField.addEventListener("blur", function currFunction() {
             if (concentricCirclesField.value <= 0) concentricCirclesField.value = 0;
         }); //Set the field to 0 if empty or not valid
-        
+
         var sizeConcentricCirclesField = document.getElementById("sizeConcentricCirclesField");
         var sizeConcentricCircles = sizeConcentricCirclesField.value;
         sizeConcentricCirclesField.addEventListener("input", generateMire);
         sizeConcentricCirclesField.addEventListener("blur", function currFunction() {
             if (sizeConcentricCirclesField.value <= 0) sizeConcentricCirclesField.value = 0;
         }); //Set the field to 0 if empty or not valid
-        
+
         var multConcentricCirclesField = document.getElementById("multConcentricCirclesField");
         var multConcentricCircles = multConcentricCirclesField.value;
         multConcentricCirclesField.addEventListener("input", generateMire);
@@ -480,9 +503,6 @@
         var canvasCtx = canvas.getContext("2d");
         var img = document.createElement("canvas");
         var imgCtx = img.getContext("2d");
-        var temp = document.createElement("canvas");
-        var ctx = img.getContext("2d");
-
 
         //Settings variables
         var rectWidth;
@@ -510,8 +530,8 @@
 
 
         //Functions
-        
-        function initialisation(){
+
+        function initialisation() {
             setText();
             setOverlay();
             setGrid();
@@ -652,6 +672,8 @@
             //Overlay
             frameOverlay = frameOverlayCheckbox.checked;
             frameOverlayColor = frameOverlayColorSelector.value;
+            arrowsOverlay = arrowsOverlayCheckbox.checked;
+            arrowsOverlayColor = arrowsOverlayColorSelector.value;
 
 
             //Grid
@@ -668,8 +690,10 @@
             linesColor = linesColorSelector.value;
 
             //Circles
+            isFollowingCircles = followingCirclesCheckbox.checked;
             nFollowingCircles = followingCirclesField.value;
             nConcentricCircles = concentricCirclesField.value;
+            isConcentricCircles = concentricCirclesCheckbox.checked;
             sizeConcentricCircles = sizeConcentricCirclesField.value;
             multConcentricCircles = multConcentricCirclesField.value;
             circlesWeight = circlesWeightField.value;
@@ -681,7 +705,7 @@
             grdTopRightColor = grdTopRightColorSelector.value;
             grdBottomRightColor = grdBottomRightColorSelector.value;
             grdBottomLeftColor = grdBottomLeftColorSelector.value;
-            
+
             safeValues();
         }
 
@@ -775,16 +799,20 @@
             }
 
             //Circles drawing
-            //TODO : Checkboxes + booleans for the types of circles
+
             if (isCircles) {
-                for (var i = 0; i < nFollowingCircles; i++) {
-                    if (fittedCircles) {
-                        drawCircle(imgWidth / nFollowingCircles / 2 + imgWidth / nFollowingCircles * i, imgHeight / 2, imgWidth / nFollowingCircles / 2);
-                    } else
-                        drawCircle(imgWidth / (nFollowingCircles * 2) + imgWidth / nFollowingCircles * i, imgHeight / 2, imgHeight / 2);
+                if (isFollowingCircles) {
+                    for (var i = 0; i < nFollowingCircles; i++) {
+                        if (fittedCircles) {
+                            drawCircle(imgWidth / nFollowingCircles / 2 + imgWidth / nFollowingCircles * i, imgHeight / 2, imgWidth / nFollowingCircles / 2);
+                        } else
+                            drawCircle(imgWidth / (nFollowingCircles * 2) + imgWidth / nFollowingCircles * i, imgHeight / 2, imgHeight / 2);
+                    }
                 }
-                for (var i = 0; i < nConcentricCircles; i++) {
-                        drawCircle(imgWidth / 2, imgHeight / 2, sizeConcentricCircles/2 + multConcentricCircles * i);
+                if (isConcentricCircles) {
+                    for (var i = 0; i < nConcentricCircles; i++) {
+                        drawCircle(imgWidth / 2, imgHeight / 2, sizeConcentricCircles / 2 + multConcentricCircles * i);
+                    }
                 }
             }
 
@@ -801,7 +829,19 @@
                     imgCtx.strokeStyle = frameOverlayColor;
                     imgCtx.strokeRect(0, 0, imgWidth, imgHeight);
                 }
+                if (arrowsOverlay) {
+                    for (var i = 0; i < 3; i++) {
+                        drawArrow(imgCtx, imgWidth / 2 * i, 0, 10, -45 + 45 * i);
+                    }
+                    for (var i = 0; i < 2; i++) {
+                        drawArrow(imgCtx, imgWidth * i, imgHeight / 2, 10, -90 + 180 * i);
+                    }
+                    for (var i = 0; i < 3; i++) {
+                        drawArrow(imgCtx, imgWidth / 2 * i, imgHeight / 1, 10, -135 - 45 * i);
+                    }
+                }
             }
+
 
             //Draw the working img in the page canvas
             canvasCtx.drawImage(img, 0, 0, img.width, img.height, // source rectangle
@@ -847,6 +887,36 @@
             return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
         }
 
+        function drawArrow(ctx, x, y, s = 1, r = 0) {
+            var arrow = {
+                x0: 0,
+                y0: 0,
+                x1: 10 * s,
+                y1: 10 * s,
+                x2: 5 * s,
+                y2: 10 * s,
+                x3: 5 * s,
+                y3: 20 * s,
+                x4: -5 * s,
+                y4: 20 * s,
+                x5: -5 * s,
+                y5: 10 * s,
+                x6: -10 * s,
+                y6: 10 * s
+            };
+            ctx.fillStyle = arrowsOverlayColor;
+            ctx.beginPath();
+            ctx.moveTo(x + (arrow.x0 * Math.cos(degreesToRadians(r)) - arrow.y0 * Math.sin(degreesToRadians(r))), y + (arrow.x0 * Math.sin(degreesToRadians(r)) + arrow.y0 * Math.cos(degreesToRadians(r))));
+            ctx.lineTo(x + (arrow.x1 * Math.cos(degreesToRadians(r)) - arrow.y1 * Math.sin(degreesToRadians(r))), y + (arrow.x1 * Math.sin(degreesToRadians(r)) + arrow.y1 * Math.cos(degreesToRadians(r))));
+            ctx.lineTo(x + (arrow.x2 * Math.cos(degreesToRadians(r)) - arrow.y2 * Math.sin(degreesToRadians(r))), y + (arrow.x2 * Math.sin(degreesToRadians(r)) + arrow.y2 * Math.cos(degreesToRadians(r))));
+            ctx.lineTo(x + (arrow.x3 * Math.cos(degreesToRadians(r)) - arrow.y3 * Math.sin(degreesToRadians(r))), y + (arrow.x3 * Math.sin(degreesToRadians(r)) + arrow.y3 * Math.cos(degreesToRadians(r))));
+            ctx.lineTo(x + (arrow.x4 * Math.cos(degreesToRadians(r)) - arrow.y4 * Math.sin(degreesToRadians(r))), y + (arrow.x4 * Math.sin(degreesToRadians(r)) + arrow.y4 * Math.cos(degreesToRadians(r))));
+            ctx.lineTo(x + (arrow.x5 * Math.cos(degreesToRadians(r)) - arrow.y5 * Math.sin(degreesToRadians(r))), y + (arrow.x5 * Math.sin(degreesToRadians(r)) + arrow.y5 * Math.cos(degreesToRadians(r))));
+            ctx.lineTo(x + (arrow.x6 * Math.cos(degreesToRadians(r)) - arrow.y6 * Math.sin(degreesToRadians(r))), y + (arrow.x6 * Math.sin(degreesToRadians(r)) + arrow.y6 * Math.cos(degreesToRadians(r))));
+            ctx.closePath();
+            ctx.fill();
+        }
+
         function drawCircle(x, y, r) {
             imgCtx.beginPath();
             imgCtx.arc(x, y, r, 0, 2 * Math.PI);
@@ -863,6 +933,10 @@
             imgCtx.lineWidth = linesWeight;
             imgCtx.strokeStyle = linesColor;
             imgCtx.stroke();
+        }
+
+        function degreesToRadians(degrees) {
+            return degrees * Math.PI / 180;
         }
 
     </script>
