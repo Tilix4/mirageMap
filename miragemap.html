@@ -146,12 +146,26 @@
 
             #ExportSettings {}
 
-            #downloadButton {
+            #downloadImageButton {
                 background-color: #4CAF50;
                 /* Green */
                 border: none;
                 color: white;
                 padding: 15px 32px;
+                margin-bottom: 3px;
+                text-align: center;
+                text-decoration: none;
+                display: block;
+                font-size: 16px;
+            }
+
+            #downloadLayersButton {
+                background-color: #3573d6;
+                /* Green */
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                margin-bottom: 3px;
                 text-align: center;
                 text-decoration: none;
                 display: block;
@@ -187,7 +201,9 @@
             }
 
         </style>
-        <script src="prefixfree.min.js"></script>
+        <script src="libs/prefixfree.min.js"></script>
+        <script src="libs/jszip.min.js"></script>
+        <script src="libs/FileSaver.min.js"></script>
     </head>
     <div id="Settings">
         <div class="Parametter" id="ImageSize">
@@ -351,7 +367,8 @@
             </div>
         </div>
         <div id="ExportSettings">
-            <a id="downloadButton">Download Image</a>
+            <a class="downloadButton" id="downloadImageButton">Download Image</a>
+            <a class="downloadButton" id="downloadLayersButton">Download Layers</a>
         </div>
     </div>
 
@@ -515,6 +532,8 @@
         var canvasCtx = canvas.getContext("2d");
         var img = document.createElement("canvas");
         var imgCtx = img.getContext("2d");
+        var temp = document.createElement("canvas");
+        var tempCtx = temp.getContext("2d");
 
         //Settings variables
         var rectWidth;
@@ -532,13 +551,19 @@
         var squaresEnabled = true;
         var bckSpaceCount = 0;
         var imgRatio;
+        var isExporting = false; //Trick for keeping performances
+        var zip = new JSZip();
 
         //Setup the download button
-        var link = document.getElementById("downloadButton");
-        link.addEventListener('click', function(ev) {
-            link.href = img.toDataURL();
-            link.download = "mire_" + String(imgWidth) + "x" + String(imgHeight) + ".png";
+        var imageLink = document.getElementById("downloadImageButton");
+        imageLink.addEventListener('click', function(ev) {
+            imageLink.href = img.toDataURL();
+            imageLink.download = "mire_" + String(imgWidth) + "x" + String(imgHeight) + ".png";
         }, false);
+
+        var layersLink = document.getElementById("downloadLayersButton");
+        layersLink.addEventListener('click', downloadLayers);
+
 
 
         //Functions
@@ -694,6 +719,14 @@
             imgCtx.textAlign = "center";
             imgCtx.textBaseline = "middle";
 
+            if (isExporting) {
+                temp.width = imgWidth;
+                temp.height = imgHeight;
+                tempCtx.font = fontSize + " Arial";
+                tempCtx.textAlign = "center";
+                tempCtx.textBaseline = "middle";
+            }
+
             imgRatio = imgWidth / imgHeight;
             canvas.height = canvas.width * 1 / imgRatio;
 
@@ -741,6 +774,7 @@
             grdBottomLeftColor = grdBottomLeftColorSelector.value;
 
             safeValues();
+            resetZIP();
         }
 
         function safeValues() {
@@ -762,120 +796,207 @@
 
             //Gradient
             if (isGradient) {
-                quadGradient(canvas, {
+                if (isExporting)//Trick for performances
+                    var currImg = temp;
+                else
+                    var currImg = img;
+
+                quadGradient(currImg, {
                     topLeft: grdTopLeftColor,
                     topRight: grdTopRightColor,
                     bottomLeft: grdBottomLeftColor,
                     bottomRight: grdBottomRightColor
                 });
+
+                if (isExporting) {//Trick for performances
+                    imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
+                        0, 0, img.width, img.height); // destination rectangle
+                    addImageToZIP(temp, "gradient");
+                    tempCtx.clearRect(0, 0, temp.width, temp.height);
+                }
             }
 
             //Grid
             if (isGrid) {
+                
+                if (isExporting)//Trick for performances
+                    var currImg = temp;
+                else
+                    var currImg = img;
+                
                 //Grid drawing (checker)
+
+                var currImgCtx = currImg.getContext("2d");
+
                 for (var j = 0; j < nbRectWidth; ++j) {
                     for (var i = 0; i < nbRectHeight; ++i) {
-                        imgCtx.globalAlpha = 0.4;
-                        imgCtx.fillStyle = (i + j) % 2 == 0 ? gridColor : "transparent";
+                        currImgCtx.globalAlpha = 0.4;
+                        currImgCtx.fillStyle = (i + j) % 2 == 0 ? gridColor : "transparent";
                         if (rectAreSquares) {
-                            imgCtx.fillRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
+                            currImgCtx.fillRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
                         } else {
-                            imgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
+                            currImgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
                         }
-                        imgCtx.globalAlpha = 1;
+                        currImgCtx.globalAlpha = 1;
                     }
                 }
+
+
 
                 //Grid drawing (lines)
                 for (var j = 0; j < nbRectWidth; ++j) {
                     for (var i = 0; i < nbRectHeight; ++i) {
-                        imgCtx.lineWidth = gridLinesWeight;
-                        imgCtx.strokeStyle = gridLinesColor;
+                        currImgCtx.lineWidth = gridLinesWeight;
+                        currImgCtx.strokeStyle = gridLinesColor;
                         if (rectAreSquares) {
-                            imgCtx.strokeRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
+                            currImgCtx.strokeRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
                         } else {
-                            imgCtx.strokeRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
+                            currImgCtx.strokeRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
                         }
                     }
                 }
+
 
                 //Numbers drawing
                 for (var j = 0; j < nbRectWidth; ++j) {
                     for (var i = 0; i < nbRectHeight; ++i) {
                         if (rectAreSquares) {
                             //imgCtx.fillStyle = (i + j) % 2 == 0 ? "blue" : "red";
-                            imgCtx.fillStyle = numbersColor;
-                            imgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectWidth / 2 + rectWidth * i);
+                            currImgCtx.fillStyle = numbersColor;
+                            currImgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectWidth / 2 + rectWidth * i);
                         } else {
                             //imgCtx.fillStyle = (i + j) % 2 == 0 ? "blue" : "red";
-                            imgCtx.fillStyle = numbersColor;
-                            imgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectHeight / 2 + rectHeight * i);
+                            currImgCtx.fillStyle = numbersColor;
+                            currImgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectHeight / 2 + rectHeight * i);
                         }
                     }
+                }
+
+                if (isExporting) {//Trick for performances
+                    imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
+                        0, 0, img.width, img.height); // destination rectangle
+                    addImageToZIP(temp, "grid");
+                    tempCtx.clearRect(0, 0, temp.width, temp.height);
                 }
             }
 
             //Lines Drawing
             if (isLines) {
+                
+                if (isExporting)//Trick for performances
+                    var currImg = temp;
+                else
+                    var currImg = img;
+                
                 for (var i = 0; i < nLines; i++) {
                     if (crossedLines) {
-                        drawLine(imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
-                        drawLine(imgWidth / nLines * i, imgHeight, imgWidth / nLines * (i + 1), 0);
+                        drawLine(currImg, imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
+                        drawLine(currImg, imgWidth / nLines * i, imgHeight, imgWidth / nLines * (i + 1), 0);
                     } else
-                        drawLine(imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
+                        drawLine(currImg, imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
                 }
 
                 //Middles cross Lines
                 if (middlesCross) {
-                    drawLine(imgWidth / 2, 0, imgWidth / 2, imgHeight);
-                    drawLine(0, imgHeight / 2, imgWidth, imgHeight / 2);
+                    drawLine(currImg, imgWidth / 2, 0, imgWidth / 2, imgHeight);
+                    drawLine(currImg, 0, imgHeight / 2, imgWidth, imgHeight / 2);
+                }
+                
+                if (isExporting) {//Trick for performances
+                    imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
+                        0, 0, img.width, img.height); // destination rectangle
+                    addImageToZIP(temp, "lines");
+                    tempCtx.clearRect(0, 0, temp.width, temp.height);
                 }
             }
 
             //Circles drawing
 
             if (isCircles) {
+                
+                if (isExporting)//Trick for performances
+                    var currImg = temp;
+                else
+                    var currImg = img;
+                
                 if (isFollowingCircles) {
                     for (var i = 0; i < nFollowingCircles; i++) {
                         if (fittedCircles) {
-                            drawCircle(imgWidth / nFollowingCircles / 2 + imgWidth / nFollowingCircles * i, imgHeight / 2, imgWidth / nFollowingCircles / 2);
+                            drawCircle(currImg, imgWidth / nFollowingCircles / 2 + imgWidth / nFollowingCircles * i, imgHeight / 2, imgWidth / nFollowingCircles / 2);
                         } else
-                            drawCircle(imgWidth / (nFollowingCircles * 2) + imgWidth / nFollowingCircles * i, imgHeight / 2, imgHeight / 2);
+                            drawCircle(currImg, imgWidth / (nFollowingCircles * 2) + imgWidth / nFollowingCircles * i, imgHeight / 2, imgHeight / 2);
                     }
                 }
                 if (isConcentricCircles) {
                     for (var i = 0; i < nConcentricCircles; i++) {
-                        drawCircle(imgWidth / 2, imgHeight / 2, sizeConcentricCircles / 2 + multConcentricCircles * i);
+                        drawCircle(currImg, imgWidth / 2, imgHeight / 2, sizeConcentricCircles / 2 + multConcentricCircles * i);
                     }
+                }
+                
+                if (isExporting) {//Trick for performances
+                    imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
+                        0, 0, img.width, img.height); // destination rectangle
+                    addImageToZIP(temp, "circles");
+                    tempCtx.clearRect(0, 0, temp.width, temp.height);
                 }
             }
 
             //Text displaying
             if (isText) {
-                imgCtx.fillStyle = textColor;
-                imgCtx.strokeStyle = "black";
-                imgCtx.font = String(mainTextWeight) + "px" + " Arial";
-                imgCtx.strokeText(mainText, imgWidth / 2, imgHeight / 2);
-                imgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
+                
+                if (isExporting)//Trick for performances
+                    var currImg = temp;
+                else
+                    var currImg = img;
+                
+                var currImgCtx = currImg.getContext("2d");
+                
+                currImgCtx.fillStyle = textColor;
+                currImgCtx.strokeStyle = "black";
+                currImgCtx.font = String(mainTextWeight) + "px" + " Arial";
+                currImgCtx.strokeText(mainText, imgWidth / 2, imgHeight / 2);
+                currImgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
+                
+                if (isExporting) {//Trick for performances
+                    imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
+                        0, 0, img.width, img.height); // destination rectangle
+                    addImageToZIP(temp, "text");
+                    tempCtx.clearRect(0, 0, temp.width, temp.height);
+                }
             }
 
             //Overlay
             if (isOverlay) {
+                
+                if (isExporting)//Trick for performances
+                    var currImg = temp;
+                else
+                    var currImg = img;
+                
+                var currImgCtx = currImg.getContext("2d");
+                
                 if (frameOverlay) {
-                    imgCtx.lineWidth = imgRatio * 50;
-                    imgCtx.strokeStyle = frameOverlayColor;
-                    imgCtx.strokeRect(0, 0, imgWidth, imgHeight);
+                    currImgCtx.lineWidth = imgRatio * 50;
+                    currImgCtx.strokeStyle = frameOverlayColor;
+                    currImgCtx.strokeRect(0, 0, imgWidth, imgHeight);
                 }
                 if (arrowsOverlay) {
                     for (var i = 0; i < 3; i++) {
-                        drawArrow(imgCtx, imgWidth / 2 * i, 0, 10, -45 + 45 * i);
+                        drawArrow(currImg, imgWidth / 2 * i, 0, 10, -45 + 45 * i);
                     }
                     for (var i = 0; i < 2; i++) {
-                        drawArrow(imgCtx, imgWidth * i, imgHeight / 2, 10, -90 + 180 * i);
+                        drawArrow(currImg, imgWidth * i, imgHeight / 2, 10, -90 + 180 * i);
                     }
                     for (var i = 0; i < 3; i++) {
-                        drawArrow(imgCtx, imgWidth / 2 * i, imgHeight / 1, 10, -135 - 45 * i);
+                        drawArrow(currImg, imgWidth / 2 * i, imgHeight / 1, 10, -135 - 45 * i);
                     }
+                }
+                
+                if (isExporting) {//Trick for performances
+                    imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
+                        0, 0, img.width, img.height); // destination rectangle
+                    addImageToZIP(temp, "overlay");
+                    tempCtx.clearRect(0, 0, temp.width, temp.height);
                 }
             }
 
@@ -883,13 +1004,12 @@
             //Draw the working img in the page canvas
             canvasCtx.drawImage(img, 0, 0, img.width, img.height, // source rectangle
                 0, 0, canvas.width, canvas.height); // destination rectangle
-            //myFunction();
         }
 
-        function quadGradient(canvas, corners) {
-            var ctx = canvas.getContext('2d');
-            var w = canvas.width;
-            var h = canvas.height;
+        function quadGradient(canvasLocal, corners) {
+            var ctx = canvasLocal.getContext('2d');
+            var w = canvasLocal.width;
+            var h = canvasLocal.height;
             var gradient, startColor, endColor, fac;
 
             for (var i = 0; i < h; i++) {
@@ -955,26 +1075,59 @@
             ctx.fill();
         }
 
-        function drawCircle(x, y, r) {
-            imgCtx.beginPath();
-            imgCtx.arc(x, y, r, 0, 2 * Math.PI);
-            imgCtx.lineWidth = circlesWeight;
-            imgCtx.strokeStyle = circlesColor;
-            imgCtx.stroke();
+        function drawCircle(canvas, x, y, r) {
+            var ctx = canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.lineWidth = circlesWeight;
+            ctx.strokeStyle = circlesColor;
+            ctx.stroke();
 
         }
 
-        function drawLine(x1, y1, x2, y2) {
-            imgCtx.beginPath();
-            imgCtx.moveTo(x1, y1);
-            imgCtx.lineTo(x2, y2);
-            imgCtx.lineWidth = linesWeight;
-            imgCtx.strokeStyle = linesColor;
-            imgCtx.stroke();
+        function drawLine(canvas, x1, y1, x2, y2) {
+            var ctx = canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.lineWidth = linesWeight;
+            ctx.strokeStyle = linesColor;
+            ctx.stroke();
         }
 
         function degreesToRadians(degrees) {
             return degrees * Math.PI / 180;
+        }
+
+        //Export functions
+        function downloadLayers() {
+            isExporting = true;
+            generateMire();
+            exportZIP("layers");
+            isExporting = false;
+        }
+
+        function addImageToZIP(image, name) {
+            var savable = new Image();
+            savable.src = image.toDataURL();
+            zip.file(name + ".png", savable.src.substr(savable.src.indexOf(',') + 1), {
+                base64: true
+            });
+            /*var imgFolder = zip.folder("images");*/ //Create Folder
+        }
+
+        function resetZIP() {
+            zip = new JSZip();
+        }
+
+        function exportZIP(name) {
+            zip.generateAsync({
+                    type: "blob"
+                })
+                .then(function(blob) {
+
+                    saveAs(blob, name + ".zip");
+                });
         }
 
     </script>
