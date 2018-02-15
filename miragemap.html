@@ -710,6 +710,7 @@
             imgHeight = heightField.value;
             img.width = imgWidth;
             img.height = imgHeight;
+            verticalOrganization = verticalCheckbox.checked;
 
             nbRectWidth = rectWidthField.value;
             nbRectHeight = rectHeightField.value;
@@ -717,13 +718,22 @@
             rectWidth = imgWidth / nbRectWidth;
             rectHeight = imgHeight / nbRectHeight;
 
+            if (rectAreSquares) {
+                if (verticalOrganization) {
+                    rectWidth = rectHeight;
+                    nbRectWidth = imgWidth / rectWidth;
+                } else {
+                    rectHeight = rectWidth;
+                    nbRectHeight = imgHeight / rectHeight;
+                }
+            }
 
-            if (verticalOrganization && rectAreSquares) {
+            /*if (verticalOrganization && rectAreSquares) {
                 nbRectWidth = imgWidth / rectWidth;
                 rectWidth = rectHeight;
             } else {
                 nbRectHeight = imgHeight / rectHeight;
-            }
+            }*/
 
             fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight) + "px";
 
@@ -740,14 +750,12 @@
             }
 
             imgRatio = imgWidth / imgHeight;
-
             canvas.height = canvas.width / imgRatio;
 
             if (canvas.width <= canvas.height) {
                 canvas.style.width = "auto";
                 canvas.style.height = String(95) + "%";
-            } 
-            else {
+            } else {
                 canvas.style.height = "auto";
                 canvas.style.width = String(48) + "%";
             }
@@ -856,11 +864,7 @@
                     for (var i = 0; i < nbRectHeight; ++i) {
                         currImgCtx.globalAlpha = 0.4;
                         currImgCtx.fillStyle = (i + j) % 2 == 0 ? gridColor : "transparent";
-                        if (rectAreSquares) {
-                            currImgCtx.fillRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
-                        } else {
-                            currImgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
-                        }
+                        currImgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
                         currImgCtx.globalAlpha = 1;
                     }
                 }
@@ -872,11 +876,7 @@
                     for (var i = 0; i < nbRectHeight; ++i) {
                         currImgCtx.lineWidth = gridLinesWeight;
                         currImgCtx.strokeStyle = gridLinesColor;
-                        if (rectAreSquares) {
-                            currImgCtx.strokeRect(rectWidth * j, rectWidth * i, rectWidth, rectWidth);
-                        } else {
-                            currImgCtx.strokeRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
-                        }
+                        currImgCtx.strokeRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
                     }
                 }
 
@@ -884,15 +884,11 @@
                 //Numbers drawing
                 for (var j = 0; j < nbRectWidth; ++j) {
                     for (var i = 0; i < nbRectHeight; ++i) {
-                        if (rectAreSquares) {
-                            //imgCtx.fillStyle = (i + j) % 2 == 0 ? "blue" : "red";
-                            currImgCtx.fillStyle = numbersColor;
-                            currImgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectWidth / 2 + rectWidth * i);
-                        } else {
-                            //imgCtx.fillStyle = (i + j) % 2 == 0 ? "blue" : "red";
-                            currImgCtx.fillStyle = numbersColor;
+                        currImgCtx.fillStyle = numbersColor;
+                        if (verticalOrganization)
+                            currImgCtx.fillText(1 + i, rectWidth / 2 + rectWidth * j, rectHeight / 2 + rectHeight * i);
+                        else
                             currImgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectHeight / 2 + rectHeight * i);
-                        }
                     }
                 }
 
