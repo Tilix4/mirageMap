@@ -1,221 +1,222 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+    <meta charset="utf-8" />
+    <title>Mirage Map</title>
+
+    <style>
+        body {
+            background-color: #424242;
+            font-family: "Arial";
+        }
+
+        canvas {
+            display: inline-block;
+            border: 1px solid #d3d3d3;
+            position: fixed;
+            right: 10px;
+            top: 20px;
+            width: 48%;
+        }
+
+        div {
+            margin: 3px;
+            position: relative;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 10px;
+            width: auto;
+        }
+
+        input {
+            width: 10%;
+            background-color: #303030;
+            color: lightsteelblue;
+            border: solid 1px;
+            border-radius: 15px;
+        }
+
+        input[type="color"] {
+            background-color: transparent;
+            border: none;
+            vertical-align: middle;
+            box-shadow: none;
+
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            margin-left: 20px;
+        }
+
+        input[type="text"] {
+            padding: 3px;
+            text-align: center;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        input[type="text"]:disabled {
+            background: #333333;
+            color: dimgrey;
+        }
+
+
+        a {
+            cursor: pointer;
+        }
+
+        p {
+            display: inline;
+            text-decoration: none;
+            color: gainsboro;
+            margin-top: 10px;
+            margin-right: 0px;
+            margin-left: 20px;
+        }
+
+        span {
+            color: gainsboro;
+        }
+
+        h2 {
+            display: inline;
+            color: #8d98aa;
+        }
+
+
+        h3 {
+            display: inline;
+            color: #8d98aa;
+        }
+
+        .colorSelector {
+            height: 34px;
+            width: 50px;
+            display: inline;
+            border: none;
+        }
+
+        .Parametter {
+            border-bottom: solid 2px #606060;
+            padding-bottom: 2px;
+        }
+
+        .subParametter {
+            border-bottom: solid 2px #505050;
+            padding-bottom: 10px;
+        }
+
+        .checkbox {
+            display: inline-block;
+            padding: 0;
+            margin: 0;
+        }
+
+        #Settings {
+            display: inline-block;
+            background-color: transparent;
+            width: 50%;
+        }
+
+        #mainTextField {
+            width: 20%;
+        }
+
+        #GradientUI {
+            border: solid 2px;
+            border-color: cornflowerblue;
+            border-radius: 15px;
+        }
+
+        .GradientRow {
+            text-align: center;
+        }
+
+        .gradientColorSelector {
+            border: none;
+            width: 45%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #ExportSettings {}
+
+        #downloadImageButton {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            margin-bottom: 3px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+        }
+
+        #downloadLayersButton {
+            background-color: #3573d6;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            margin-bottom: 3px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+        }
+
+        input.ParametterCheckbox {
+            appearance: none;
+            width: 5%;
+            height: 12px;
+            border: 1px solid #aaa;
+            border-radius: 2px;
+            background: #606060;
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: middle;
+            transition: background 0.3s;
+            box-sizing: border-box;
+        }
+
+        input.ParametterCheckbox:after {
+            content: '';
+            position: absolute;
+            border: 1px solid #aaa;
+            border-radius: 2px;
+            transition: left 0.1s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+        }
+
+        input.ParametterCheckbox:checked {
+            background: #64beef;
+            border-color: #8daee5;
+        }
+
+    </style>
+    <script src="libs/prefixfree.min.js"></script>
+    <script src="libs/jszip.min.js"></script>
+    <script src="libs/FileSaver.min.js"></script>
+</head>
+
 <body onload="initialisation()">
-
-    <head>
-        <title>Mirage Map</title>
-
-        <style>
-            body {
-                background-color: #424242;
-                font-family: "Arial";
-            }
-
-            canvas {
-                display: inline-block;
-                border: 1px solid #d3d3d3;
-                position: fixed;
-                right: 10px;
-                top: 20px;
-                width: 48%;
-            }
-
-            div {
-                margin: 3px;
-                position: relative;
-                margin-top: 5px;
-                margin-bottom: 5px;
-                padding-top: 5px;
-                padding-bottom: 5px;
-                padding-left: 10px;
-                width: auto;
-            }
-
-            input {
-                width: 10%;
-                background-color: #303030;
-                color: lightsteelblue;
-                border: solid 1px;
-                border-radius: 15px;
-            }
-
-            input[type="color"] {
-                background-color: transparent;
-                border: none;
-                vertical-align: middle;
-                box-shadow: none;
-
-            }
-
-            input[type="checkbox"] {
-                width: auto;
-                margin-left: 20px;
-            }
-
-            input[type="text"] {
-                padding: 3px;
-                text-align: center;
-                margin-left: 10px;
-                margin-right: 10px;
-            }
-
-            input[type="text"]:disabled {
-                background: #333333;
-                color: dimgrey;
-            }
-
-
-            a {
-                cursor: pointer;
-            }
-
-            p {
-                display: inline;
-                text-decoration: none;
-                color: gainsboro;
-                margin-top: 10px;
-                margin-right: 0px;
-                margin-left: 20px;
-            }
-
-            span {
-                color: gainsboro;
-            }
-
-            h2 {
-                display: inline;
-                color: #8d98aa;
-            }
-
-
-            h3 {
-                display: inline;
-                color: #8d98aa;
-            }
-
-            .colorSelector {
-                height: 34px;
-                width: 50px;
-                display: inline;
-                border: none;
-            }
-
-            .Parametter {
-                border-bottom: solid 2px #606060;
-                padding-bottom: 2px;
-            }
-
-            .subParametter {
-                border-bottom: solid 2px #505050;
-                padding-bottom: 10px;
-            }
-
-            .checkbox {
-                display: inline-block;
-                padding: 0;
-                margin: 0;
-            }
-
-            #Settings {
-                display: inline-block;
-                background-color: transparent;
-                width: 50%;
-            }
-
-            #mainTextField {
-                width: 20%;
-            }
-
-            #GradientUI {
-                border: solid 2px;
-                border-color: cornflowerblue;
-                border-radius: 15px;
-            }
-
-            .GradientRow {
-                text-align: center;
-            }
-
-            .gradientColorSelector {
-                border: none;
-                width: 45%;
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            #ExportSettings {}
-
-            #downloadImageButton {
-                background-color: #4CAF50;
-                /* Green */
-                border: none;
-                color: white;
-                padding: 15px 32px;
-                margin-bottom: 3px;
-                text-align: center;
-                text-decoration: none;
-                display: block;
-                font-size: 16px;
-            }
-
-            #downloadLayersButton {
-                background-color: #3573d6;
-                /* Green */
-                border: none;
-                color: white;
-                padding: 15px 32px;
-                margin-bottom: 3px;
-                text-align: center;
-                text-decoration: none;
-                display: block;
-                font-size: 16px;
-            }
-
-            input.ParametterCheckbox {
-                appearance: none;
-                width: 5%;
-                height: 12px;
-                border: 1px solid #aaa;
-                border-radius: 2px;
-                background: #606060;
-                position: relative;
-                display: inline-block;
-                overflow: hidden;
-                vertical-align: middle;
-                transition: background 0.3s;
-                box-sizing: border-box;
-            }
-
-            input.ParametterCheckbox:after {
-                content: '';
-                position: absolute;
-                border: 1px solid #aaa;
-                border-radius: 2px;
-                transition: left 0.1s cubic-bezier(0.785, 0.135, 0.15, 0.86);
-            }
-
-            input.ParametterCheckbox:checked {
-                background: #64beef;
-                border-color: #8daee5;
-            }
-
-        </style>
-        <script src="libs/prefixfree.min.js"></script>
-        <script src="libs/jszip.min.js"></script>
-        <script src="libs/FileSaver.min.js"></script>
-    </head>
     <div id="Settings">
         <div class="Parametter" id="ImageSize">
             <div>
-                <div>
-                    <h2>Image</h2>
-                </div>
+                <h2>Image</h2>
                 <p>Size</p>
                 <input type="text" id="imageWidthField" value="1920"> <span>x</span>
                 <input type="text" id="imageHeightField" value="1080">
-                <input style="display: none" type="checkbox" id="verticalCheckbox" tabindex="-1">
-                <span style="display: none">Vertical organization</span>
+                <div class="checkbox">
+                    <input type="checkbox" id="verticalCheckbox" tabindex="-1" onclick="generateMire()">
+                    <span>Vertical organization</span>
+                </div>
             </div>
         </div>
         <div class="Parametter" id="TextSection">
@@ -289,7 +290,7 @@
                 <input class="ParametterCheckbox" type="checkbox" id="LinesCheckbox" checked tabindex="-1" onclick="setLines()">
             </div>
             <div id="LinesSettings">
-                <p>How many</p>
+                <p>Count</p>
                 <input type="text" id="linesField" value="2">
                 <p>Weight</p>
                 <input type="text" id="linesWeightField" value="10">
@@ -319,7 +320,7 @@
                         <input type="checkbox" id="followingCirclesCheckbox" tabindex="-1" onclick="setFollowingCircles()">
                     </div>
                     <div class="subParametter" id="FollowingCirclesSettings">
-                        <p>How many</p>
+                        <p>Count</p>
                         <input type="text" id="followingCirclesField" value="2">
                         <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
                             <span>Fitted circles</span>
@@ -332,9 +333,9 @@
                         <input type="checkbox" id="concentricCirclesCheckbox" checked tabindex="-1" onclick="setConcentricCircles()">
                     </div>
                     <div class="subParametter" id="ConcentricCirclesSettings">
-                        <p>How many</p>
+                        <p>Count</p>
                         <input type="text" id="concentricCirclesField" value="2">
-                        <p>Size first</p>
+                        <p>Size</p>
                         <input type="text" id="sizeConcentricCirclesField" value="500">
                         <p>Multiplier</p>
                         <input type="text" id="multConcentricCirclesField" value="200">
@@ -373,7 +374,7 @@
     </div>
 
 
-    <canvas id="myCanvas" width="720" height="405">
+    <canvas id="myCanvas" width="720">
         Your browser does not support the canvas element.
     </canvas>
 
@@ -546,6 +547,7 @@
         var isCircles = Boolean();
         var isGradient = Boolean();
         var rectAreSquares = true;
+        var verticalOrganization = false;
 
         //Internal management
         var squaresEnabled = true;
@@ -711,8 +713,18 @@
 
             nbRectWidth = rectWidthField.value;
             nbRectHeight = rectHeightField.value;
+
             rectWidth = imgWidth / nbRectWidth;
             rectHeight = imgHeight / nbRectHeight;
+
+
+            if (verticalOrganization && rectAreSquares) {
+                nbRectWidth = imgWidth / rectWidth;
+                rectWidth = rectHeight;
+            } else {
+                nbRectHeight = imgHeight / rectHeight;
+            }
+
             fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight) + "px";
 
             imgCtx.font = fontSize + " Arial";
@@ -728,7 +740,19 @@
             }
 
             imgRatio = imgWidth / imgHeight;
-            canvas.height = canvas.width * 1 / imgRatio;
+
+            canvas.height = canvas.width / imgRatio;
+
+            if (canvas.width <= canvas.height) {
+                canvas.style.width = "auto";
+                canvas.style.height = String(95) + "%";
+            } 
+            else {
+                canvas.style.height = "auto";
+                canvas.style.width = String(48) + "%";
+            }
+
+
 
             //Fields
             //Text
@@ -796,7 +820,7 @@
 
             //Gradient
             if (isGradient) {
-                if (isExporting)//Trick for performances
+                if (isExporting) //Trick for performances
                     var currImg = temp;
                 else
                     var currImg = img;
@@ -808,7 +832,7 @@
                     bottomRight: grdBottomRightColor
                 });
 
-                if (isExporting) {//Trick for performances
+                if (isExporting) { //Trick for performances
                     imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
                         0, 0, img.width, img.height); // destination rectangle
                     addImageToZIP(temp, "gradient");
@@ -818,12 +842,12 @@
 
             //Grid
             if (isGrid) {
-                
-                if (isExporting)//Trick for performances
+
+                if (isExporting) //Trick for performances
                     var currImg = temp;
                 else
                     var currImg = img;
-                
+
                 //Grid drawing (checker)
 
                 var currImgCtx = currImg.getContext("2d");
@@ -872,7 +896,7 @@
                     }
                 }
 
-                if (isExporting) {//Trick for performances
+                if (isExporting) { //Trick for performances
                     imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
                         0, 0, img.width, img.height); // destination rectangle
                     addImageToZIP(temp, "grid");
@@ -882,12 +906,12 @@
 
             //Lines Drawing
             if (isLines) {
-                
-                if (isExporting)//Trick for performances
+
+                if (isExporting) //Trick for performances
                     var currImg = temp;
                 else
                     var currImg = img;
-                
+
                 for (var i = 0; i < nLines; i++) {
                     if (crossedLines) {
                         drawLine(currImg, imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
@@ -901,8 +925,8 @@
                     drawLine(currImg, imgWidth / 2, 0, imgWidth / 2, imgHeight);
                     drawLine(currImg, 0, imgHeight / 2, imgWidth, imgHeight / 2);
                 }
-                
-                if (isExporting) {//Trick for performances
+
+                if (isExporting) { //Trick for performances
                     imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
                         0, 0, img.width, img.height); // destination rectangle
                     addImageToZIP(temp, "lines");
@@ -913,12 +937,12 @@
             //Circles drawing
 
             if (isCircles) {
-                
-                if (isExporting)//Trick for performances
+
+                if (isExporting) //Trick for performances
                     var currImg = temp;
                 else
                     var currImg = img;
-                
+
                 if (isFollowingCircles) {
                     for (var i = 0; i < nFollowingCircles; i++) {
                         if (fittedCircles) {
@@ -932,8 +956,8 @@
                         drawCircle(currImg, imgWidth / 2, imgHeight / 2, sizeConcentricCircles / 2 + multConcentricCircles * i);
                     }
                 }
-                
-                if (isExporting) {//Trick for performances
+
+                if (isExporting) { //Trick for performances
                     imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
                         0, 0, img.width, img.height); // destination rectangle
                     addImageToZIP(temp, "circles");
@@ -943,21 +967,21 @@
 
             //Text displaying
             if (isText) {
-                
-                if (isExporting)//Trick for performances
+
+                if (isExporting) //Trick for performances
                     var currImg = temp;
                 else
                     var currImg = img;
-                
+
                 var currImgCtx = currImg.getContext("2d");
-                
+
                 currImgCtx.fillStyle = textColor;
                 currImgCtx.strokeStyle = "black";
                 currImgCtx.font = String(mainTextWeight) + "px" + " Arial";
                 currImgCtx.strokeText(mainText, imgWidth / 2, imgHeight / 2);
                 currImgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
-                
-                if (isExporting) {//Trick for performances
+
+                if (isExporting) { //Trick for performances
                     imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
                         0, 0, img.width, img.height); // destination rectangle
                     addImageToZIP(temp, "text");
@@ -967,14 +991,14 @@
 
             //Overlay
             if (isOverlay) {
-                
-                if (isExporting)//Trick for performances
+
+                if (isExporting) //Trick for performances
                     var currImg = temp;
                 else
                     var currImg = img;
-                
+
                 var currImgCtx = currImg.getContext("2d");
-                
+
                 if (frameOverlay) {
                     currImgCtx.lineWidth = imgRatio * 50;
                     currImgCtx.strokeStyle = frameOverlayColor;
@@ -991,8 +1015,8 @@
                         drawArrow(currImg, imgWidth / 2 * i, imgHeight / 1, 10, -135 - 45 * i);
                     }
                 }
-                
-                if (isExporting) {//Trick for performances
+
+                if (isExporting) { //Trick for performances
                     imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
                         0, 0, img.width, img.height); // destination rectangle
                     addImageToZIP(temp, "overlay");
@@ -1129,6 +1153,13 @@
                     saveAs(blob, name + ".zip");
                 });
         }
+
+
+        (function() {
+            Math.clamp = function(a, b, c) {
+                return Math.max(b, Math.min(c, a));
+            }
+        })();
 
     </script>
 
