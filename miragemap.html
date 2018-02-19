@@ -210,6 +210,8 @@
         <div class="Parametter" id="ImageSize">
             <div>
                 <h2>Image</h2>
+            </div>
+            <div>
                 <p>Size</p>
                 <input type="text" id="imageWidthField" value="1920"> <span>x</span>
                 <input type="text" id="imageHeightField" value="1080">
@@ -370,6 +372,9 @@
         <div id="ExportSettings">
             <a class="downloadButton" id="downloadImageButton">Download Image</a>
             <a class="downloadButton" id="downloadLayersButton">Download Layers</a>
+            <a class="saveButton" id="savePresetButton">Save Preset</a>
+            <a class="saveButton" id="exportPresetButton">Export Preset</a>
+            <a class="saveButton" id="loadPresetButton">Load Preset</a>
         </div>
     </div>
 
@@ -566,6 +571,15 @@
         var layersLink = document.getElementById("downloadLayersButton");
         layersLink.addEventListener('click', downloadLayers);
 
+        var saveLink = document.getElementById("savePresetButton");
+        saveLink.addEventListener('click', savePreset);
+
+        var exportLink = document.getElementById("exportPresetButton");
+        exportLink.addEventListener('click', exportPreset);
+        
+        var loadLink = document.getElementById("loadPresetButton");
+        loadLink.addEventListener('click', loadLink);
+
 
 
         //Functions
@@ -728,14 +742,7 @@
                 }
             }
 
-            /*if (verticalOrganization && rectAreSquares) {
-                nbRectWidth = imgWidth / rectWidth;
-                rectWidth = rectHeight;
-            } else {
-                nbRectHeight = imgHeight / rectHeight;
-            }*/
-
-            fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight) + "px";
+            fontSize = String(rectHeight > rectWidth ? rectWidth * 0.7 : rectHeight * 0.7) + "px";
 
             imgCtx.font = fontSize + " Arial";
             imgCtx.textAlign = "center";
@@ -1150,6 +1157,57 @@
                 });
         }
 
+        //Presets
+        var preset_inputs = {
+            preset0: 'TextCheckbox',
+            preset1: 'mainTextField'
+        };
+
+        function makePreset() {
+            var preset = {};
+            var keys = Object.keys(preset_inputs);
+            for (var i = 0; i < keys.length; ++i) {
+                var key = keys[i];
+                var input_id = preset_inputs[key];
+                var input = document.getElementById(input_id);
+                console.log(input.nodeType);
+                if (input.type == 'text') {
+                    preset[input_id] = input.value;
+                } else if (input.type == 'checkbox') {
+                    preset[input_id] = input.checked;
+                }
+            }
+            return preset
+        }
+
+        function savePreset() {
+            // Store
+            var jsonData = JSON.stringify(makePreset());
+            localStorage.setItem('testObject', JSON.stringify(jsonData));
+            // Retrieve
+            document.getElementById("savePresetButton").innerHTML = localStorage.getItem(jsonData);
+            console.log(localStorage.getItem("testObject"));
+        }
+
+        function exportPreset() {
+            var jsonData = JSON.stringify(makePreset());
+            download(jsonData, "test.json", 'text/plain');
+            console.log(jsonData);
+        }
+        
+        function applyPreset() {
+            
+        }
+
+        function download(text, name, type) {
+            var a = exportLink;
+            var file = new Blob([text], {
+                type: type
+            });
+            a.href = URL.createObjectURL(file);
+            a.download = name;
+            a.click();
+        }
 
         (function() {
             Math.clamp = function(a, b, c) {
