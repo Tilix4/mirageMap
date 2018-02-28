@@ -258,6 +258,8 @@ Special thanks to Elie Michel (http://exppad.com/)
                         <span>Frame</span>
                     </div>
                     <input class="colorSelector" type="color" id="frameOverlayColorSelector" value="#fff000" tabindex="-1">
+                    <p>Size</p>
+                    <input type="text" id="frameOverlaySizeField" value="40">
                 </div>
                 <div>
                     <div class="checkbox">
@@ -265,6 +267,8 @@ Special thanks to Elie Michel (http://exppad.com/)
                         <span>Arrows</span>
                     </div>
                     <input class="colorSelector" type="color" id="arrowsOverlayColorSelector" value="#ff0000" tabindex="-1">
+                    <p>Size</p>
+                    <input type="text" id="arrowsOverlaySizeField" value="10">
                 </div>
             </div>
         </div>
@@ -421,10 +425,24 @@ Special thanks to Elie Michel (http://exppad.com/)
         var frameOverlayColorSelector = document.getElementById("frameOverlayColorSelector");
         var frameOverlayColor = frameOverlayColorSelector.value;
         frameOverlayColorSelector.addEventListener("input", generateMire);
+        
+        var frameOverlaySizeField = document.getElementById("frameOverlaySizeField");
+        var frameOverlaySize = frameOverlaySizeField.value;
+        frameOverlaySizeField.addEventListener("input", generateMire);
+        frameOverlaySizeField.addEventListener("blur", function currFunction(e) {
+            if ( e.relatedTarget.value <= 0)  e.relatedTarget.value = 0;
+        }); //Set the field to 0 if empty or not valid
 
         var arrowsOverlayColorSelector = document.getElementById("arrowsOverlayColorSelector");
         var arrowsOverlayColor = arrowsOverlayColorSelector.value;
         arrowsOverlayColorSelector.addEventListener("input", generateMire);
+        
+        var arrowsOverlaySizeField = document.getElementById("arrowsOverlaySizeField");
+        var arrowsOverlaySize = arrowsOverlaySizeField.value;
+        arrowsOverlaySizeField.addEventListener("input", generateMire);
+        arrowsOverlaySizeField.addEventListener("blur", function currFunction(e) {
+            if ( e.relatedTarget.value <= 0)  e.relatedTarget.value = 0;
+        }); //Set the field to 0 if empty or not valid
 
         var rectWidthField = document.getElementById("nbSquaresW");
         var nbRectWidth = rectWidthField.value;
@@ -784,8 +802,10 @@ Special thanks to Elie Michel (http://exppad.com/)
             //Overlay
             frameOverlay = frameOverlayCheckbox.checked;
             frameOverlayColor = frameOverlayColorSelector.value;
+            frameOverlaySize = frameOverlaySizeField.value;
             arrowsOverlay = arrowsOverlayCheckbox.checked;
             arrowsOverlayColor = arrowsOverlayColorSelector.value;
+            arrowsOverlaySize = arrowsOverlaySizeField.value;
 
 
             //Grid
@@ -1009,19 +1029,19 @@ Special thanks to Elie Michel (http://exppad.com/)
                 var currImgCtx = currImg.getContext("2d");
 
                 if (frameOverlay) {
-                    currImgCtx.lineWidth = imgRatio * 50;
+                    currImgCtx.lineWidth = imgRatio * frameOverlaySize;
                     currImgCtx.strokeStyle = frameOverlayColor;
                     currImgCtx.strokeRect(0, 0, imgWidth, imgHeight);
                 }
                 if (arrowsOverlay) {
                     for (var i = 0; i < 3; i++) {
-                        drawArrow(currImg, imgWidth / 2 * i, 0, 10, -45 + 45 * i);
+                        drawArrow(currImg, imgWidth / 2 * i, 0, arrowsOverlaySize, -45 + 45 * i);
                     }
                     for (var i = 0; i < 2; i++) {
-                        drawArrow(currImg, imgWidth * i, imgHeight / 2, 10, -90 + 180 * i);
+                        drawArrow(currImg, imgWidth * i, imgHeight / 2, arrowsOverlaySize, -90 + 180 * i);
                     }
                     for (var i = 0; i < 3; i++) {
-                        drawArrow(currImg, imgWidth / 2 * i, imgHeight / 1, 10, -135 - 45 * i);
+                        drawArrow(currImg, imgWidth / 2 * i, imgHeight / 1, arrowsOverlaySize, -135 - 45 * i);
                     }
                 }
 
