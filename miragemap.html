@@ -540,19 +540,19 @@ Special thanks to Elie Michel (http://exppad.com/)
         //Gradient
         var grdTopLeftColorSelector = document.getElementById("grdTopLeftColorSelector");
         var grdTopLeftColor = grdTopLeftColorSelector.value;
-        grdTopLeftColorSelector.addEventListener("input", generateMire);
+        grdTopLeftColorSelector.addEventListener("input", generateGradient);
 
         var grdTopRightColorSelector = document.getElementById("grdTopRightColorSelector");
         var grdTopRightColor = grdTopRightColorSelector.value;
-        grdTopRightColorSelector.addEventListener("input", generateMire);
+        grdTopRightColorSelector.addEventListener("input", generateGradient);
 
         var grdBottomRightColorSelector = document.getElementById("grdBottomRightColorSelector");
         var grdBottomRightColor = grdBottomRightColorSelector.value;
-        grdBottomRightColorSelector.addEventListener("input", generateMire);
+        grdBottomRightColorSelector.addEventListener("input", generateGradient);
 
         var grdBottomLeftColorSelector = document.getElementById("grdBottomLeftColorSelector");
         var grdBottomLeftColor = grdBottomLeftColorSelector.value;
-        grdBottomLeftColorSelector.addEventListener("input", generateMire);
+        grdBottomLeftColorSelector.addEventListener("input", generateGradient);
 
         function myFunction(e) { //debug function
             rectAreSquares = squaresCheckbox.checked;
@@ -567,15 +567,15 @@ Special thanks to Elie Michel (http://exppad.com/)
         var imgGradient = document.createElement("canvas"); //Optimization
         var imgGradientCtx = imgGradient.getContext("2d"); //Optimization
         var imgLines = document.createElement("canvas"); //Optimization
-        var imgLines = imgGradient.getContext("2d"); //Optimization
+        var imgLinesCtx = imgLines.getContext("2d"); //Optimization
         var imgCircles = document.createElement("canvas"); //Optimization
-        var imgCirclesCtx = imgGradient.getContext("2d"); //Optimization
+        var imgCirclesCtx = imgCircles.getContext("2d"); //Optimization
         var imgOverlay = document.createElement("canvas"); //Optimization
-        var imgOverlayCtx = imgGradient.getContext("2d"); //Optimization
+        var imgOverlayCtx = imgOverlay.getContext("2d"); //Optimization
         var imgText = document.createElement("canvas"); //Optimization
-        var imgTextCtx = imgGradient.getContext("2d"); //Optimization
+        var imgTextCtx = imgText.getContext("2d"); //Optimization
         var imgGrid = document.createElement("canvas"); //Optimization
-        var imgGridCtx = imgGradient.getContext("2d"); //Optimization
+        var imgGridCtx = imgGrid.getContext("2d"); //Optimization
         var temp = document.createElement("canvas");
         var tempCtx = temp.getContext("2d");
 
@@ -704,7 +704,7 @@ Special thanks to Elie Michel (http://exppad.com/)
                 document.getElementById(id).style.display = 'block';
             else
                 document.getElementById(id).style.display = 'none';
-            generateMire();
+            generateGradient();
         }
 
         function gridUpdate(e) { //Squares fields ergonomy
@@ -779,10 +779,8 @@ Special thanks to Elie Michel (http://exppad.com/)
 
             temp = img;
             tempCtx = imgCtx;
-            imgGradient = img;
-            imgGradientCtx = imgCtx;
-            imgGradient = img;
-            imgGradientCtx = imgCtx;
+            //imgGradient = img;
+            //imgGradientCtx = imgGradient.getContext('2D');
             imgGrid = img;
             imgGridCtx = imgCtx;
             imgLines = img;
@@ -883,43 +881,48 @@ Special thanks to Elie Michel (http://exppad.com/)
 
             //Gradient
             if (isGradient) {
-                generateGradient(imgGradient);
+                drawInMainImage(imgGradient);
             }
 
             //Grid
             if (isGrid) {
-                generateGrid(imgGrid);
+                generateGrid();
             }
 
             //Lines Drawing
             if (isLines) {
-                generateLines(imgLines);
+                generateLines();
             }
 
             //Circles drawing
 
             if (isCircles) {
-                generateCircles(imgCircles);
+                generateCircles();
             }
 
             //Text displaying
             if (isText) {
-                generateText(imgText);
+                generateText();
             }
 
             //Overlay
             if (isOverlay) {
-                generateOverlay(imgOverlay);
+                generateOverlay();
             }
             //Draw the working img in the page canvas
-            canvasCtx.drawImage(img, 0, 0, img.width, img.height, // source rectangle
+            canvasCtx.drawImage(imgGrid, 0, 0, img.width, img.height, // source rectangle
                 0, 0, canvas.width, canvas.height); // destination rectangle
         }
 
-        function generateGrid(currImg) {
+        function drawInMainImage(currImg) {
+            imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
+                0, 0, img.width, img.height); // destination rectangle
+        }
+
+        function generateGrid() {
 
             //Grid drawing (checker)
-
+            currImg = imgGrid;
             var currImgCtx = currImg.getContext("2d");
 
             for (var j = 0; j < nbRectWidth; ++j) {
@@ -962,9 +965,9 @@ Special thanks to Elie Michel (http://exppad.com/)
             }
         }
 
-        function generateLines(currImg) {
+        function generateLines() {
 
-            var currImg = temp;
+            var currImg = imgLines;
 
             for (var i = 0; i < nLines; i++) {
                 if (crossedLines) {
@@ -989,7 +992,8 @@ Special thanks to Elie Michel (http://exppad.com/)
             }
         }
 
-        function generateCircles(currImg) {
+        function generateCircles() {
+            currImg = imgCircles;
 
             if (isExporting) //Trick for performances
                 var currImg = temp;
@@ -1018,7 +1022,8 @@ Special thanks to Elie Michel (http://exppad.com/)
             }
         }
 
-        function generateText(currImg) {
+        function generateText() {
+            currImg = imgText;
             if (isExporting) //Trick for performances
                 var currImg = temp;
             else
@@ -1040,7 +1045,8 @@ Special thanks to Elie Michel (http://exppad.com/)
             }
         }
 
-        function generateOverlay(currImg) {
+        function generateOverlay() {
+            currImg = imgOverlay;
             if (isExporting) //Trick for performances
                 var currImg = temp;
             else
@@ -1073,13 +1079,16 @@ Special thanks to Elie Michel (http://exppad.com/)
             }
         }
 
-        function generateGradient(currImg) {
+        function generateGradient() {
+            currImg = imgGradient;
             quadGradient(currImg, {
                 topLeft: grdTopLeftColor,
                 topRight: grdTopRightColor,
                 bottomLeft: grdBottomLeftColor,
                 bottomRight: grdBottomRightColor
             });
+
+            generateMire();
 
             if (isExporting) { //Trick for performances
                 imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
