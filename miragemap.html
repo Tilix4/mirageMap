@@ -885,7 +885,6 @@ Special thanks to Elie Michel (http://exppad.com/)
       }
     }
 
-
     function generateMire() {
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -1208,10 +1207,40 @@ Special thanks to Elie Michel (http://exppad.com/)
 
     //Export functions
     function downloadLayers() {
-      isExporting = true;
-      generateMire();
-      exportZIP("layers");
-      isExporting = false;
+      addAllLayersToZIP();
+      exportZIP("Mire_"+mainText+"_layers");
+    }
+    
+    function addAllLayersToZIP() {
+      //Gradient
+      if (isGradient) {
+        addImageToZIP(imgGradient, "gradient");
+      }
+
+      //Grid
+      if (isGrid) {
+        addImageToZIP(imgGrid, "grid");
+      }
+
+      //Lines Drawing
+      if (isLines) {
+        addImageToZIP(imgLines, "lines");
+      }
+
+      //Circles drawing
+      if (isCircles) {
+        addImageToZIP(imgCircles, "circles");
+      }
+
+      //Text displaying
+      if (isText) {
+        addImageToZIP(imgText, "text");
+      }
+
+      //Overlay
+      if (isOverlay) {
+        addImageToZIP(imgOverlay, "overlay");
+      }
     }
 
     function addImageToZIP(image, name) {
