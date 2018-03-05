@@ -400,11 +400,11 @@ Special thanks to Elie Michel (http://exppad.com/)
     //Settings fields
     var widthField = document.getElementById("imageWidthField");
     var imgWidth = widthField.value;
-    widthField.addEventListener("blur", updateAllCanvas);
+    widthField.addEventListener("blur", initialisation);
 
     var heightField = document.getElementById("imageHeightField");
     var imgHeight = widthField.value;
-    heightField.addEventListener("blur", updateAllCanvas);
+    heightField.addEventListener("blur", initialisation);
 
     var mainTextField = document.getElementById("mainTextField");
     var mainText = mainTextField.value;
@@ -594,14 +594,13 @@ Special thanks to Elie Michel (http://exppad.com/)
     var squaresEnabled = true;
     var bckSpaceCount = 0;
     var imgRatio;
-    var isExporting = false; //Trick for keeping performances
     var zip = new JSZip();
 
     //Setup the download button
     var imageLink = document.getElementById("downloadImageButton");
     imageLink.addEventListener('click', function(ev) {
       imageLink.href = img.toDataURL();
-      imageLink.download = "mire_" + String(imgWidth) + "x" + String(imgHeight) + ".png";
+      imageLink.download = "mire_"+mainText.replace(/ /g, "-")+"_"+ String(imgWidth) + "x" + String(imgHeight) + ".png";
     }, false);
 
     var layersLink = document.getElementById("downloadLayersButton");
@@ -802,17 +801,6 @@ Special thanks to Elie Michel (http://exppad.com/)
       imgTextCtx.textAlign = "center";
       imgTextCtx.textBaseline = "middle";
 
-      temp = img;
-      tempCtx = imgCtx;
-
-      if (isExporting) {
-        temp.width = imgWidth;
-        temp.height = imgHeight;
-        tempCtx.font = fontSize + " Arial";
-        tempCtx.textAlign = "center";
-        tempCtx.textBaseline = "middle";
-      }
-
       imgRatio = imgWidth / imgHeight;
       canvas.height = canvas.width / imgRatio;
 
@@ -965,13 +953,6 @@ Special thanks to Elie Michel (http://exppad.com/)
       }
 
       generateMire();
-
-      if (isExporting) { //Trick for performances
-        imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
-          0, 0, img.width, img.height); // destination rectangle
-        addImageToZIP(temp, "grid");
-        tempCtx.clearRect(0, 0, temp.width, temp.height);
-      }
     }
 
     function generateLines() {
@@ -996,11 +977,6 @@ Special thanks to Elie Michel (http://exppad.com/)
       }
 
       generateMire();
-
-      if (isExporting) { //Trick for performances
-        addImageToZIP(temp, "lines");
-        tempCtx.clearRect(0, 0, temp.width, temp.height);
-      }
     }
 
     function generateCircles() {
@@ -1025,13 +1001,6 @@ Special thanks to Elie Michel (http://exppad.com/)
       }
 
       generateMire();
-
-      if (isExporting) { //Trick for performances
-        imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
-          0, 0, img.width, img.height); // destination rectangle
-        addImageToZIP(temp, "circles");
-        tempCtx.clearRect(0, 0, temp.width, temp.height);
-      }
     }
 
     function generateText() {
@@ -1040,7 +1009,7 @@ Special thanks to Elie Michel (http://exppad.com/)
       var currImg = imgText;
       var currImgCtx = currImg.getContext('2d');
       currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
-
+      
       currImgCtx.fillStyle = textColor;
       currImgCtx.strokeStyle = "black";
       currImgCtx.lineWidth = mainTextWeight / 10;
@@ -1049,13 +1018,6 @@ Special thanks to Elie Michel (http://exppad.com/)
       currImgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
 
       generateMire();
-
-      if (isExporting) { //Trick for performances
-        imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
-          0, 0, img.width, img.height); // destination rectangle
-        addImageToZIP(temp, "text");
-        tempCtx.clearRect(0, 0, temp.width, temp.height);
-      }
     }
 
     function generateOverlay() {
@@ -1083,13 +1045,6 @@ Special thanks to Elie Michel (http://exppad.com/)
       }
 
       generateMire();
-
-      if (isExporting) { //Trick for performances
-        imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
-          0, 0, img.width, img.height); // destination rectangle
-        addImageToZIP(temp, "overlay");
-        tempCtx.clearRect(0, 0, temp.width, temp.height);
-      }
     }
 
     function generateGradient() {
@@ -1104,13 +1059,6 @@ Special thanks to Elie Michel (http://exppad.com/)
       });
 
       generateMire();
-
-      if (isExporting) { //Trick for performances
-        imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
-          0, 0, img.width, img.height); // destination rectangle
-        addImageToZIP(currImg, "gradient");
-        tempCtx.clearRect(0, 0, temp.width, temp.height);
-      }
     }
 
     function quadGradient(canvasLocal, corners) {
@@ -1208,7 +1156,7 @@ Special thanks to Elie Michel (http://exppad.com/)
     //Export functions
     function downloadLayers() {
       addAllLayersToZIP();
-      exportZIP("Mire_"+mainText+"_layers");
+      exportZIP("Mire_"+mainText.replace(/ /g, "-")+"_layers");
     }
     
     function addAllLayersToZIP() {
