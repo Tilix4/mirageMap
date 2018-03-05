@@ -15,1244 +15,1236 @@ Special thanks to Elie Michel (http://exppad.com/)
 <html>
 
 <head>
-    <meta charset="utf-8" />
-    <title>Mirage Map</title>
+  <meta charset="utf-8" />
+  <title>Mirage Map</title>
 
-    <style>
-        body {
-            background-color: #424242;
-            font-family: "Arial";
-        }
+  <style>
+    body {
+      background-color: #424242;
+      font-family: "Arial";
+    }
 
-        canvas {
-            display: inline-block;
-            border: 1px solid #d3d3d3;
-            position: fixed;
-            right: 10px;
-            top: 20px;
-            width: 48%;
-        }
+    canvas {
+      display: inline-block;
+      border: 1px solid #d3d3d3;
+      position: fixed;
+      right: 10px;
+      top: 20px;
+      width: 48%;
+    }
 
-        div {
-            margin: 3px;
-            position: relative;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            padding-left: 10px;
-            width: auto;
-        }
+    div {
+      margin: 3px;
+      position: relative;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 10px;
+      width: auto;
+    }
 
-        input {
-            width: 10%;
-            background-color: #303030;
-            color: lightsteelblue;
-            border: solid 1px;
-            border-radius: 15px;
-        }
+    input {
+      width: 10%;
+      background-color: #303030;
+      color: lightsteelblue;
+      border: solid 1px;
+      border-radius: 15px;
+    }
 
-        input[type="color"] {
-            background-color: transparent;
-            border: none;
-            vertical-align: middle;
-            box-shadow: none;
+    input[type="color"] {
+      background-color: transparent;
+      border: none;
+      vertical-align: middle;
+      box-shadow: none;
 
-        }
+    }
 
-        input[type="checkbox"] {
-            width: auto;
-            margin-left: 20px;
-        }
+    input[type="checkbox"] {
+      width: auto;
+      margin-left: 20px;
+    }
 
-        input[type="text"] {
-            padding: 3px;
-            text-align: center;
-            margin-left: 10px;
-            margin-right: 10px;
-        }
+    input[type="text"] {
+      padding: 3px;
+      text-align: center;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
 
-        input[type="text"]:disabled {
-            background: #333333;
-            color: dimgrey;
-        }
-
-
-        a {
-            cursor: pointer;
-        }
-
-        p {
-            display: inline;
-            text-decoration: none;
-            color: gainsboro;
-            margin-top: 10px;
-            margin-right: 0px;
-            margin-left: 20px;
-        }
-
-        span {
-            color: gainsboro;
-        }
-
-        h2 {
-            display: inline;
-            color: #8d98aa;
-        }
+    input[type="text"]:disabled {
+      background: #333333;
+      color: dimgrey;
+    }
 
 
-        h3 {
-            display: inline;
-            color: #8d98aa;
-        }
+    a {
+      cursor: pointer;
+    }
 
-        .colorSelector {
-            height: 34px;
-            width: 50px;
-            display: inline;
-            border: none;
-        }
+    p {
+      display: inline;
+      text-decoration: none;
+      color: gainsboro;
+      margin-top: 10px;
+      margin-right: 0px;
+      margin-left: 20px;
+    }
 
-        .Parametter {
-            border-bottom: solid 2px #606060;
-            padding-bottom: 2px;
-        }
+    span {
+      color: gainsboro;
+    }
 
-        .subParametter {
-            border-bottom: solid 2px #505050;
-            padding-bottom: 10px;
-        }
+    h2 {
+      display: inline;
+      color: #8d98aa;
+    }
 
-        .checkbox {
-            display: inline-block;
-            padding: 0;
-            margin: 0;
-        }
 
-        #Settings {
-            display: inline-block;
-            background-color: transparent;
-            width: 50%;
-        }
+    h3 {
+      display: inline;
+      color: #8d98aa;
+    }
 
-        #mainTextField {
-            width: 20%;
-        }
+    .colorSelector {
+      height: 34px;
+      width: 50px;
+      display: inline;
+      border: none;
+    }
 
-        #GradientUI {
-            border: solid 2px;
-            border-color: cornflowerblue;
-            border-radius: 15px;
-        }
+    .Parametter {
+      border-bottom: solid 2px #606060;
+      padding-bottom: 2px;
+    }
 
-        .GradientRow {
-            text-align: center;
-        }
+    .subParametter {
+      border-bottom: solid 2px #505050;
+      padding-bottom: 10px;
+    }
 
-        .gradientColorSelector {
-            border: none;
-            width: 45%;
-            margin-left: auto;
-            margin-right: auto;
-        }
+    .checkbox {
+      display: inline-block;
+      padding: 0;
+      margin: 0;
+    }
 
-        #ExportSettings {}
+    #Settings {
+      display: inline-block;
+      background-color: transparent;
+      width: 50%;
+    }
 
-        #downloadImageButton {
-            background-color: #4CAF50;
-            /* Green */
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            margin-bottom: 3px;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            font-size: 16px;
-        }
+    #mainTextField {
+      width: 20%;
+    }
 
-        #downloadLayersButton {
-            background-color: #3573d6;
-            /* Green */
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            margin-bottom: 3px;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            font-size: 16px;
-        }
+    #GradientUI {
+      border: solid 2px;
+      border-color: cornflowerblue;
+      border-radius: 15px;
+    }
 
-        input.ParametterCheckbox {
-            appearance: none;
-            width: 5%;
-            height: 12px;
-            border: 1px solid #aaa;
-            border-radius: 2px;
-            background: #606060;
-            position: relative;
-            display: inline-block;
-            overflow: hidden;
-            vertical-align: middle;
-            transition: background 0.3s;
-            box-sizing: border-box;
-        }
+    .GradientRow {
+      text-align: center;
+    }
 
-        input.ParametterCheckbox:after {
-            content: '';
-            position: absolute;
-            border: 1px solid #aaa;
-            border-radius: 2px;
-            transition: left 0.1s cubic-bezier(0.785, 0.135, 0.15, 0.86);
-        }
+    .gradientColorSelector {
+      border: none;
+      width: 45%;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-        input.ParametterCheckbox:checked {
-            background: #64beef;
-            border-color: #8daee5;
-        }
+    #ExportSettings {}
 
-    </style>
-    <script src="libs/prefixfree.min.js"></script>
-    <script src="libs/jszip.min.js"></script>
-    <script src="libs/FileSaver.min.js"></script>
+    #downloadImageButton {
+      background-color: #4CAF50;
+      /* Green */
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      margin-bottom: 3px;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      font-size: 16px;
+    }
+
+    #downloadLayersButton {
+      background-color: #3573d6;
+      /* Green */
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      margin-bottom: 3px;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      font-size: 16px;
+    }
+
+    input.ParametterCheckbox {
+      appearance: none;
+      width: 5%;
+      height: 12px;
+      border: 1px solid #aaa;
+      border-radius: 2px;
+      background: #606060;
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: middle;
+      transition: background 0.3s;
+      box-sizing: border-box;
+    }
+
+    input.ParametterCheckbox:after {
+      content: '';
+      position: absolute;
+      border: 1px solid #aaa;
+      border-radius: 2px;
+      transition: left 0.1s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    }
+
+    input.ParametterCheckbox:checked {
+      background: #64beef;
+      border-color: #8daee5;
+    }
+
+  </style>
+  <script src="libs/prefixfree.min.js"></script>
+  <script src="libs/jszip.min.js"></script>
+  <script src="libs/FileSaver.min.js"></script>
 </head>
 
 <body onload="initialisation()">
-    <div id="Settings">
-        <div class="Parametter" id="ImageSize">
-            <div>
-                <h2>Image</h2>
-                <p>Size</p>
-                <input type="text" id="imageWidthField" value="1920"> <span>x</span>
-                <input type="text" id="imageHeightField" value="1080">
-                <div class="checkbox">
-                    <input type="checkbox" id="verticalCheckbox" tabindex="-1" onclick="setVerticalOrganization()">
-                    <span>Vertical organization</span>
-                </div>
-            </div>
+  <div id="Settings">
+    <div class="Parametter" id="ImageSize">
+      <div>
+        <h2>Image</h2>
+        <p>Size</p>
+        <input type="text" id="imageWidthField" value="1920"> <span>x</span>
+        <input type="text" id="imageHeightField" value="1080">
+        <div class="checkbox">
+          <input type="checkbox" id="verticalCheckbox" tabindex="-1" onclick="setVerticalOrganization()">
+          <span>Vertical organization</span>
         </div>
-        <div class="Parametter" id="TextSection">
-            <div>
-                <h2>Text</h2>
-                <input class="ParametterCheckbox" type="checkbox" id="TextCheckbox" checked tabindex="-1" onclick="setText()">
-            </div>
-            <div id="TextSettings">
-                <p>Main text</p>
-                <input type="text" id="mainTextField" value="Main Title">
-                <p>Weight</p>
-                <input type="text" id="mainTextWeightField" value="300">
-                <p>Color</p>
-                <input class="colorSelector" type="color" id="textColorSelector" value="#ffff00" tabindex="-1">
-            </div>
-        </div>
-        <div class="Parametter" id="OverlaySection">
-            <div>
-                <h2>Overlay</h2>
-                <input class="ParametterCheckbox" type="checkbox" id="OverlayCheckbox" tabindex="-1" onclick="setOverlay()">
-            </div>
-            <div id="OverlaySettings">
-                <div>
-                    <div class="checkbox">
-                        <input type="checkbox" id="frameOverlayCheckbox" checked tabindex="-1" onclick="generateMire()">
-                        <span>Frame</span>
-                    </div>
-                    <input class="colorSelector" type="color" id="frameOverlayColorSelector" value="#fff000" tabindex="-1">
-                    <p>Size</p>
-                    <input type="text" id="frameOverlaySizeField" value="40">
-                </div>
-                <div>
-                    <div class="checkbox">
-                        <input type="checkbox" id="arrowsOverlayCheckbox" checked tabindex="-1" onclick="generateMire()">
-                        <span>Arrows</span>
-                    </div>
-                    <input class="colorSelector" type="color" id="arrowsOverlayColorSelector" value="#ff0000" tabindex="-1">
-                    <p>Size</p>
-                    <input type="text" id="arrowsOverlaySizeField" value="10">
-                </div>
-            </div>
-        </div>
-        <div class="Parametter" id="GridSection">
-            <div>
-                <h2>Grid</h2>
-                <input class="ParametterCheckbox" type="checkbox" id="GridCheckbox" checked tabindex="-1" onclick="setGrid()">
-            </div>
-            <div id="GridSettings">
-                <div>
-                    <p>Size</p>
-                    <input type="text" id="nbSquaresW" value="10"> <span>x</span>
-                    <input type="text" id="nbSquaresH" value="10">
-                    <div class="checkbox">
-                        <input type="checkbox" id="squaresCheckbox" checked tabindex="-1" onclick="setRectAsSquares()">
-                        <span>Squares</span>
-                    </div>
-                </div>
-                <div>
-                    <p>Checker</p>
-                    <input class="colorSelector" type="color" id="gridColorSelector" value="#000000" tabindex="-1">
-                    <p>Lines weight</p>
-                    <input type="text" id="gridLinesWeightField" value="10">
-                    <p>Lines</p>
-                    <input class="colorSelector" type="color" id="gridLinesColorSelector" value="#000000" tabindex="-1">
-                </div>
-                <div>
-                    <p>Numbers</p>
-                    <input class="colorSelector" type="color" id="numbersColorSelector" value="#ffffff" tabindex="-1">
-                </div>
-            </div>
-        </div>
-        <div class="Parametter" id="LinesSection">
-            <div>
-                <h2>Lines</h2>
-                <input class="ParametterCheckbox" type="checkbox" id="LinesCheckbox" checked tabindex="-1" onclick="setLines()">
-            </div>
-            <div id="LinesSettings">
-                <p>Count</p>
-                <input type="text" id="linesField" value="2">
-                <p>Weight</p>
-                <input type="text" id="linesWeightField" value="10">
-                <div class="checkbox">
-                    <input type="checkbox" id="crossesCheckbox" checked tabindex="-1" onclick="generateLines()">
-                    <span>Crosses</span>
-                </div>
-                <div>
-                    <div class="checkbox">
-                        <input type="checkbox" id="middleCrossCheckbox" checked tabindex="-1" onclick="generateMire()">
-                        <span>Middle cross</span>
-                    </div>
-                    <p>Lines</p>
-                    <input class="colorSelector" type="color" id="linesColorSelector" value="#ffffff" tabindex="-1">
-                </div>
-            </div>
-        </div>
-        <div class="Parametter" id="CirclesSection">
-            <div>
-                <h2>Circles</h2>
-                <input class="ParametterCheckbox" type="checkbox" id="CirclesCheckbox" checked tabindex="-1" onclick="setCircles()">
-            </div>
-            <div id="CirclesSettings">
-                <div>
-                    <div class="checkbox">
-                        <h3>Following circles</h3>
-                        <input type="checkbox" id="followingCirclesCheckbox" tabindex="-1" onclick="setFollowingCircles()">
-                    </div>
-                    <div class="subParametter" id="FollowingCirclesSettings">
-                        <p>Count</p>
-                        <input type="text" id="followingCirclesField" value="2">
-                        <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="generateMire()">
-                            <span>Fitted circles</span>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="checkbox">
-                        <h3>Concentric circles</h3>
-                        <input type="checkbox" id="concentricCirclesCheckbox" checked tabindex="-1" onclick="setConcentricCircles()">
-                    </div>
-                    <div class="subParametter" id="ConcentricCirclesSettings">
-                        <p>Count</p>
-                        <input type="text" id="concentricCirclesField" value="2">
-                        <p>Size</p>
-                        <input type="text" id="sizeConcentricCirclesField" value="500">
-                        <p>Multiplier</p>
-                        <input type="text" id="multConcentricCirclesField" value="200">
-                    </div>
-                </div>
-                <div>
-                    <p>Weight</p>
-                    <input type="text" id="circlesWeightField" value="10">
-                    <p>Color</p>
-                    <input class="colorSelector" type="color" id="circlesColorSelector" value="#ffffff" tabindex="-1">
-                </div>
-            </div>
-        </div>
-        <div class="Parametter" id="GradientSection">
-            <div>
-                <h2>Gradient</h2>
-                <input class="ParametterCheckbox" type="checkbox" id="GradientCheckbox" checked tabindex="-1" onclick="setGradient()">
-            </div>
-            <div id="GradientSettings">
-                <div id="GradientUI">
-                    <div class="GradientRow">
-                        <input class="gradientColorSelector" type="color" id="grdTopLeftColorSelector" value="#ff0000" tabindex="-1">
-                        <input class="gradientColorSelector" type="color" id="grdTopRightColorSelector" value="#00ff00" tabindex="-1">
-                    </div>
-                    <div class="GradientRow">
-                        <input class="gradientColorSelector" type="color" id="grdBottomLeftColorSelector" value="#00f0ff" tabindex="-1">
-                        <input class="gradientColorSelector" type="color" id="grdBottomRightColorSelector" value="#f000ff" tabindex="-1">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="ExportSettings">
-            <a class="downloadButton" id="downloadImageButton">Download Image</a>
-            <a class="downloadButton" id="downloadLayersButton">Download Layers</a>
-        </div>
+      </div>
     </div>
+    <div class="Parametter" id="TextSection">
+      <div>
+        <h2>Text</h2>
+        <input class="ParametterCheckbox" type="checkbox" id="TextCheckbox" checked tabindex="-1" onclick="setText()">
+      </div>
+      <div id="TextSettings">
+        <p>Main text</p>
+        <input type="text" id="mainTextField" value="VP 1">
+        <p>Weight</p>
+        <input type="text" id="mainTextWeightField" value="300">
+        <p>Color</p>
+        <input class="colorSelector" type="color" id="textColorSelector" value="#ffff00" tabindex="-1">
+      </div>
+    </div>
+    <div class="Parametter" id="OverlaySection">
+      <div>
+        <h2>Overlay</h2>
+        <input class="ParametterCheckbox" type="checkbox" id="OverlayCheckbox" tabindex="-1" onclick="setOverlay()">
+      </div>
+      <div id="OverlaySettings">
+        <div>
+          <div class="checkbox">
+            <input type="checkbox" id="frameOverlayCheckbox" checked tabindex="-1" onclick="generateOverlay()">
+            <span>Frame</span>
+          </div>
+          <input class="colorSelector" type="color" id="frameOverlayColorSelector" value="#fff000" tabindex="-1">
+          <p>Size</p>
+          <input type="text" id="frameOverlaySizeField" value="40">
+        </div>
+        <div>
+          <div class="checkbox">
+            <input type="checkbox" id="arrowsOverlayCheckbox" checked tabindex="-1" onclick="generateOverlay()">
+            <span>Arrows</span>
+          </div>
+          <input class="colorSelector" type="color" id="arrowsOverlayColorSelector" value="#ff0000" tabindex="-1">
+          <p>Size</p>
+          <input type="text" id="arrowsOverlaySizeField" value="10">
+        </div>
+      </div>
+    </div>
+    <div class="Parametter" id="GridSection">
+      <div>
+        <h2>Grid</h2>
+        <input class="ParametterCheckbox" type="checkbox" id="GridCheckbox" checked tabindex="-1" onclick="setGrid()">
+      </div>
+      <div id="GridSettings">
+        <div>
+          <p>Size</p>
+          <input type="text" id="nbSquaresW" value="10"> <span>x</span>
+          <input type="text" id="nbSquaresH" value="10">
+          <div class="checkbox">
+            <input type="checkbox" id="squaresCheckbox" checked tabindex="-1" onclick="setRectAsSquares()">
+            <span>Squares</span>
+          </div>
+        </div>
+        <div>
+          <p>Checker</p>
+          <input class="colorSelector" type="color" id="gridColorSelector" value="#000000" tabindex="-1">
+          <p>Lines weight</p>
+          <input type="text" id="gridLinesWeightField" value="10">
+          <p>Lines</p>
+          <input class="colorSelector" type="color" id="gridLinesColorSelector" value="#000000" tabindex="-1">
+        </div>
+        <div>
+          <p>Numbers</p>
+          <input class="colorSelector" type="color" id="numbersColorSelector" value="#ffffff" tabindex="-1">
+        </div>
+      </div>
+    </div>
+    <div class="Parametter" id="LinesSection">
+      <div>
+        <h2>Lines</h2>
+        <input class="ParametterCheckbox" type="checkbox" id="LinesCheckbox" checked tabindex="-1" onclick="setLines()">
+      </div>
+      <div id="LinesSettings">
+        <p>Count</p>
+        <input type="text" id="linesField" value="2">
+        <p>Weight</p>
+        <input type="text" id="linesWeightField" value="10">
+        <div class="checkbox">
+          <input type="checkbox" id="crossesCheckbox" checked tabindex="-1" onclick="generateLines()">
+          <span>Crosses</span>
+        </div>
+        <div>
+          <div class="checkbox">
+            <input type="checkbox" id="middleCrossCheckbox" checked tabindex="-1" onclick="generateLines()">
+            <span>Middle cross</span>
+          </div>
+          <p>Lines</p>
+          <input class="colorSelector" type="color" id="linesColorSelector" value="#ffffff" tabindex="-1">
+        </div>
+      </div>
+    </div>
+    <div class="Parametter" id="CirclesSection">
+      <div>
+        <h2>Circles</h2>
+        <input class="ParametterCheckbox" type="checkbox" id="CirclesCheckbox" checked tabindex="-1" onclick="setCircles()">
+      </div>
+      <div id="CirclesSettings">
+        <div>
+          <div class="checkbox">
+            <h3>Following circles</h3>
+            <input type="checkbox" id="followingCirclesCheckbox" tabindex="-1" onclick="setFollowingCircles()">
+          </div>
+          <div class="subParametter" id="FollowingCirclesSettings">
+            <p>Count</p>
+            <input type="text" id="followingCirclesField" value="2">
+            <div class="checkbox"><input type="checkbox" id="fittedCirclesCheckbox" checked tabindex="-1" onclick="generateCircles()">
+              <span>Fitted circles</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="checkbox">
+            <h3>Concentric circles</h3>
+            <input type="checkbox" id="concentricCirclesCheckbox" checked tabindex="-1" onclick="setConcentricCircles()">
+          </div>
+          <div class="subParametter" id="ConcentricCirclesSettings">
+            <p>Count</p>
+            <input type="text" id="concentricCirclesField" value="2">
+            <p>Size</p>
+            <input type="text" id="sizeConcentricCirclesField" value="500">
+            <p>Multiplier</p>
+            <input type="text" id="multConcentricCirclesField" value="200">
+          </div>
+        </div>
+        <div>
+          <p>Weight</p>
+          <input type="text" id="circlesWeightField" value="10">
+          <p>Color</p>
+          <input class="colorSelector" type="color" id="circlesColorSelector" value="#ffffff" tabindex="-1">
+        </div>
+      </div>
+    </div>
+    <div class="Parametter" id="GradientSection">
+      <div>
+        <h2>Gradient</h2>
+        <input class="ParametterCheckbox" type="checkbox" id="GradientCheckbox" checked tabindex="-1" onclick="setGradient()">
+      </div>
+      <div id="GradientSettings">
+        <div id="GradientUI">
+          <div class="GradientRow">
+            <input class="gradientColorSelector" type="color" id="grdTopLeftColorSelector" value="#ff0000" tabindex="-1">
+            <input class="gradientColorSelector" type="color" id="grdTopRightColorSelector" value="#00ff00" tabindex="-1">
+          </div>
+          <div class="GradientRow">
+            <input class="gradientColorSelector" type="color" id="grdBottomLeftColorSelector" value="#00f0ff" tabindex="-1">
+            <input class="gradientColorSelector" type="color" id="grdBottomRightColorSelector" value="#f000ff" tabindex="-1">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="ExportSettings">
+      <a class="downloadButton" id="downloadImageButton">Download Image</a>
+      <a class="downloadButton" id="downloadLayersButton">Download Layers</a>
+    </div>
+  </div>
 
 
-    <canvas id="myCanvas" width="720">
+  <canvas id="myCanvas" width="720">
         Your browser does not support the canvas element.
     </canvas>
 
-    <script>
-        //Setup
-        //Settings fields
-        var widthField = document.getElementById("imageWidthField");
-        var imgWidth = widthField.value;
-        widthField.addEventListener("blur", updateAllCanvas);
+  <script>
+    //Setup
+    //Settings fields
+    var widthField = document.getElementById("imageWidthField");
+    var imgWidth = widthField.value;
+    widthField.addEventListener("blur", updateAllCanvas);
 
-        var heightField = document.getElementById("imageHeightField");
-        var imgHeight = widthField.value;
-        heightField.addEventListener("blur", updateAllCanvas);
+    var heightField = document.getElementById("imageHeightField");
+    var imgHeight = widthField.value;
+    heightField.addEventListener("blur", updateAllCanvas);
 
-        var mainTextField = document.getElementById("mainTextField");
-        var mainText = mainTextField.value;
-        mainTextField.addEventListener("input", generateMire);
+    var mainTextField = document.getElementById("mainTextField");
+    var mainText = mainTextField.value;
+    mainTextField.addEventListener("input", generateText);
 
-        var mainTextWeightField = document.getElementById("mainTextWeightField");
-        var maintTextWeight = mainTextWeightField.value;
-        mainTextWeightField.addEventListener("input", generateMire);
+    var mainTextWeightField = document.getElementById("mainTextWeightField");
+    var maintTextWeight = mainTextWeightField.value;
+    mainTextWeightField.addEventListener("input", generateText);
 
-        var textColorSelector = document.getElementById("textColorSelector");
-        var textColor = textColorSelector.value;
-        textColorSelector.addEventListener("input", generateMire);
+    var textColorSelector = document.getElementById("textColorSelector");
+    var textColor = textColorSelector.value;
+    textColorSelector.addEventListener("input", generateText);
 
-        var frameOverlayColorSelector = document.getElementById("frameOverlayColorSelector");
-        var frameOverlayColor = frameOverlayColorSelector.value;
-        frameOverlayColorSelector.addEventListener("input", generateMire);
+    var frameOverlayColorSelector = document.getElementById("frameOverlayColorSelector");
+    var frameOverlayColor = frameOverlayColorSelector.value;
+    frameOverlayColorSelector.addEventListener("input", generateOverlay);
 
-        var frameOverlaySizeField = document.getElementById("frameOverlaySizeField");
-        var frameOverlaySize = frameOverlaySizeField.value;
-        frameOverlaySizeField.addEventListener("input", generateMire);
-        frameOverlaySizeField.addEventListener("blur", function currFunction(e) {
-            if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
-        }); //Set the field to 0 if empty or not valid
+    var frameOverlaySizeField = document.getElementById("frameOverlaySizeField");
+    var frameOverlaySize = frameOverlaySizeField.value;
+    frameOverlaySizeField.addEventListener("input", generateOverlay);
+    frameOverlaySizeField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var arrowsOverlayColorSelector = document.getElementById("arrowsOverlayColorSelector");
-        var arrowsOverlayColor = arrowsOverlayColorSelector.value;
-        arrowsOverlayColorSelector.addEventListener("input", generateMire);
+    var arrowsOverlayColorSelector = document.getElementById("arrowsOverlayColorSelector");
+    var arrowsOverlayColor = arrowsOverlayColorSelector.value;
+    arrowsOverlayColorSelector.addEventListener("input", generateOverlay);
 
-        var arrowsOverlaySizeField = document.getElementById("arrowsOverlaySizeField");
-        var arrowsOverlaySize = arrowsOverlaySizeField.value;
-        arrowsOverlaySizeField.addEventListener("input", generateMire);
-        arrowsOverlaySizeField.addEventListener("blur", function currFunction(e) {
-            if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
-        }); //Set the field to 0 if empty or not valid
+    var arrowsOverlaySizeField = document.getElementById("arrowsOverlaySizeField");
+    var arrowsOverlaySize = arrowsOverlaySizeField.value;
+    arrowsOverlaySizeField.addEventListener("input", generateOverlay);
+    arrowsOverlaySizeField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var rectWidthField = document.getElementById("nbSquaresW");
-        var nbRectWidth = rectWidthField.value;
-        rectWidthField.addEventListener("input", generateGrid);
-        rectWidthField.addEventListener("keypress", gridUpdate);
-        rectWidthField.addEventListener("input", gridUpdate); //Forcing height update
-        rectWidthField.addEventListener("blur", function currFunction() {
-            if (rectWidthField.value <= 0) setSquaresFields(0)
-        }); //Set the field to 0 if empty or not valid
+    var rectWidthField = document.getElementById("nbSquaresW");
+    var nbRectWidth = rectWidthField.value;
+    rectWidthField.addEventListener("input", generateGrid);
+    rectWidthField.addEventListener("keypress", gridUpdate);
+    rectWidthField.addEventListener("input", gridUpdate); //Forcing height update
+    rectWidthField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var rectHeightField = document.getElementById("nbSquaresH");
-        var nbRectHeight = rectHeightField.value;
-        rectHeightField.addEventListener("input", generateGrid);
-        rectHeightField.addEventListener("keypress", gridUpdate);
-        rectHeightField.addEventListener("blur", function currFunction() {
-            if (rectHeightField.value <= 0) setSquaresFields(0)
-        }); //Set the field to 0 if empty or not valid
+    var rectHeightField = document.getElementById("nbSquaresH");
+    var nbRectHeight = rectHeightField.value;
+    rectHeightField.addEventListener("input", generateGrid);
+    rectHeightField.addEventListener("keypress", gridUpdate);
+    rectHeightField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var gridColorSelector = document.getElementById("gridColorSelector");
-        var gridColor = gridColorSelector.value;
-        gridColorSelector.addEventListener("input", generateGrid);
+    var gridColorSelector = document.getElementById("gridColorSelector");
+    var gridColor = gridColorSelector.value;
+    gridColorSelector.addEventListener("input", generateGrid);
 
-        var gridLinesWeightField = document.getElementById("gridLinesWeightField");
-        var gridLinesWeight = gridLinesWeightField.value;
-        gridLinesWeightField.addEventListener("input", generateGrid);
-        gridLinesWeightField.addEventListener("blur", function currFunction() {
-            if (gridLinesWeightField.value <= 0) gridLinesWeightField.value = 0;
-        }); //Set the field to 0 if empty or not valid
+    var gridLinesWeightField = document.getElementById("gridLinesWeightField");
+    var gridLinesWeight = gridLinesWeightField.value;
+    gridLinesWeightField.addEventListener("input", generateGrid);
+    gridLinesWeightField.addEventListener("blur", function currFunction() {
+      if (gridLinesWeightField.value <= 0) gridLinesWeightField.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var gridLinesColorSelector = document.getElementById("gridLinesColorSelector");
-        var gridLinesColor = gridLinesColorSelector.value;
-        gridLinesColorSelector.addEventListener("input", generateGrid);
+    var gridLinesColorSelector = document.getElementById("gridLinesColorSelector");
+    var gridLinesColor = gridLinesColorSelector.value;
+    gridLinesColorSelector.addEventListener("input", generateGrid);
 
-        var numbersColorSelector = document.getElementById("numbersColorSelector");
-        var numbersColor = numbersColorSelector.value;
-        numbersColorSelector.addEventListener("input", generateGrid);
+    var numbersColorSelector = document.getElementById("numbersColorSelector");
+    var numbersColor = numbersColorSelector.value;
+    numbersColorSelector.addEventListener("input", generateGrid);
 
-        var linesField = document.getElementById("linesField");
-        var nLines = linesField.value;
-        linesField.addEventListener("input", generateLines);
-        linesField.addEventListener("blur", function currFunction() {
-            if (linesField.value <= 0) linesField.value = 0;
-        }); //Set the field to 0 if empty or not valid
+    var linesField = document.getElementById("linesField");
+    var nLines = linesField.value;
+    linesField.addEventListener("input", generateLines);
+    linesField.addEventListener("blur", function currFunction() {
+      if (linesField.value <= 0) linesField.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var linesWeightField = document.getElementById("linesWeightField");
-        var linesWeight = linesWeightField.value;
-        linesWeightField.addEventListener("input", generateLines);
-        linesWeightField.addEventListener("blur", function currFunction() {
-            if (linesWeightField.value <= 0) linesWeightField.value = 0;
-        }); //Set the field to 0 if empty or not valid
+    var linesWeightField = document.getElementById("linesWeightField");
+    var linesWeight = linesWeightField.value;
+    linesWeightField.addEventListener("input", generateLines);
+    linesWeightField.addEventListener("blur", function currFunction() {
+      if (linesWeightField.value <= 0) linesWeightField.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var linesColorSelector = document.getElementById("linesColorSelector");
-        var linesColor = linesColorSelector.value;
-        linesColorSelector.addEventListener("input", generateLines);
+    var linesColorSelector = document.getElementById("linesColorSelector");
+    var linesColor = linesColorSelector.value;
+    linesColorSelector.addEventListener("input", generateLines);
 
-        var followingCirclesField = document.getElementById("followingCirclesField");
-        var nFollowingCircles = followingCirclesField.value;
-        followingCirclesField.addEventListener("input", generateMire);
-        followingCirclesField.addEventListener("blur", function currFunction() {
-            if (followingCirclesField.value <= 0) followingCirclesField.value = 0;
-        }); //Set the field to 0 if empty or not valid
+    var followingCirclesField = document.getElementById("followingCirclesField");
+    var nFollowingCircles = followingCirclesField.value;
+    followingCirclesField.addEventListener("input", generateMire);
+    followingCirclesField.addEventListener("blur", function currFunction() {
+      if (followingCirclesField.value <= 0) followingCirclesField.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var concentricCirclesField = document.getElementById("concentricCirclesField");
-        var nConcentricCircles = concentricCirclesField.value;
-        concentricCirclesField.addEventListener("input", generateMire);
-        concentricCirclesField.addEventListener("blur", function currFunction() {
-            if (concentricCirclesField.value <= 0) concentricCirclesField.value = 0;
-        }); //Set the field to 0 if empty or not valid
+    var concentricCirclesField = document.getElementById("concentricCirclesField");
+    var nConcentricCircles = concentricCirclesField.value;
+    concentricCirclesField.addEventListener("input", generateMire);
+    concentricCirclesField.addEventListener("blur", function currFunction() {
+      if (concentricCirclesField.value <= 0) concentricCirclesField.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var sizeConcentricCirclesField = document.getElementById("sizeConcentricCirclesField");
-        var sizeConcentricCircles = sizeConcentricCirclesField.value;
-        sizeConcentricCirclesField.addEventListener("input", generateMire);
-        sizeConcentricCirclesField.addEventListener("blur", function currFunction() {
-            if (sizeConcentricCirclesField.value <= 0) sizeConcentricCirclesField.value = 0;
-        }); //Set the field to 0 if empty or not valid
+    var sizeConcentricCirclesField = document.getElementById("sizeConcentricCirclesField");
+    var sizeConcentricCircles = sizeConcentricCirclesField.value;
+    sizeConcentricCirclesField.addEventListener("input", generateMire);
+    sizeConcentricCirclesField.addEventListener("blur", function currFunction() {
+      if (sizeConcentricCirclesField.value <= 0) sizeConcentricCirclesField.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var multConcentricCirclesField = document.getElementById("multConcentricCirclesField");
-        var multConcentricCircles = multConcentricCirclesField.value;
-        multConcentricCirclesField.addEventListener("input", generateMire);
-        multConcentricCirclesField.addEventListener("blur", function currFunction() {
-            if (multConcentricCirclesField.value <= 0) multConcentricCirclesField.value = 0;
-        }); //Set the field to 0 if empty or not valid
+    var multConcentricCirclesField = document.getElementById("multConcentricCirclesField");
+    var multConcentricCircles = multConcentricCirclesField.value;
+    multConcentricCirclesField.addEventListener("input", generateMire);
+    multConcentricCirclesField.addEventListener("blur", function currFunction() {
+      if (multConcentricCirclesField.value <= 0) multConcentricCirclesField.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var circlesWeightField = document.getElementById("circlesWeightField");
-        var circlesWeight = circlesWeightField.value;
-        circlesWeightField.addEventListener("input", generateMire);
-        circlesWeightField.addEventListener("blur", function currFunction() {
-            if (linesField.value <= 0) circlesWeightField.value = 0;
-        }); //Set the field to 0 if empty or not valid
+    var circlesWeightField = document.getElementById("circlesWeightField");
+    var circlesWeight = circlesWeightField.value;
+    circlesWeightField.addEventListener("input", generateMire);
+    circlesWeightField.addEventListener("blur", function currFunction() {
+      if (linesField.value <= 0) circlesWeightField.value = 0;
+    }); //Set the field to 0 if empty or not valid
 
-        var circlesColorSelector = document.getElementById("circlesColorSelector");
-        var circlesColor = circlesColorSelector.value;
-        circlesColorSelector.addEventListener("input", generateMire);
+    var circlesColorSelector = document.getElementById("circlesColorSelector");
+    var circlesColor = circlesColorSelector.value;
+    circlesColorSelector.addEventListener("input", generateMire);
 
-        //Gradient
-        var grdTopLeftColorSelector = document.getElementById("grdTopLeftColorSelector");
-        var grdTopLeftColor = grdTopLeftColorSelector.value;
-        grdTopLeftColorSelector.addEventListener("input", generateGradient);
+    //Gradient
+    var grdTopLeftColorSelector = document.getElementById("grdTopLeftColorSelector");
+    var grdTopLeftColor = grdTopLeftColorSelector.value;
+    grdTopLeftColorSelector.addEventListener("input", generateGradient);
 
-        var grdTopRightColorSelector = document.getElementById("grdTopRightColorSelector");
-        var grdTopRightColor = grdTopRightColorSelector.value;
-        grdTopRightColorSelector.addEventListener("input", generateGradient);
+    var grdTopRightColorSelector = document.getElementById("grdTopRightColorSelector");
+    var grdTopRightColor = grdTopRightColorSelector.value;
+    grdTopRightColorSelector.addEventListener("input", generateGradient);
 
-        var grdBottomRightColorSelector = document.getElementById("grdBottomRightColorSelector");
-        var grdBottomRightColor = grdBottomRightColorSelector.value;
-        grdBottomRightColorSelector.addEventListener("input", generateGradient);
+    var grdBottomRightColorSelector = document.getElementById("grdBottomRightColorSelector");
+    var grdBottomRightColor = grdBottomRightColorSelector.value;
+    grdBottomRightColorSelector.addEventListener("input", generateGradient);
 
-        var grdBottomLeftColorSelector = document.getElementById("grdBottomLeftColorSelector");
-        var grdBottomLeftColor = grdBottomLeftColorSelector.value;
-        grdBottomLeftColorSelector.addEventListener("input", generateGradient);
+    var grdBottomLeftColorSelector = document.getElementById("grdBottomLeftColorSelector");
+    var grdBottomLeftColor = grdBottomLeftColorSelector.value;
+    grdBottomLeftColorSelector.addEventListener("input", generateGradient);
 
-        function myFunction(e) { //debug function
-            rectAreSquares = squaresCheckbox.checked;
-            alert(e);
+    function myFunction(e) { //debug function
+      rectAreSquares = squaresCheckbox.checked;
+      alert(e);
+    }
+
+    //Canvas
+    var canvas = document.getElementById("myCanvas");
+    var canvasCtx = canvas.getContext("2d");
+    var img = document.createElement("canvas");
+    var imgCtx = img.getContext("2d");
+    var imgGradient = document.createElement("canvas");
+    var imgGradientCtx = imgGradient.getContext("2d");
+    var imgGrid = document.createElement("canvas");
+    var imgGridCtx = imgGrid.getContext("2d");
+    var imgLines = document.createElement("canvas");
+    var imgLinesCtx = imgLines.getContext("2d");
+    var imgCircles = document.createElement("canvas");
+    var imgCirclesCtx = imgCircles.getContext("2d");
+    var imgOverlay = document.createElement("canvas");
+    var imgOverlayCtx = imgOverlay.getContext("2d");
+    var imgText = document.createElement("canvas");
+    var imgTextCtx = imgText.getContext("2d");
+    var temp = document.createElement("canvas");
+    var tempCtx = temp.getContext("2d");
+
+    //Settings variables
+    var rectWidth;
+    var rectHeight;
+    var fontSize;
+    var isText = Boolean();
+    var isOverlay = Boolean();
+    var isGrid = Boolean();
+    var isLines = Boolean();
+    var isCircles = Boolean();
+    var isGradient = Boolean();
+    var crossedLines = Boolean();
+    var middlesCross = Boolean();
+    var rectAreSquares = true;
+    var verticalOrganization = false;
+
+    //Internal management
+    var squaresEnabled = true;
+    var bckSpaceCount = 0;
+    var imgRatio;
+    var isExporting = false; //Trick for keeping performances
+    var zip = new JSZip();
+
+    //Setup the download button
+    var imageLink = document.getElementById("downloadImageButton");
+    imageLink.addEventListener('click', function(ev) {
+      imageLink.href = img.toDataURL();
+      imageLink.download = "mire_" + String(imgWidth) + "x" + String(imgHeight) + ".png";
+    }, false);
+
+    var layersLink = document.getElementById("downloadLayersButton");
+    layersLink.addEventListener('click', downloadLayers);
+
+
+
+    //Functions
+
+    function initialisation() {
+      updateAllCanvas();
+      setText();
+      setOverlay();
+      setGrid();
+      setLines();
+      setCircles();
+      setFollowingCircles();
+      setConcentricCircles();
+      setGradient();
+      setRectAsSquares();
+      generateMire();
+    }
+
+    function setText() {
+      isText = document.getElementById("TextCheckbox").checked;
+      let id = "TextSettings";
+      if (isText)
+        document.getElementById(id).style.display = 'inline-block';
+      else
+        document.getElementById(id).style.display = 'none';
+      generateText();
+    }
+
+    function setOverlay() {
+      isOverlay = document.getElementById("OverlayCheckbox").checked;
+      let id = "OverlaySettings";
+      if (isOverlay)
+        document.getElementById(id).style.display = 'inline-block';
+      else
+        document.getElementById(id).style.display = 'none';
+      generateOverlay();
+    }
+
+    function setGrid() {
+      isGrid = document.getElementById("GridCheckbox").checked;
+      let id = "GridSettings";
+      if (isGrid)
+        document.getElementById(id).style.display = 'inline-block';
+      else
+        document.getElementById(id).style.display = 'none';
+      generateGrid();
+    }
+
+    function setLines() {
+      isLines = document.getElementById("LinesCheckbox").checked;
+      let id = "LinesSettings";
+      if (isLines)
+        document.getElementById(id).style.display = 'inline-block';
+      else
+        document.getElementById(id).style.display = 'none';
+
+      generateLines();
+    }
+
+    function setCircles() {
+      isCircles = document.getElementById("CirclesCheckbox").checked;
+      let id = "CirclesSettings";
+      if (isCircles)
+        document.getElementById(id).style.display = 'inline-block';
+      else
+        document.getElementById(id).style.display = 'none';
+      generateCircles();
+    }
+
+    function setFollowingCircles() {
+      isFollowingCircles = document.getElementById("followingCirclesCheckbox").checked;
+      let id = "FollowingCirclesSettings";
+      if (isFollowingCircles)
+        document.getElementById(id).style.display = 'block';
+      else
+        document.getElementById(id).style.display = 'none';
+      generateCircles();
+    }
+
+    function setConcentricCircles() {
+      isConcentricCircles = document.getElementById("concentricCirclesCheckbox").checked;
+      let id = "ConcentricCirclesSettings";
+      if (isConcentricCircles)
+        document.getElementById(id).style.display = 'block';
+      else
+        document.getElementById(id).style.display = 'none';
+      generateCircles();
+    }
+
+    function setGradient() {
+      isGradient = document.getElementById("GradientCheckbox").checked;
+      let id = "GradientSettings";
+      if (isGradient)
+        document.getElementById(id).style.display = 'block';
+      else
+        document.getElementById(id).style.display = 'none';
+      generateGradient();
+    }
+
+    function gridUpdate(e) { //Squares fields ergonomy
+
+      if (e.key == "Backspace") {
+        bckSpaceCount++;
+      } else {
+        bckSpaceCount = 0;
+      }
+
+      if (bckSpaceCount == 3 && squaresEnabled && (nbRectWidth <= 0 || nbRectHeight <= 0)) {
+        setSquaresFields(0);
+        squaresEnabled = false;
+      }
+      if (nbRectWidth > 0 && nbRectHeight > 0) {
+        squaresEnabled = true;
+      }
+
+      if (rectAreSquares)
+        rectHeightField.value = rectWidthField.value;
+      generateGrid();
+
+    }
+
+    function setRectAsSquares() {
+      rectAreSquares = squaresCheckbox.checked;
+      rectHeightField.disabled = rectAreSquares;
+      rectHeightField.value = rectWidthField.value;
+      generateGrid();
+    }
+
+    function setSquaresFields(n) {
+      rectWidthField.value = 0;
+      rectHeightField.value = 0;
+    }
+
+    function setVerticalOrganization() {
+      verticalOrganization = verticalCheckbox.checked;
+      generateGrid();
+    }
+
+    function updateAllCanvas() {
+      updateSettings();
+      img.width = imgWidth;
+      img.height = imgHeight;
+
+      imgGradient.width = imgWidth;
+      imgGradient.height = imgHeight;
+
+      imgGrid.width = imgWidth;
+      imgGrid.height = imgHeight;
+
+      imgLines.width = imgWidth;
+      imgLines.height = imgHeight;
+
+      imgCircles.width = imgWidth;
+      imgCircles.height = imgHeight;
+
+      imgText.width = imgWidth;
+      imgText.height = imgHeight;
+
+      imgOverlay.width = imgWidth;
+      imgOverlay.height = imgHeight;
+
+      generateMire();
+    }
+
+    function updateSettings() {
+      imgWidth = widthField.value;
+      imgHeight = heightField.value;
+      verticalOrganization = verticalCheckbox.checked;
+
+      nbRectWidth = rectWidthField.value;
+      nbRectHeight = rectHeightField.value;
+
+      rectWidth = imgWidth / nbRectWidth;
+      rectHeight = imgHeight / nbRectHeight;
+
+      if (rectAreSquares) {
+        if (verticalOrganization) {
+          rectWidth = rectHeight;
+          nbRectWidth = imgWidth / rectWidth;
+        } else {
+          rectHeight = rectWidth;
+          nbRectHeight = imgHeight / rectHeight;
         }
+      }
 
-        //Canvas
-        var canvas = document.getElementById("myCanvas");
-        var canvasCtx = canvas.getContext("2d");
-        var img = document.createElement("canvas");
-        var imgCtx = img.getContext("2d");
-        var imgGradient = document.createElement("canvas"); //Optimization
-        var imgGradientCtx = imgGradient.getContext("2d"); //Optimization
-        var imgGrid = document.createElement("canvas"); //Optimization
-        var imgGridCtx = imgGrid.getContext("2d"); //Optimization
-        var imgLines = document.createElement("canvas"); //Optimization
-        var imgLinesCtx = imgLines.getContext("2d"); //Optimization
-        var imgCircles = document.createElement("canvas"); //Optimization
-        var imgCirclesCtx = imgCircles.getContext("2d"); //Optimization
-        var imgOverlay = document.createElement("canvas"); //Optimization
-        var imgOverlayCtx = imgOverlay.getContext("2d"); //Optimization
-        var imgText = document.createElement("canvas"); //Optimization
-        var imgTextCtx = imgText.getContext("2d"); //Optimization
-        var temp = document.createElement("canvas");
-        var tempCtx = temp.getContext("2d");
+      fontSize = String(rectHeight > rectWidth ? rectWidth - rectWidth / 5 : rectHeight - rectHeight / 5) + "px";
 
-        //Settings variables
-        var rectWidth;
-        var rectHeight;
-        var fontSize;
-        var isText = Boolean();
-        var isOverlay = Boolean();
-        var isGrid = Boolean();
-        var isLines = Boolean();
-        var isCircles = Boolean();
-        var isGradient = Boolean();
-        var crossedLines = Boolean();
-        var middlesCross = Boolean();
-        var rectAreSquares = true;
-        var verticalOrganization = false;
+      imgGridCtx.font = fontSize + " Arial";
+      imgGridCtx.textAlign = "center";
+      imgGridCtx.textBaseline = "middle";
 
-        //Internal management
-        var squaresEnabled = true;
-        var bckSpaceCount = 0;
-        var imgRatio;
-        var isExporting = false; //Trick for keeping performances
-        var zip = new JSZip();
+      imgTextCtx.font = fontSize + " Arial";
+      imgTextCtx.textAlign = "center";
+      imgTextCtx.textBaseline = "middle";
 
-        //Setup the download button
-        var imageLink = document.getElementById("downloadImageButton");
-        imageLink.addEventListener('click', function(ev) {
-            imageLink.href = img.toDataURL();
-            imageLink.download = "mire_" + String(imgWidth) + "x" + String(imgHeight) + ".png";
-        }, false);
+      temp = img;
+      tempCtx = imgCtx;
 
-        var layersLink = document.getElementById("downloadLayersButton");
-        layersLink.addEventListener('click', downloadLayers);
+      if (isExporting) {
+        temp.width = imgWidth;
+        temp.height = imgHeight;
+        tempCtx.font = fontSize + " Arial";
+        tempCtx.textAlign = "center";
+        tempCtx.textBaseline = "middle";
+      }
+
+      imgRatio = imgWidth / imgHeight;
+      canvas.height = canvas.width / imgRatio;
+
+      if (canvas.width <= canvas.height) {
+        canvas.style.width = "auto";
+        canvas.style.height = String(95) + "%";
+      } else {
+        canvas.style.height = "auto";
+        canvas.style.width = String(48) + "%";
+      }
+
+      //Fields
+      //Text
+      mainText = mainTextField.value;
+      mainTextWeight = mainTextWeightField.value;
+      textColor = textColorSelector.value;
+
+      //Overlay
+      frameOverlay = frameOverlayCheckbox.checked;
+      frameOverlayColor = frameOverlayColorSelector.value;
+      frameOverlaySize = frameOverlaySizeField.value;
+      arrowsOverlay = arrowsOverlayCheckbox.checked;
+      arrowsOverlayColor = arrowsOverlayColorSelector.value;
+      arrowsOverlaySize = arrowsOverlaySizeField.value;
 
 
+      //Grid
+      gridColor = gridColorSelector.value;
+      gridLinesWeight = gridLinesWeightField.value;
+      gridLinesColor = gridLinesColorSelector.value;
+      numbersColor = numbersColorSelector.value;
 
-        //Functions
+      //Lines
+      nLines = linesField.value;
+      linesWeight = linesWeightField.value;
+      crossedLines = crossesCheckbox.checked;
+      middlesCross = middleCrossCheckbox.checked;
+      linesColor = linesColorSelector.value;
 
-        function initialisation() {
-            updateAllCanvas();
-            setText();
-            setOverlay();
-            setGrid();
-            setLines();
-            setCircles();
-            setFollowingCircles();
-            setConcentricCircles();
-            setGradient();
-            setRectAsSquares();
-            generateMire();
+      //Circles
+      isFollowingCircles = followingCirclesCheckbox.checked;
+      nFollowingCircles = followingCirclesField.value;
+      nConcentricCircles = concentricCirclesField.value;
+      isConcentricCircles = concentricCirclesCheckbox.checked;
+      sizeConcentricCircles = sizeConcentricCirclesField.value;
+      multConcentricCircles = multConcentricCirclesField.value;
+      circlesWeight = circlesWeightField.value;
+      fittedCircles = fittedCirclesCheckbox.checked;
+      circlesColor = circlesColorSelector.value;
+
+      //Gradient
+      grdTopLeftColor = grdTopLeftColorSelector.value;
+      grdTopRightColor = grdTopRightColorSelector.value;
+      grdBottomRightColor = grdBottomRightColorSelector.value;
+      grdBottomLeftColor = grdBottomLeftColorSelector.value;
+
+      safeValues();
+      resetZIP();
+    }
+
+    function safeValues() {
+      //Secures the quantity of the squares
+      if (nbRectHeight >= imgHeight / 8) {
+        nbRectHeight = imgHeight / 8;
+        rectHeightField.value = nbRectHeight;
+      }
+      if (nbRectWidth >= imgWidth / 8) {
+        nbRectWidth = imgWidth / 8;
+        rectWidthField.value = nbRectWidth;
+      }
+    }
+
+
+    function generateMire() {
+      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+      //Gradient
+      if (isGradient) {
+        drawInMainImage(imgGradient);
+      }
+
+      //Grid
+      if (isGrid) {
+        drawInMainImage(imgGrid);
+      }
+
+      //Lines Drawing
+      if (isLines) {
+        drawInMainImage(imgLines);
+      }
+
+      //Circles drawing
+      if (isCircles) {
+        drawInMainImage(imgCircles);
+      }
+
+      //Text displaying
+      if (isText) {
+        drawInMainImage(imgText);
+      }
+
+      //Overlay
+      if (isOverlay) {
+        drawInMainImage(imgOverlay);
+      }
+      //Draw the working img in the page canvas
+      canvasCtx.drawImage(img, 0, 0, img.width, img.height, // source rectangle
+        0, 0, canvas.width, canvas.height); // destination rectangle
+    }
+
+    function drawInMainImage(currImg) {
+      imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
+        0, 0, img.width, img.height); // destination rectangle
+    }
+
+    function generateGrid() {
+      updateSettings();
+
+      //Grid drawing (checker)
+      var currImg = imgGrid;
+      var currImgCtx = currImg.getContext('2d');
+      currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
+
+      for (var j = 0; j < nbRectWidth; ++j) {
+        for (var i = 0; i < nbRectHeight; ++i) {
+          currImgCtx.globalAlpha = 0.4;
+          currImgCtx.fillStyle = (i + j) % 2 == 0 ? gridColor : "transparent";
+          currImgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
+          currImgCtx.globalAlpha = 1;
         }
+      }
 
-        function setText() {
-            isText = document.getElementById("TextCheckbox").checked;
-            let id = "TextSettings";
-            if (isText)
-                document.getElementById(id).style.display = 'inline-block';
-            else
-                document.getElementById(id).style.display = 'none';
-            generateMire();
+      //Grid drawing (lines)
+      for (var j = 0; j < nbRectWidth; ++j) {
+        for (var i = 0; i < nbRectHeight; ++i) {
+          currImgCtx.lineWidth = gridLinesWeight;
+          currImgCtx.strokeStyle = gridLinesColor;
+          currImgCtx.strokeRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
         }
+      }
 
-        function setOverlay() {
-            isOverlay = document.getElementById("OverlayCheckbox").checked;
-            let id = "OverlaySettings";
-            if (isOverlay)
-                document.getElementById(id).style.display = 'inline-block';
-            else
-                document.getElementById(id).style.display = 'none';
-            generateMire();
+      //Numbers drawing
+      for (var j = 0; j < nbRectWidth; ++j) {
+        for (var i = 0; i < nbRectHeight; ++i) {
+          currImgCtx.fillStyle = numbersColor;
+          if (verticalOrganization)
+            currImgCtx.fillText(1 + i, rectWidth / 2 + rectWidth * j, rectHeight / 2 + rectHeight * i);
+          else
+            currImgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectHeight / 2 + rectHeight * i);
         }
+      }
 
-        function setGrid() {
-            isGrid = document.getElementById("GridCheckbox").checked;
-            let id = "GridSettings";
-            if (isGrid)
-                document.getElementById(id).style.display = 'inline-block';
-            else
-                document.getElementById(id).style.display = 'none';
-            generateGrid();
+      generateMire();
+
+      if (isExporting) { //Trick for performances
+        imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
+          0, 0, img.width, img.height); // destination rectangle
+        addImageToZIP(temp, "grid");
+        tempCtx.clearRect(0, 0, temp.width, temp.height);
+      }
+    }
+
+    function generateLines() {
+      updateSettings();
+
+      var currImg = imgLines;
+      var currImgCtx = currImg.getContext('2d');
+      currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
+
+      for (var i = 0; i < nLines; i++) {
+        if (crossedLines) {
+          drawLine(currImg, imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
+          drawLine(currImg, imgWidth / nLines * i, imgHeight, imgWidth / nLines * (i + 1), 0);
+        } else
+          drawLine(currImg, imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
+      }
+
+      //Middles cross Lines
+      if (middlesCross) {
+        drawLine(currImg, imgWidth / 2, 0, imgWidth / 2, imgHeight);
+        drawLine(currImg, 0, imgHeight / 2, imgWidth, imgHeight / 2);
+      }
+
+      generateMire();
+
+      if (isExporting) { //Trick for performances
+        addImageToZIP(temp, "lines");
+        tempCtx.clearRect(0, 0, temp.width, temp.height);
+      }
+    }
+
+    function generateCircles() {
+      updateSettings();
+
+      var currImg = imgCircles;
+      var currImgCtx = currImg.getContext('2d');
+      currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
+
+      if (isFollowingCircles) {
+        for (var i = 0; i < nFollowingCircles; i++) {
+          if (fittedCircles) {
+            drawCircle(currImg, imgWidth / nFollowingCircles / 2 + imgWidth / nFollowingCircles * i, imgHeight / 2, imgWidth / nFollowingCircles / 2);
+          } else
+            drawCircle(currImg, imgWidth / (nFollowingCircles * 2) + imgWidth / nFollowingCircles * i, imgHeight / 2, imgHeight / 2);
         }
-
-        function setLines() {
-            isLines = document.getElementById("LinesCheckbox").checked;
-            let id = "LinesSettings";
-            if (isLines)
-                document.getElementById(id).style.display = 'inline-block';
-            else
-                document.getElementById(id).style.display = 'none';
-
-            generateLines();
+      }
+      if (isConcentricCircles) {
+        for (var i = 0; i < nConcentricCircles; i++) {
+          drawCircle(currImg, imgWidth / 2, imgHeight / 2, sizeConcentricCircles / 2 + multConcentricCircles * i);
         }
+      }
 
-        function setCircles() {
-            isCircles = document.getElementById("CirclesCheckbox").checked;
-            let id = "CirclesSettings";
-            if (isCircles)
-                document.getElementById(id).style.display = 'inline-block';
-            else
-                document.getElementById(id).style.display = 'none';
-            generateMire();
+      generateMire();
+
+      if (isExporting) { //Trick for performances
+        imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
+          0, 0, img.width, img.height); // destination rectangle
+        addImageToZIP(temp, "circles");
+        tempCtx.clearRect(0, 0, temp.width, temp.height);
+      }
+    }
+
+    function generateText() {
+      updateSettings();
+
+      var currImg = imgText;
+      var currImgCtx = currImg.getContext('2d');
+      currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
+
+      currImgCtx.fillStyle = textColor;
+      currImgCtx.strokeStyle = "black";
+      currImgCtx.lineWidth = mainTextWeight / 10;
+      currImgCtx.font = String(mainTextWeight) + "px" + " Arial";
+      currImgCtx.strokeText(mainText, imgWidth / 2, imgHeight / 2);
+      currImgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
+
+      generateMire();
+
+      if (isExporting) { //Trick for performances
+        imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
+          0, 0, img.width, img.height); // destination rectangle
+        addImageToZIP(temp, "text");
+        tempCtx.clearRect(0, 0, temp.width, temp.height);
+      }
+    }
+
+    function generateOverlay() {
+      updateSettings();
+
+      var currImg = imgOverlay;
+      var currImgCtx = currImg.getContext('2d');
+      currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
+
+      if (frameOverlay) {
+        currImgCtx.lineWidth = imgRatio * frameOverlaySize;
+        currImgCtx.strokeStyle = frameOverlayColor;
+        currImgCtx.strokeRect(0, 0, imgWidth, imgHeight);
+      }
+      if (arrowsOverlay) {
+        for (var i = 0; i < 3; i++) {
+          drawArrow(currImg, imgWidth / 2 * i, 0, arrowsOverlaySize, -45 + 45 * i);
         }
-
-        function setFollowingCircles() {
-            isFollowingCircles = document.getElementById("followingCirclesCheckbox").checked;
-            let id = "FollowingCirclesSettings";
-            if (isFollowingCircles)
-                document.getElementById(id).style.display = 'block';
-            else
-                document.getElementById(id).style.display = 'none';
-            generateMire();
+        for (var i = 0; i < 2; i++) {
+          drawArrow(currImg, imgWidth * i, imgHeight / 2, arrowsOverlaySize, -90 + 180 * i);
         }
-
-        function setConcentricCircles() {
-            isConcentricCircles = document.getElementById("concentricCirclesCheckbox").checked;
-            let id = "ConcentricCirclesSettings";
-            if (isConcentricCircles)
-                document.getElementById(id).style.display = 'block';
-            else
-                document.getElementById(id).style.display = 'none';
-            generateMire();
+        for (var i = 0; i < 3; i++) {
+          drawArrow(currImg, imgWidth / 2 * i, imgHeight / 1, arrowsOverlaySize, -135 - 45 * i);
         }
-
-        function setGradient() {
-            isGradient = document.getElementById("GradientCheckbox").checked;
-            let id = "GradientSettings";
-            if (isGradient)
-                document.getElementById(id).style.display = 'block';
-            else
-                document.getElementById(id).style.display = 'none';
-            generateGradient();
-        }
-
-        function gridUpdate(e) { //Squares fields ergonomy
-
-            if (e.key == "Backspace") {
-                bckSpaceCount++;
-            } else {
-                bckSpaceCount = 0;
-            }
-
-            if (bckSpaceCount == 3 && squaresEnabled && (nbRectWidth <= 0 || nbRectHeight <= 0)) {
-                setSquaresFields(0);
-                squaresEnabled = false;
-            }
-            if (nbRectWidth > 0 && nbRectHeight > 0) {
-                squaresEnabled = true;
-            }
-
-            if (rectAreSquares)
-                rectHeightField.value = rectWidthField.value;
-            generateGrid();
-
-        }
-
-        function setRectAsSquares() {
-            rectAreSquares = squaresCheckbox.checked;
-            rectHeightField.disabled = rectAreSquares;
-            rectHeightField.value = rectWidthField.value;
-            generateGrid();
-        }
-
-        function setSquaresFields(n) {
-            rectWidthField.value = 0;
-            rectHeightField.value = 0;
-        }
-
-        function setVerticalOrganization() {
-            verticalOrganization = verticalCheckbox.checked;
-            generateGrid();
-        }
-
-        function updateAllCanvas() {
-            updateSettings();
-            img.width = imgWidth;
-            img.height = imgHeight;
-            
-            imgGradient.width = imgWidth;
-            imgGradient.height = imgHeight;
-            
-            imgGrid.width = imgWidth;
-            imgGrid.height = imgHeight;
-            imgGridCtx.font = fontSize + " Arial";
-            imgGridCtx.textAlign = "center";
-            imgGridCtx.textBaseline = "middle";
-
-            imgLines.width = imgWidth;
-            imgLines.height = imgHeight;
-            
-            generateMire();
-        }
-
-        function updateSettings() {
-            imgWidth = widthField.value;
-            imgHeight = heightField.value;
-            verticalOrganization = verticalCheckbox.checked;
-
-            nbRectWidth = rectWidthField.value;
-            nbRectHeight = rectHeightField.value;
-
-            rectWidth = imgWidth / nbRectWidth;
-            rectHeight = imgHeight / nbRectHeight;
-
-            if (rectAreSquares) {
-                if (verticalOrganization) {
-                    rectWidth = rectHeight;
-                    nbRectWidth = imgWidth / rectWidth;
-                } else {
-                    rectHeight = rectWidth;
-                    nbRectHeight = imgHeight / rectHeight;
-                }
-            }
-
-            fontSize = String(rectHeight > rectWidth ? rectWidth : rectHeight) + "px";
-
-            imgCtx.font = fontSize + " Arial";
-            imgCtx.textAlign = "center";
-            imgCtx.textBaseline = "middle";
-
-            temp = img;
-            tempCtx = imgCtx;
-            //imgGradient = img;
-            //imgGradientCtx = imgGradient.getContext('2D');
-            //imgGrid = img;
-            //imgGridCtx = imgCtx;
-            //imgLines = img;
-            //imgLinesCtx = imgCtx;
-            /*imgCircles = img;
-            imgCirclesCtx = imgCtx;
-            imgText = img;
-            imgTextCtx = imgCtx;
-            imgOverlay = img;
-            imgOverlayCtx = imgCtx;*/
-
-            if (isExporting) {
-                temp.width = imgWidth;
-                temp.height = imgHeight;
-                tempCtx.font = fontSize + " Arial";
-                tempCtx.textAlign = "center";
-                tempCtx.textBaseline = "middle";
-            }
-
-            imgRatio = imgWidth / imgHeight;
-            canvas.height = canvas.width / imgRatio;
-
-            if (canvas.width <= canvas.height) {
-                canvas.style.width = "auto";
-                canvas.style.height = String(95) + "%";
-            } else {
-                canvas.style.height = "auto";
-                canvas.style.width = String(48) + "%";
-            }
-
-            //Fields
-            //Text
-            mainText = mainTextField.value;
-            mainTextWeight = mainTextWeightField.value;
-            textColor = textColorSelector.value;
-
-            //Overlay
-            frameOverlay = frameOverlayCheckbox.checked;
-            frameOverlayColor = frameOverlayColorSelector.value;
-            frameOverlaySize = frameOverlaySizeField.value;
-            arrowsOverlay = arrowsOverlayCheckbox.checked;
-            arrowsOverlayColor = arrowsOverlayColorSelector.value;
-            arrowsOverlaySize = arrowsOverlaySizeField.value;
-
-
-            //Grid
-            gridColor = gridColorSelector.value;
-            gridLinesWeight = gridLinesWeightField.value;
-            gridLinesColor = gridLinesColorSelector.value;
-            numbersColor = numbersColorSelector.value;
-
-            //Lines
-            nLines = linesField.value;
-            linesWeight = linesWeightField.value;
-            crossedLines = crossesCheckbox.checked;
-            middlesCross = middleCrossCheckbox.checked;
-            linesColor = linesColorSelector.value;
-
-            //Circles
-            isFollowingCircles = followingCirclesCheckbox.checked;
-            nFollowingCircles = followingCirclesField.value;
-            nConcentricCircles = concentricCirclesField.value;
-            isConcentricCircles = concentricCirclesCheckbox.checked;
-            sizeConcentricCircles = sizeConcentricCirclesField.value;
-            multConcentricCircles = multConcentricCirclesField.value;
-            circlesWeight = circlesWeightField.value;
-            fittedCircles = fittedCirclesCheckbox.checked;
-            circlesColor = circlesColorSelector.value;
-
-            //Gradient
-            grdTopLeftColor = grdTopLeftColorSelector.value;
-            grdTopRightColor = grdTopRightColorSelector.value;
-            grdBottomRightColor = grdBottomRightColorSelector.value;
-            grdBottomLeftColor = grdBottomLeftColorSelector.value;
-
-            safeValues();
-            resetZIP();
-        }
-
-        function safeValues() {
-            //Secures the quantity of the squares
-            if (nbRectHeight >= imgHeight / 8) {
-                nbRectHeight = imgHeight / 8;
-                rectHeightField.value = nbRectHeight;
-            }
-            if (nbRectWidth >= imgWidth / 8) {
-                nbRectWidth = imgWidth / 8;
-                rectWidthField.value = nbRectWidth;
-            }
-        }
-
-
-        function generateMire() {
-            //updateSettings();
-            canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-
-            //Gradient
-            if (isGradient) {
-                console.log("isGradient");
-                drawInMainImage(imgGradient);
-            }
-
-            //Grid
-            if (isGrid) {
-                console.log("isGrid");
-                drawInMainImage(imgGrid);
-            }
-
-            //Lines Drawing
-            if (isLines) {
-                console.log("isLines");
-                drawInMainImage(imgLines);
-            }
-
-            //Circles drawing
-            if (isCircles) {
-                generateCircles();
-            }
-
-            //Text displaying
-            if (isText) {
-                generateText();
-            }
-
-            //Overlay
-            if (isOverlay) {
-                generateOverlay();
-            }
-            //Draw the working img in the page canvas
-            canvasCtx.drawImage(img, 0, 0, img.width, img.height, // source rectangle
-                0, 0, canvas.width, canvas.height); // destination rectangle
-        }
-
-        function drawInMainImage(currImg) {
-            imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
-                0, 0, img.width, img.height); // destination rectangle
-        }
-
-        function generateGrid() {
-            updateSettings();
-
-            console.log("generateGrid");
-            //Grid drawing (checker)
-            var currImg = imgGrid;
-            var currImgCtx = currImg.getContext('2d');
-            currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
-
-            for (var j = 0; j < nbRectWidth; ++j) {
-                for (var i = 0; i < nbRectHeight; ++i) {
-                    currImgCtx.globalAlpha = 0.4;
-                    currImgCtx.fillStyle = (i + j) % 2 == 0 ? gridColor : "transparent";
-                    currImgCtx.fillRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
-                    currImgCtx.globalAlpha = 1;
-                }
-            }
-
-            //Grid drawing (lines)
-            for (var j = 0; j < nbRectWidth; ++j) {
-                for (var i = 0; i < nbRectHeight; ++i) {
-                    currImgCtx.lineWidth = gridLinesWeight;
-                    currImgCtx.strokeStyle = gridLinesColor;
-                    currImgCtx.strokeRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
-                }
-            }
-
-            //Numbers drawing
-            for (var j = 0; j < nbRectWidth; ++j) {
-                for (var i = 0; i < nbRectHeight; ++i) {
-                    currImgCtx.fillStyle = numbersColor;
-                    if (verticalOrganization)
-                        currImgCtx.fillText(1 + i, rectWidth / 2 + rectWidth * j, rectHeight / 2 + rectHeight * i);
-                    else
-                        currImgCtx.fillText(1 + j, rectWidth / 2 + rectWidth * j, rectHeight / 2 + rectHeight * i);
-                }
-            }
-
-            generateMire();
-
-            if (isExporting) { //Trick for performances
-                imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
-                    0, 0, img.width, img.height); // destination rectangle
-                addImageToZIP(temp, "grid");
-                tempCtx.clearRect(0, 0, temp.width, temp.height);
-            }
-        }
-
-        function generateLines() {
-            updateSettings();
-            console.log("generateLines");
-            var currImg = imgLines;
-            var currImgCtx = currImg.getContext('2d');
-            currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
-
-            for (var i = 0; i < nLines; i++) {
-                if (crossedLines) {
-                    drawLine(currImg, imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
-                    drawLine(currImg, imgWidth / nLines * i, imgHeight, imgWidth / nLines * (i + 1), 0);
-                } else
-                    drawLine(currImg, imgWidth / nLines * i, 0, imgWidth / nLines * (i + 1), imgHeight);
-            }
-
-            //Middles cross Lines
-            if (middlesCross) {
-                drawLine(currImg, imgWidth / 2, 0, imgWidth / 2, imgHeight);
-                drawLine(currImg, 0, imgHeight / 2, imgWidth, imgHeight / 2);
-            }
-
-            generateMire();
-
-            /*imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
-                0, 0, img.width, img.height); // destination rectangle*/
-
-            if (isExporting) { //Trick for performances
-                addImageToZIP(temp, "lines");
-                tempCtx.clearRect(0, 0, temp.width, temp.height);
-            }
-        }
-
-        function generateCircles() {
-            currImg = imgCircles;
-
-            if (isExporting) //Trick for performances
-                var currImg = temp;
-            else
-                var currImg = img;
-
-            if (isFollowingCircles) {
-                for (var i = 0; i < nFollowingCircles; i++) {
-                    if (fittedCircles) {
-                        drawCircle(currImg, imgWidth / nFollowingCircles / 2 + imgWidth / nFollowingCircles * i, imgHeight / 2, imgWidth / nFollowingCircles / 2);
-                    } else
-                        drawCircle(currImg, imgWidth / (nFollowingCircles * 2) + imgWidth / nFollowingCircles * i, imgHeight / 2, imgHeight / 2);
-                }
-            }
-            if (isConcentricCircles) {
-                for (var i = 0; i < nConcentricCircles; i++) {
-                    drawCircle(currImg, imgWidth / 2, imgHeight / 2, sizeConcentricCircles / 2 + multConcentricCircles * i);
-                }
-            }
-
-            if (isExporting) { //Trick for performances
-                imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
-                    0, 0, img.width, img.height); // destination rectangle
-                addImageToZIP(temp, "circles");
-                tempCtx.clearRect(0, 0, temp.width, temp.height);
-            }
-        }
-
-        function generateText() {
-            currImg = imgText;
-            if (isExporting) //Trick for performances
-                var currImg = temp;
-            else
-                var currImg = img;
-
-            var currImgCtx = currImg.getContext("2d");
-
-            currImgCtx.fillStyle = textColor;
-            currImgCtx.strokeStyle = "black";
-            currImgCtx.font = String(mainTextWeight) + "px" + " Arial";
-            currImgCtx.strokeText(mainText, imgWidth / 2, imgHeight / 2);
-            currImgCtx.fillText(mainText, imgWidth / 2, imgHeight / 2);
-
-            if (isExporting) { //Trick for performances
-                imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
-                    0, 0, img.width, img.height); // destination rectangle
-                addImageToZIP(temp, "text");
-                tempCtx.clearRect(0, 0, temp.width, temp.height);
-            }
-        }
-
-        function generateOverlay() {
-            currImg = imgOverlay;
-            if (isExporting) //Trick for performances
-                var currImg = temp;
-            else
-                var currImg = img;
-
-            var currImgCtx = currImg.getContext("2d");
-
-            if (frameOverlay) {
-                currImgCtx.lineWidth = imgRatio * frameOverlaySize;
-                currImgCtx.strokeStyle = frameOverlayColor;
-                currImgCtx.strokeRect(0, 0, imgWidth, imgHeight);
-            }
-            if (arrowsOverlay) {
-                for (var i = 0; i < 3; i++) {
-                    drawArrow(currImg, imgWidth / 2 * i, 0, arrowsOverlaySize, -45 + 45 * i);
-                }
-                for (var i = 0; i < 2; i++) {
-                    drawArrow(currImg, imgWidth * i, imgHeight / 2, arrowsOverlaySize, -90 + 180 * i);
-                }
-                for (var i = 0; i < 3; i++) {
-                    drawArrow(currImg, imgWidth / 2 * i, imgHeight / 1, arrowsOverlaySize, -135 - 45 * i);
-                }
-            }
-
-            if (isExporting) { //Trick for performances
-                imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
-                    0, 0, img.width, img.height); // destination rectangle
-                addImageToZIP(temp, "overlay");
-                tempCtx.clearRect(0, 0, temp.width, temp.height);
-            }
-        }
-
-        function generateGradient() {
-            updateSettings();
-            console.log("generateGradient");
-            var currImg = imgGradient;
-            quadGradient(currImg, {
-                topLeft: grdTopLeftColor,
-                topRight: grdTopRightColor,
-                bottomLeft: grdBottomLeftColor,
-                bottomRight: grdBottomRightColor
-            });
-
-            generateMire();
-
-            if (isExporting) { //Trick for performances
-                imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
-                    0, 0, img.width, img.height); // destination rectangle
-                addImageToZIP(currImg, "gradient");
-                tempCtx.clearRect(0, 0, temp.width, temp.height);
-            }
-        }
-
-        function quadGradient(canvasLocal, corners) {
-            var ctx = canvasLocal.getContext('2d');
-            var w = canvasLocal.width;
-            var h = canvasLocal.height;
-            var gradient, startColor, endColor, fac;
-
-            for (var i = 0; i < h; i++) {
-                gradient = ctx.createLinearGradient(0, i, w, i);
-                fac = i / (h - 1);
-
-                startColor = lerpColor(corners.topLeft, corners.bottomLeft, fac);
-                endColor = lerpColor(corners.topRight, corners.bottomRight, fac);
-
-                gradient.addColorStop(0, startColor);
-                gradient.addColorStop(1, endColor);
-
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, i, w, i);
-            }
-        }
-
-        function lerpColor(a, b, amount) {
-
-            var ah = parseInt(a.replace(/#/g, ''), 16),
-                ar = ah >> 16,
-                ag = ah >> 8 & 0xff,
-                ab = ah & 0xff,
-                bh = parseInt(b.replace(/#/g, ''), 16),
-                br = bh >> 16,
-                bg = bh >> 8 & 0xff,
-                bb = bh & 0xff,
-                rr = ar + amount * (br - ar),
-                rg = ag + amount * (bg - ag),
-                rb = ab + amount * (bb - ab);
-
-            return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
-        }
-
-        function drawArrow(canvas, x, y, s = 1, r = 0) {
-            var ctx = canvas.getContext('2d');
-            var arrow = {
-                x0: 0,
-                y0: 0,
-                x1: 10 * s,
-                y1: 10 * s,
-                x2: 5 * s,
-                y2: 10 * s,
-                x3: 5 * s,
-                y3: 20 * s,
-                x4: -5 * s,
-                y4: 20 * s,
-                x5: -5 * s,
-                y5: 10 * s,
-                x6: -10 * s,
-                y6: 10 * s
-            };
-            ctx.fillStyle = arrowsOverlayColor;
-            ctx.beginPath();
-            ctx.moveTo(x + (arrow.x0 * Math.cos(degreesToRadians(r)) - arrow.y0 * Math.sin(degreesToRadians(r))), y + (arrow.x0 * Math.sin(degreesToRadians(r)) + arrow.y0 * Math.cos(degreesToRadians(r))));
-            ctx.lineTo(x + (arrow.x1 * Math.cos(degreesToRadians(r)) - arrow.y1 * Math.sin(degreesToRadians(r))), y + (arrow.x1 * Math.sin(degreesToRadians(r)) + arrow.y1 * Math.cos(degreesToRadians(r))));
-            ctx.lineTo(x + (arrow.x2 * Math.cos(degreesToRadians(r)) - arrow.y2 * Math.sin(degreesToRadians(r))), y + (arrow.x2 * Math.sin(degreesToRadians(r)) + arrow.y2 * Math.cos(degreesToRadians(r))));
-            ctx.lineTo(x + (arrow.x3 * Math.cos(degreesToRadians(r)) - arrow.y3 * Math.sin(degreesToRadians(r))), y + (arrow.x3 * Math.sin(degreesToRadians(r)) + arrow.y3 * Math.cos(degreesToRadians(r))));
-            ctx.lineTo(x + (arrow.x4 * Math.cos(degreesToRadians(r)) - arrow.y4 * Math.sin(degreesToRadians(r))), y + (arrow.x4 * Math.sin(degreesToRadians(r)) + arrow.y4 * Math.cos(degreesToRadians(r))));
-            ctx.lineTo(x + (arrow.x5 * Math.cos(degreesToRadians(r)) - arrow.y5 * Math.sin(degreesToRadians(r))), y + (arrow.x5 * Math.sin(degreesToRadians(r)) + arrow.y5 * Math.cos(degreesToRadians(r))));
-            ctx.lineTo(x + (arrow.x6 * Math.cos(degreesToRadians(r)) - arrow.y6 * Math.sin(degreesToRadians(r))), y + (arrow.x6 * Math.sin(degreesToRadians(r)) + arrow.y6 * Math.cos(degreesToRadians(r))));
-            ctx.closePath();
-            ctx.fill();
-        }
-
-        function drawCircle(canvasLocal, x, y, r) {
-            var ctx = canvasLocal.getContext('2d');
-            ctx.beginPath();
-            ctx.arc(x, y, r, 0, 2 * Math.PI);
-            ctx.lineWidth = circlesWeight;
-            ctx.strokeStyle = circlesColor;
-            ctx.stroke();
-        }
-
-        function drawLine(canvasLocal, x1, y1, x2, y2) {
-            var ctx = canvasLocal.getContext('2d');
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.lineWidth = linesWeight;
-            ctx.strokeStyle = linesColor;
-            ctx.stroke();
-        }
-
-        function degreesToRadians(degrees) {
-            return degrees * Math.PI / 180;
-        }
-
-        //Export functions
-        function downloadLayers() {
-            isExporting = true;
-            generateMire();
-            exportZIP("layers");
-            isExporting = false;
-        }
-
-        function addImageToZIP(image, name) {
-            var savable = new Image();
-            savable.src = image.toDataURL();
-            zip.file(name + ".png", savable.src.substr(savable.src.indexOf(',') + 1), {
-                base64: true
-            });
-            /*var imgFolder = zip.folder("images");*/ //Create Folder
-        }
-
-        function resetZIP() {
-            zip = new JSZip();
-        }
-
-        function exportZIP(name) {
-            zip.generateAsync({
-                    type: "blob"
-                })
-                .then(function(blob) {
-
-                    saveAs(blob, name + ".zip");
-                });
-        }
-
-
-        (function() {
-            Math.clamp = function(a, b, c) {
-                return Math.max(b, Math.min(c, a));
-            }
-        })();
-
-    </script>
+      }
+
+      generateMire();
+
+      if (isExporting) { //Trick for performances
+        imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
+          0, 0, img.width, img.height); // destination rectangle
+        addImageToZIP(temp, "overlay");
+        tempCtx.clearRect(0, 0, temp.width, temp.height);
+      }
+    }
+
+    function generateGradient() {
+      updateSettings();
+
+      var currImg = imgGradient;
+      quadGradient(currImg, {
+        topLeft: grdTopLeftColor,
+        topRight: grdTopRightColor,
+        bottomLeft: grdBottomLeftColor,
+        bottomRight: grdBottomRightColor
+      });
+
+      generateMire();
+
+      if (isExporting) { //Trick for performances
+        imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
+          0, 0, img.width, img.height); // destination rectangle
+        addImageToZIP(currImg, "gradient");
+        tempCtx.clearRect(0, 0, temp.width, temp.height);
+      }
+    }
+
+    function quadGradient(canvasLocal, corners) {
+      var ctx = canvasLocal.getContext('2d');
+      var w = canvasLocal.width;
+      var h = canvasLocal.height;
+      var gradient, startColor, endColor, fac;
+
+      for (var i = 0; i < h; i++) {
+        gradient = ctx.createLinearGradient(0, i, w, i);
+        fac = i / (h - 1);
+
+        startColor = lerpColor(corners.topLeft, corners.bottomLeft, fac);
+        endColor = lerpColor(corners.topRight, corners.bottomRight, fac);
+
+        gradient.addColorStop(0, startColor);
+        gradient.addColorStop(1, endColor);
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, i, w, i);
+      }
+    }
+
+    function lerpColor(a, b, amount) {
+
+      var ah = parseInt(a.replace(/#/g, ''), 16),
+        ar = ah >> 16,
+        ag = ah >> 8 & 0xff,
+        ab = ah & 0xff,
+        bh = parseInt(b.replace(/#/g, ''), 16),
+        br = bh >> 16,
+        bg = bh >> 8 & 0xff,
+        bb = bh & 0xff,
+        rr = ar + amount * (br - ar),
+        rg = ag + amount * (bg - ag),
+        rb = ab + amount * (bb - ab);
+
+      return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
+    }
+
+    function drawArrow(canvas, x, y, s = 1, r = 0) {
+      var ctx = canvas.getContext('2d');
+      var arrow = {
+        x0: 0,
+        y0: 0,
+        x1: 10 * s,
+        y1: 10 * s,
+        x2: 5 * s,
+        y2: 10 * s,
+        x3: 5 * s,
+        y3: 20 * s,
+        x4: -5 * s,
+        y4: 20 * s,
+        x5: -5 * s,
+        y5: 10 * s,
+        x6: -10 * s,
+        y6: 10 * s
+      };
+      ctx.fillStyle = arrowsOverlayColor;
+      ctx.beginPath();
+      ctx.moveTo(x + (arrow.x0 * Math.cos(degreesToRadians(r)) - arrow.y0 * Math.sin(degreesToRadians(r))), y + (arrow.x0 * Math.sin(degreesToRadians(r)) + arrow.y0 * Math.cos(degreesToRadians(r))));
+      ctx.lineTo(x + (arrow.x1 * Math.cos(degreesToRadians(r)) - arrow.y1 * Math.sin(degreesToRadians(r))), y + (arrow.x1 * Math.sin(degreesToRadians(r)) + arrow.y1 * Math.cos(degreesToRadians(r))));
+      ctx.lineTo(x + (arrow.x2 * Math.cos(degreesToRadians(r)) - arrow.y2 * Math.sin(degreesToRadians(r))), y + (arrow.x2 * Math.sin(degreesToRadians(r)) + arrow.y2 * Math.cos(degreesToRadians(r))));
+      ctx.lineTo(x + (arrow.x3 * Math.cos(degreesToRadians(r)) - arrow.y3 * Math.sin(degreesToRadians(r))), y + (arrow.x3 * Math.sin(degreesToRadians(r)) + arrow.y3 * Math.cos(degreesToRadians(r))));
+      ctx.lineTo(x + (arrow.x4 * Math.cos(degreesToRadians(r)) - arrow.y4 * Math.sin(degreesToRadians(r))), y + (arrow.x4 * Math.sin(degreesToRadians(r)) + arrow.y4 * Math.cos(degreesToRadians(r))));
+      ctx.lineTo(x + (arrow.x5 * Math.cos(degreesToRadians(r)) - arrow.y5 * Math.sin(degreesToRadians(r))), y + (arrow.x5 * Math.sin(degreesToRadians(r)) + arrow.y5 * Math.cos(degreesToRadians(r))));
+      ctx.lineTo(x + (arrow.x6 * Math.cos(degreesToRadians(r)) - arrow.y6 * Math.sin(degreesToRadians(r))), y + (arrow.x6 * Math.sin(degreesToRadians(r)) + arrow.y6 * Math.cos(degreesToRadians(r))));
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function drawCircle(canvasLocal, x, y, r) {
+      var ctx = canvasLocal.getContext('2d');
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, 2 * Math.PI);
+      ctx.lineWidth = circlesWeight;
+      ctx.strokeStyle = circlesColor;
+      ctx.stroke();
+    }
+
+    function drawLine(canvasLocal, x1, y1, x2, y2) {
+      var ctx = canvasLocal.getContext('2d');
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.lineWidth = linesWeight;
+      ctx.strokeStyle = linesColor;
+      ctx.stroke();
+    }
+
+    function degreesToRadians(degrees) {
+      return degrees * Math.PI / 180;
+    }
+
+    //Export functions
+    function downloadLayers() {
+      isExporting = true;
+      generateMire();
+      exportZIP("layers");
+      isExporting = false;
+    }
+
+    function addImageToZIP(image, name) {
+      var savable = new Image();
+      savable.src = image.toDataURL();
+      zip.file(name + ".png", savable.src.substr(savable.src.indexOf(',') + 1), {
+        base64: true
+      });
+      /*var imgFolder = zip.folder("images");*/ //Create Folder
+    }
+
+    function resetZIP() {
+      zip = new JSZip();
+    }
+
+    function exportZIP(name) {
+      zip.generateAsync({
+          type: "blob"
+        })
+        .then(function(blob) {
+
+          saveAs(blob, name + ".zip");
+        });
+    }
+
+
+    (function() {
+      Math.clamp = function(a, b, c) {
+        return Math.max(b, Math.min(c, a));
+      }
+    })();
+
+  </script>
 
 </body>
 
