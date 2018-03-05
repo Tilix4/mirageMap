@@ -386,10 +386,10 @@ Special thanks to Elie Michel (http://exppad.com/)
     </div>
     <div id="ExportSettings">
       <a class="downloadButton" id="downloadImageButton">Download Image</a>
-            <a class="downloadButton" id="downloadLayersButton">Download Layers</a>
-            <a class="saveButton" id="savePresetButton">Save Preset</a>
-            <a class="saveButton" id="exportPresetButton">Export Preset</a>
-            <a class="saveButton" id="loadPresetButton">Load Preset</a>
+      <a class="downloadButton" id="downloadLayersButton">Download Layers</a>
+      <a class="saveButton" id="savePresetButton">Save Preset</a>
+      <a class="saveButton" id="exportPresetButton">Export Preset</a>
+      <a class="saveButton" id="loadPresetButton">Load Preset</a>
     </div>
   </div>
 
@@ -398,7 +398,7 @@ Special thanks to Elie Michel (http://exppad.com/)
         Your browser does not support the canvas element.
     </canvas>
 
-<script>
+  <script>
     //Setup
     //Settings fields
     var widthField = document.getElementById("imageWidthField");
@@ -603,12 +603,23 @@ Special thanks to Elie Michel (http://exppad.com/)
     var imageLink = document.getElementById("downloadImageButton");
     imageLink.addEventListener('click', function(ev) {
       imageLink.href = img.toDataURL();
-      imageLink.download = "mire_"+mainText.replace(/ /g, "-")+"_"+ String(imgWidth) + "x" + String(imgHeight) + ".png";
+      imageLink.download = "mire_" + mainText.replace(/ /g, "-") + "_" + String(imgWidth) + "x" + String(imgHeight) + ".png";
     }, false);
 
     var layersLink = document.getElementById("downloadLayersButton");
     layersLink.addEventListener('click', downloadLayers);
 
+    var layersLink = document.getElementById("downloadLayersButton");
+    layersLink.addEventListener('click', downloadLayers);
+
+    var saveLink = document.getElementById("savePresetButton");
+    saveLink.addEventListener('click', savePreset);
+
+    var exportLink = document.getElementById("exportPresetButton");
+    exportLink.addEventListener('click', exportPreset);
+
+    var loadLink = document.getElementById("loadPresetButton");
+    loadLink.addEventListener('click', loadLink);
 
 
     //Functions
@@ -918,8 +929,8 @@ Special thanks to Elie Michel (http://exppad.com/)
       imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
         0, 0, img.width, img.height); // destination rectangle
     }
-    
-    function cleanMainImage(){
+
+    function cleanMainImage() {
       imgCtx.clearRect(0, 0, img.width, img.height);
     }
 
@@ -1017,7 +1028,7 @@ Special thanks to Elie Michel (http://exppad.com/)
       var currImg = imgText;
       var currImgCtx = currImg.getContext('2d');
       currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
-      
+
       currImgCtx.fillStyle = textColor;
       currImgCtx.strokeStyle = "black";
       currImgCtx.lineWidth = mainTextWeight / 10;
@@ -1164,9 +1175,9 @@ Special thanks to Elie Michel (http://exppad.com/)
     //Export functions
     function downloadLayers() {
       addAllLayersToZIP();
-      exportZIP("Mire_"+mainText.replace(/ /g, "-")+"_layers");
+      exportZIP("Mire_" + mainText.replace(/ /g, "-") + "_layers");
     }
-    
+
     function addAllLayersToZIP() {
       //Gradient
       if (isGradient) {
@@ -1224,62 +1235,62 @@ Special thanks to Elie Michel (http://exppad.com/)
 
 
     //Presets
-        var preset_inputs = {
-            preset0: 'TextCheckbox',
-            preset1: 'mainTextField'
-        };
+    var preset_inputs = {
+      preset0: 'TextCheckbox',
+      preset1: 'mainTextField'
+    };
 
-        function makePreset() {
-            var preset = {};
-            var keys = Object.keys(preset_inputs);
-            for (var i = 0; i < keys.length; ++i) {
-                var key = keys[i];
-                var input_id = preset_inputs[key];
-                var input = document.getElementById(input_id);
-                console.log(input.nodeType);
-                if (input.type == 'text') {
-                    preset[input_id] = input.value;
-                } else if (input.type == 'checkbox') {
-                    preset[input_id] = input.checked;
-                }
-            }
-            return preset
+    function makePreset() {
+      var preset = {};
+      var keys = Object.keys(preset_inputs);
+      for (var i = 0; i < keys.length; ++i) {
+        var key = keys[i];
+        var input_id = preset_inputs[key];
+        var input = document.getElementById(input_id);
+        console.log(input.nodeType);
+        if (input.type == 'text') {
+          preset[input_id] = input.value;
+        } else if (input.type == 'checkbox') {
+          preset[input_id] = input.checked;
         }
+      }
+      return preset
+    }
 
-        function savePreset() {
-            // Store
-            var jsonData = JSON.stringify(makePreset());
-            localStorage.setItem('testObject', JSON.stringify(jsonData));
-            // Retrieve
-            document.getElementById("savePresetButton").innerHTML = localStorage.getItem(jsonData);
-            console.log(localStorage.getItem("testObject"));
-        }
+    function savePreset() {
+      // Store
+      var jsonData = JSON.stringify(makePreset());
+      localStorage.setItem('testObject', JSON.stringify(jsonData));
+      // Retrieve
+      //document.getElementById("savePresetButton").innerHTML = localStorage.getItem(jsonData);
+      console.log(localStorage.getItem("testObject"));
+    }
 
-        function exportPreset() {
-            var jsonData = JSON.stringify(makePreset());
-            download(jsonData, "test.json", 'text/plain');
-            console.log(jsonData);
-        }
-        
-        function applyPreset() {
-            
-        }
+    function exportPreset() {
+      var jsonData = JSON.stringify(makePreset());
+      download(jsonData, "test.json", 'text/plain');
+      console.log(jsonData);
+    }
 
-        function download(text, name, type) {
-            var a = exportLink;
-            var file = new Blob([text], {
-                type: type
-            });
-            a.href = URL.createObjectURL(file);
-            a.download = name;
-            a.click();
-        }
+    function applyPreset() {
 
-        (function() {
-            Math.clamp = function(a, b, c) {
-                return Math.max(b, Math.min(c, a));
-            }
-        })();
+    }
+
+    function download(text, name, type) {
+      var a = exportLink;
+      var file = new Blob([text], {
+        type: type
+      });
+      a.href = URL.createObjectURL(file);
+      a.download = name;
+      a.click();
+    }
+
+    (function() {
+      Math.clamp = function(a, b, c) {
+        return Math.max(b, Math.min(c, a));
+      }
+    })();
 
   </script>
 </body>
