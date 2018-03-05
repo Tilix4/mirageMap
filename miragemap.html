@@ -482,15 +482,15 @@ Special thanks to Elie Michel (http://exppad.com/)
     var linesField = document.getElementById("linesField");
     var nLines = linesField.value;
     linesField.addEventListener("input", generateLines);
-    linesField.addEventListener("blur", function currFunction() {
-      if (linesField.value <= 0) linesField.value = 0;
+    linesField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
     }); //Set the field to 0 if empty or not valid
 
     var linesWeightField = document.getElementById("linesWeightField");
     var linesWeight = linesWeightField.value;
     linesWeightField.addEventListener("input", generateLines);
-    linesWeightField.addEventListener("blur", function currFunction() {
-      if (linesWeightField.value <= 0) linesWeightField.value = 0;
+    linesWeightField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
     }); //Set the field to 0 if empty or not valid
 
     var linesColorSelector = document.getElementById("linesColorSelector");
@@ -499,42 +499,42 @@ Special thanks to Elie Michel (http://exppad.com/)
 
     var followingCirclesField = document.getElementById("followingCirclesField");
     var nFollowingCircles = followingCirclesField.value;
-    followingCirclesField.addEventListener("input", generateMire);
-    followingCirclesField.addEventListener("blur", function currFunction() {
-      if (followingCirclesField.value <= 0) followingCirclesField.value = 0;
+    followingCirclesField.addEventListener("input", generateCircles);
+    followingCirclesField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
     }); //Set the field to 0 if empty or not valid
 
     var concentricCirclesField = document.getElementById("concentricCirclesField");
     var nConcentricCircles = concentricCirclesField.value;
-    concentricCirclesField.addEventListener("input", generateMire);
-    concentricCirclesField.addEventListener("blur", function currFunction() {
-      if (concentricCirclesField.value <= 0) concentricCirclesField.value = 0;
+    concentricCirclesField.addEventListener("input", generateCircles);
+    concentricCirclesField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
     }); //Set the field to 0 if empty or not valid
 
     var sizeConcentricCirclesField = document.getElementById("sizeConcentricCirclesField");
     var sizeConcentricCircles = sizeConcentricCirclesField.value;
-    sizeConcentricCirclesField.addEventListener("input", generateMire);
-    sizeConcentricCirclesField.addEventListener("blur", function currFunction() {
-      if (sizeConcentricCirclesField.value <= 0) sizeConcentricCirclesField.value = 0;
+    sizeConcentricCirclesField.addEventListener("input", generateCircles);
+    sizeConcentricCirclesField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
     }); //Set the field to 0 if empty or not valid
 
     var multConcentricCirclesField = document.getElementById("multConcentricCirclesField");
     var multConcentricCircles = multConcentricCirclesField.value;
-    multConcentricCirclesField.addEventListener("input", generateMire);
-    multConcentricCirclesField.addEventListener("blur", function currFunction() {
-      if (multConcentricCirclesField.value <= 0) multConcentricCirclesField.value = 0;
+    multConcentricCirclesField.addEventListener("input", generateCircles);
+    multConcentricCirclesField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
     }); //Set the field to 0 if empty or not valid
 
     var circlesWeightField = document.getElementById("circlesWeightField");
     var circlesWeight = circlesWeightField.value;
-    circlesWeightField.addEventListener("input", generateMire);
-    circlesWeightField.addEventListener("blur", function currFunction() {
-      if (linesField.value <= 0) circlesWeightField.value = 0;
+    circlesWeightField.addEventListener("input", generateCircles);
+    circlesWeightField.addEventListener("blur", function currFunction(e) {
+      if (e.relatedTarget.value <= 0) e.relatedTarget.value = 0;
     }); //Set the field to 0 if empty or not valid
 
     var circlesColorSelector = document.getElementById("circlesColorSelector");
     var circlesColor = circlesColorSelector.value;
-    circlesColorSelector.addEventListener("input", generateMire);
+    circlesColorSelector.addEventListener("input", generateCircles);
 
     //Gradient
     var grdTopLeftColorSelector = document.getElementById("grdTopLeftColorSelector");
@@ -877,6 +877,7 @@ Special thanks to Elie Michel (http://exppad.com/)
     }
 
     function generateMire() {
+      cleanMainImage();
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
       //Gradient
@@ -916,6 +917,10 @@ Special thanks to Elie Michel (http://exppad.com/)
     function drawInMainImage(currImg) {
       imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
         0, 0, img.width, img.height); // destination rectangle
+    }
+    
+    function cleanMainImage(){
+      imgCtx.clearRect(0, 0, img.width, img.height);
     }
 
     function generateGrid() {
