@@ -227,7 +227,7 @@ Special thanks to Elie Michel (http://exppad.com/)
                 <input type="text" id="imageWidthField" value="1920"> <span>x</span>
                 <input type="text" id="imageHeightField" value="1080">
                 <div class="checkbox">
-                    <input type="checkbox" id="verticalCheckbox" tabindex="-1" onclick="generateMire()">
+                    <input type="checkbox" id="verticalCheckbox" tabindex="-1" onclick="setVerticalOrganization()">
                     <span>Vertical organization</span>
                 </div>
             </div>
@@ -312,7 +312,7 @@ Special thanks to Elie Michel (http://exppad.com/)
                 <p>Weight</p>
                 <input type="text" id="linesWeightField" value="10">
                 <div class="checkbox">
-                    <input type="checkbox" id="crossesCheckbox" checked tabindex="-1" onclick="generateMire()">
+                    <input type="checkbox" id="crossesCheckbox" checked tabindex="-1" onclick="generateLines()">
                     <span>Crosses</span>
                 </div>
                 <div>
@@ -400,15 +400,11 @@ Special thanks to Elie Michel (http://exppad.com/)
         //Settings fields
         var widthField = document.getElementById("imageWidthField");
         var imgWidth = widthField.value;
-        widthField.addEventListener("blur", generateMire);
+        widthField.addEventListener("blur", updateAllCanvas);
 
         var heightField = document.getElementById("imageHeightField");
         var imgHeight = widthField.value;
-        heightField.addEventListener("blur", generateMire);
-
-        var verticalCheckbox = document.getElementById("verticalCheckbox");
-        var verticalOrganization = verticalCheckbox.checked;
-        verticalCheckbox.addEventListener("input", generateMire);
+        heightField.addEventListener("blur", updateAllCanvas);
 
         var mainTextField = document.getElementById("mainTextField");
         var mainText = mainTextField.value;
@@ -446,7 +442,7 @@ Special thanks to Elie Michel (http://exppad.com/)
 
         var rectWidthField = document.getElementById("nbSquaresW");
         var nbRectWidth = rectWidthField.value;
-        rectWidthField.addEventListener("input", generateMire);
+        rectWidthField.addEventListener("input", generateGrid);
         rectWidthField.addEventListener("keypress", gridUpdate);
         rectWidthField.addEventListener("input", gridUpdate); //Forcing height update
         rectWidthField.addEventListener("blur", function currFunction() {
@@ -455,7 +451,7 @@ Special thanks to Elie Michel (http://exppad.com/)
 
         var rectHeightField = document.getElementById("nbSquaresH");
         var nbRectHeight = rectHeightField.value;
-        rectHeightField.addEventListener("input", generateMire);
+        rectHeightField.addEventListener("input", generateGrid);
         rectHeightField.addEventListener("keypress", gridUpdate);
         rectHeightField.addEventListener("blur", function currFunction() {
             if (rectHeightField.value <= 0) setSquaresFields(0)
@@ -463,40 +459,40 @@ Special thanks to Elie Michel (http://exppad.com/)
 
         var gridColorSelector = document.getElementById("gridColorSelector");
         var gridColor = gridColorSelector.value;
-        gridColorSelector.addEventListener("input", generateMire);
+        gridColorSelector.addEventListener("input", generateGrid);
 
         var gridLinesWeightField = document.getElementById("gridLinesWeightField");
         var gridLinesWeight = gridLinesWeightField.value;
-        gridLinesWeightField.addEventListener("input", generateMire);
+        gridLinesWeightField.addEventListener("input", generateGrid);
         gridLinesWeightField.addEventListener("blur", function currFunction() {
             if (gridLinesWeightField.value <= 0) gridLinesWeightField.value = 0;
         }); //Set the field to 0 if empty or not valid
 
         var gridLinesColorSelector = document.getElementById("gridLinesColorSelector");
         var gridLinesColor = gridLinesColorSelector.value;
-        gridLinesColorSelector.addEventListener("input", generateMire);
+        gridLinesColorSelector.addEventListener("input", generateGrid);
 
         var numbersColorSelector = document.getElementById("numbersColorSelector");
         var numbersColor = numbersColorSelector.value;
-        numbersColorSelector.addEventListener("input", generateMire);
+        numbersColorSelector.addEventListener("input", generateGrid);
 
         var linesField = document.getElementById("linesField");
         var nLines = linesField.value;
-        linesField.addEventListener("input", generateMire);
+        linesField.addEventListener("input", generateLines);
         linesField.addEventListener("blur", function currFunction() {
             if (linesField.value <= 0) linesField.value = 0;
         }); //Set the field to 0 if empty or not valid
 
         var linesWeightField = document.getElementById("linesWeightField");
         var linesWeight = linesWeightField.value;
-        linesWeightField.addEventListener("input", generateMire);
+        linesWeightField.addEventListener("input", generateLines);
         linesWeightField.addEventListener("blur", function currFunction() {
             if (linesWeightField.value <= 0) linesWeightField.value = 0;
         }); //Set the field to 0 if empty or not valid
 
         var linesColorSelector = document.getElementById("linesColorSelector");
         var linesColor = linesColorSelector.value;
-        linesColorSelector.addEventListener("input", generateMire);
+        linesColorSelector.addEventListener("input", generateLines);
 
         var followingCirclesField = document.getElementById("followingCirclesField");
         var nFollowingCircles = followingCirclesField.value;
@@ -566,6 +562,8 @@ Special thanks to Elie Michel (http://exppad.com/)
         var imgCtx = img.getContext("2d");
         var imgGradient = document.createElement("canvas"); //Optimization
         var imgGradientCtx = imgGradient.getContext("2d"); //Optimization
+        var imgGrid = document.createElement("canvas"); //Optimization
+        var imgGridCtx = imgGrid.getContext("2d"); //Optimization
         var imgLines = document.createElement("canvas"); //Optimization
         var imgLinesCtx = imgLines.getContext("2d"); //Optimization
         var imgCircles = document.createElement("canvas"); //Optimization
@@ -574,8 +572,6 @@ Special thanks to Elie Michel (http://exppad.com/)
         var imgOverlayCtx = imgOverlay.getContext("2d"); //Optimization
         var imgText = document.createElement("canvas"); //Optimization
         var imgTextCtx = imgText.getContext("2d"); //Optimization
-        var imgGrid = document.createElement("canvas"); //Optimization
-        var imgGridCtx = imgGrid.getContext("2d"); //Optimization
         var temp = document.createElement("canvas");
         var tempCtx = temp.getContext("2d");
 
@@ -589,6 +585,8 @@ Special thanks to Elie Michel (http://exppad.com/)
         var isLines = Boolean();
         var isCircles = Boolean();
         var isGradient = Boolean();
+        var crossedLines = Boolean();
+        var middlesCross = Boolean();
         var rectAreSquares = true;
         var verticalOrganization = false;
 
@@ -614,6 +612,7 @@ Special thanks to Elie Michel (http://exppad.com/)
         //Functions
 
         function initialisation() {
+            updateAllCanvas();
             setText();
             setOverlay();
             setGrid();
@@ -653,7 +652,7 @@ Special thanks to Elie Michel (http://exppad.com/)
                 document.getElementById(id).style.display = 'inline-block';
             else
                 document.getElementById(id).style.display = 'none';
-            generateMire();
+            generateGrid();
         }
 
         function setLines() {
@@ -664,7 +663,7 @@ Special thanks to Elie Michel (http://exppad.com/)
             else
                 document.getElementById(id).style.display = 'none';
 
-            generateMire();
+            generateLines();
         }
 
         function setCircles() {
@@ -725,7 +724,7 @@ Special thanks to Elie Michel (http://exppad.com/)
 
             if (rectAreSquares)
                 rectHeightField.value = rectWidthField.value;
-            generateMire();
+            generateGrid();
 
         }
 
@@ -733,7 +732,7 @@ Special thanks to Elie Michel (http://exppad.com/)
             rectAreSquares = squaresCheckbox.checked;
             rectHeightField.disabled = rectAreSquares;
             rectHeightField.value = rectWidthField.value;
-            generateMire();
+            generateGrid();
         }
 
         function setSquaresFields(n) {
@@ -743,16 +742,32 @@ Special thanks to Elie Michel (http://exppad.com/)
 
         function setVerticalOrganization() {
             verticalOrganization = verticalCheckbox.checked;
-            generateMire();
+            generateGrid();
         }
 
+        function updateAllCanvas() {
+            updateSettings();
+            img.width = imgWidth;
+            img.height = imgHeight;
+            
+            imgGradient.width = imgWidth;
+            imgGradient.height = imgHeight;
+            
+            imgGrid.width = imgWidth;
+            imgGrid.height = imgHeight;
+            imgGridCtx.font = fontSize + " Arial";
+            imgGridCtx.textAlign = "center";
+            imgGridCtx.textBaseline = "middle";
 
+            imgLines.width = imgWidth;
+            imgLines.height = imgHeight;
+            
+            generateMire();
+        }
 
         function updateSettings() {
             imgWidth = widthField.value;
             imgHeight = heightField.value;
-            img.width = imgWidth;
-            img.height = imgHeight;
             verticalOrganization = verticalCheckbox.checked;
 
             nbRectWidth = rectWidthField.value;
@@ -781,16 +796,16 @@ Special thanks to Elie Michel (http://exppad.com/)
             tempCtx = imgCtx;
             //imgGradient = img;
             //imgGradientCtx = imgGradient.getContext('2D');
-            imgGrid = img;
-            imgGridCtx = imgCtx;
-            imgLines = img;
-            imgLinesCtx = imgCtx;
-            imgCircles = img;
+            //imgGrid = img;
+            //imgGridCtx = imgCtx;
+            //imgLines = img;
+            //imgLinesCtx = imgCtx;
+            /*imgCircles = img;
             imgCirclesCtx = imgCtx;
             imgText = img;
             imgTextCtx = imgCtx;
             imgOverlay = img;
-            imgOverlayCtx = imgCtx;
+            imgOverlayCtx = imgCtx;*/
 
             if (isExporting) {
                 temp.width = imgWidth;
@@ -810,8 +825,6 @@ Special thanks to Elie Michel (http://exppad.com/)
                 canvas.style.height = "auto";
                 canvas.style.width = String(48) + "%";
             }
-
-
 
             //Fields
             //Text
@@ -876,26 +889,28 @@ Special thanks to Elie Michel (http://exppad.com/)
 
 
         function generateMire() {
-            updateSettings();
+            //updateSettings();
             canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
             //Gradient
             if (isGradient) {
+                console.log("isGradient");
                 drawInMainImage(imgGradient);
             }
 
             //Grid
             if (isGrid) {
-                generateGrid();
+                console.log("isGrid");
+                drawInMainImage(imgGrid);
             }
 
             //Lines Drawing
             if (isLines) {
-                generateLines();
+                console.log("isLines");
+                drawInMainImage(imgLines);
             }
 
             //Circles drawing
-
             if (isCircles) {
                 generateCircles();
             }
@@ -910,7 +925,7 @@ Special thanks to Elie Michel (http://exppad.com/)
                 generateOverlay();
             }
             //Draw the working img in the page canvas
-            canvasCtx.drawImage(imgGrid, 0, 0, img.width, img.height, // source rectangle
+            canvasCtx.drawImage(img, 0, 0, img.width, img.height, // source rectangle
                 0, 0, canvas.width, canvas.height); // destination rectangle
         }
 
@@ -920,10 +935,13 @@ Special thanks to Elie Michel (http://exppad.com/)
         }
 
         function generateGrid() {
+            updateSettings();
 
+            console.log("generateGrid");
             //Grid drawing (checker)
-            currImg = imgGrid;
-            var currImgCtx = currImg.getContext("2d");
+            var currImg = imgGrid;
+            var currImgCtx = currImg.getContext('2d');
+            currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
 
             for (var j = 0; j < nbRectWidth; ++j) {
                 for (var i = 0; i < nbRectHeight; ++i) {
@@ -934,8 +952,6 @@ Special thanks to Elie Michel (http://exppad.com/)
                 }
             }
 
-
-
             //Grid drawing (lines)
             for (var j = 0; j < nbRectWidth; ++j) {
                 for (var i = 0; i < nbRectHeight; ++i) {
@@ -944,7 +960,6 @@ Special thanks to Elie Michel (http://exppad.com/)
                     currImgCtx.strokeRect(rectWidth * j, rectHeight * i, rectWidth, rectHeight);
                 }
             }
-
 
             //Numbers drawing
             for (var j = 0; j < nbRectWidth; ++j) {
@@ -957,6 +972,8 @@ Special thanks to Elie Michel (http://exppad.com/)
                 }
             }
 
+            generateMire();
+
             if (isExporting) { //Trick for performances
                 imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
                     0, 0, img.width, img.height); // destination rectangle
@@ -966,8 +983,11 @@ Special thanks to Elie Michel (http://exppad.com/)
         }
 
         function generateLines() {
-
+            updateSettings();
+            console.log("generateLines");
             var currImg = imgLines;
+            var currImgCtx = currImg.getContext('2d');
+            currImgCtx.clearRect(0, 0, currImg.width, currImg.height);
 
             for (var i = 0; i < nLines; i++) {
                 if (crossedLines) {
@@ -983,8 +1003,10 @@ Special thanks to Elie Michel (http://exppad.com/)
                 drawLine(currImg, 0, imgHeight / 2, imgWidth, imgHeight / 2);
             }
 
-            imgCtx.drawImage(temp, 0, 0, temp.width, temp.height, // source rectangle
-                0, 0, img.width, img.height); // destination rectangle
+            generateMire();
+
+            /*imgCtx.drawImage(currImg, 0, 0, currImg.width, currImg.height, // source rectangle
+                0, 0, img.width, img.height); // destination rectangle*/
 
             if (isExporting) { //Trick for performances
                 addImageToZIP(temp, "lines");
@@ -1080,7 +1102,9 @@ Special thanks to Elie Michel (http://exppad.com/)
         }
 
         function generateGradient() {
-            currImg = imgGradient;
+            updateSettings();
+            console.log("generateGradient");
+            var currImg = imgGradient;
             quadGradient(currImg, {
                 topLeft: grdTopLeftColor,
                 topRight: grdTopRightColor,
@@ -1167,18 +1191,17 @@ Special thanks to Elie Michel (http://exppad.com/)
             ctx.fill();
         }
 
-        function drawCircle(canvas, x, y, r) {
-            var ctx = canvas.getContext('2d');
+        function drawCircle(canvasLocal, x, y, r) {
+            var ctx = canvasLocal.getContext('2d');
             ctx.beginPath();
             ctx.arc(x, y, r, 0, 2 * Math.PI);
             ctx.lineWidth = circlesWeight;
             ctx.strokeStyle = circlesColor;
             ctx.stroke();
-
         }
 
-        function drawLine(canvas, x1, y1, x2, y2) {
-            var ctx = canvas.getContext('2d');
+        function drawLine(canvasLocal, x1, y1, x2, y2) {
+            var ctx = canvasLocal.getContext('2d');
             ctx.beginPath();
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
