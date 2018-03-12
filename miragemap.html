@@ -619,7 +619,7 @@ Special thanks to Elie Michel (http://exppad.com/)
     exportLink.addEventListener('click', exportPreset);
 
     var loadLink = document.getElementById("loadPresetButton");
-    loadLink.addEventListener('click', loadLink);
+    loadLink.addEventListener('click', loadPreset);
 
 
     //Functions
@@ -1234,13 +1234,13 @@ Special thanks to Elie Michel (http://exppad.com/)
     }
 
 
-    //Presets
+    //Presets, everything managed by IDs
     var preset_inputs = {
       preset0: 'TextCheckbox',
       preset1: 'mainTextField'
     };
 
-    function makePreset() {
+    function makePreset() {//Get IDs to get values
       var preset = {};
       var keys = Object.keys(preset_inputs);
       for (var i = 0; i < keys.length; ++i) {
@@ -1260,7 +1260,7 @@ Special thanks to Elie Michel (http://exppad.com/)
     function savePreset() {
       // Store
       var jsonData = JSON.stringify(makePreset());
-      localStorage.setItem('testObject', JSON.stringify(jsonData));
+      localStorage.setItem('testObject', jsonData);
       // Retrieve
       //document.getElementById("savePresetButton").innerHTML = localStorage.getItem(jsonData);
       console.log(localStorage.getItem("testObject"));
@@ -1272,8 +1272,20 @@ Special thanks to Elie Michel (http://exppad.com/)
       console.log(jsonData);
     }
 
-    function applyPreset() {
+    function loadPreset() {
+      var jsonData = localStorage.getItem('testObject');
+      jsonData = JSON.parse(jsonData);
+      applyPreset(jsonData);
+      console.log(jsonData);
+    }
 
+    function applyPreset(jsonData) {//Use IDs to apply values
+      var keys = Object.keys(jsonData);
+      console.log(keys);
+      for (var i = 0; i < keys.length; ++i) {
+        console.log(jsonData.TextCheckbox);
+        //TODO
+      }
     }
 
     function download(text, name, type) {
