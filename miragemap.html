@@ -1248,10 +1248,10 @@ Special thanks to Elie Michel (http://exppad.com/)
         var input_id = preset_inputs[key];
         var input = document.getElementById(input_id);
         console.log(input.nodeType);
-        if (input.type == 'text') {
-          preset[input_id] = input.value;
-        } else if (input.type == 'checkbox') {
+        if (input.type == 'checkbox') {
           preset[input_id] = input.checked;
+        } else {
+          preset[input_id] = input.value;
         }
       }
       return preset
@@ -1284,8 +1284,14 @@ Special thanks to Elie Michel (http://exppad.com/)
       console.log(keys);
       for (var i = 0; i < keys.length; ++i) {
         console.log(jsonData.TextCheckbox);
-        //TODO
+        let key = keys[i];
+        setting = document.getElementById(key)
+        if (setting.type == 'checkbox')
+          setting.checked = jsonData[key];
+        else
+          setting.value = jsonData[key];
       }
+      initialisation();
     }
 
     function download(text, name, type) {
